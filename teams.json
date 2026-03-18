@@ -1,0 +1,2051 @@
+{
+  "teams": [
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiUnZjbUxlNWcxNkdJWGc5TDRfVlNGdyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyMTc3MCwiZW1haWwiOiI1d2JhZHgzMjZzQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzcyNTM3NiwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6IjRhYzJjZTI0LWM0NjUtNDYxOC04Y2MyLTNlMzBlYTVlNWZiNiIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE3VDA0OjI5OjMwLjc1ODI5MyswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItN3owUEtqSUkydUlTWUZvSUgwNk5rTmZ1IiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmcta053MDJ2WmhMZ2hTQURMVGRZbHVLd0c1IiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItN3owUEtqSUkydUlTWUZvSUgwNk5rTmZ1In0sImlhdCI6MTc3MzcyMTc3NiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJjMWJkZTg0Ni05ZDFhLTQ0N2EtOWQ5Ny1kODliZDNhY2YyMzkiLCJyYXQiOjE3NzM3MjE3NTMsInNpZCI6IjBkYjQ1NGNjLWQ5YzUtNGM4OS1iMTcxLTgwMWYxZmEyZGNjNiIsInN1YiI6ImF1dGgwfGVabno1eFdpTEpPNDhYRHFPZ0Nzb2o5eiJ9.iSUkOVWVSzMw0aw-9E5OqlwXzQ-4cwf5kbUtObE95fgu3Klr1ylN0vqWaNJAV10qmDOMmu7E9JCgHbuUDd4vTRqZ6xw-5kMZXd3j-4nKLn_L5iqdrz5OzJoAgAuC9JuQlzHmZC72LuZ_PkZfcRtguUyB6Y961PXE7tbo0OWsPQ7JN5AK_-ZndTddSCIr7y8fxUIuY6XZ25gPYKj-SLSmEY5IbS57uALaGv8c-bxFYpb_xEoKVlZxrNtw5T6gcFMIU9qYrOSk0cPLMghb1KG2p3WWsXdxgR23T31F9fpfvZg1dMskW0ZCXG2LxCIfT284WfDLnIaFPinQo0TiQSwBIsTC0GpHNfelcB-v_qnUZy_dYIYT_EzJO7_B27R-MBnl2o8GuWEInEJj8G_8qJfgTBu7V__X1WkMZM4doB-zxi1sEM0O04qAjskhQvHXyL-kdvNAuojbM2LQO1UU8AFmkZHjBneSzaNSYaD00iDE-n1A-YV7pzTH5Pc8ZHmCfKZ8dhwpUW1O07KwDwTZ-crpoLUZktiOOuR7TotfliIPwfBZJLbxCbIU8Rwq9d4AW85zJTtQMwDmxfsFosPMEcG88Y76d2ShwK4U-0ZaGcdHKqVZw6v5OcrgZn5BiLG5GRyW85SpSMLGQlzA7ncIKRyRtiu8JfejI_2fDT9BdzEdQro",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTg1Nzc2LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNGFjMmNlMjQtYzQ2NS00NjE4LThjYzItM2UzMGVhNWU1ZmI2IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLTd6MFBLaklJMnVJU1lGb0lIMDZOa05mdV9fNGFjMmNlMjQtYzQ2NS00NjE4LThjYzItM2UzMGVhNWU1ZmI2IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLTd6MFBLaklJMnVJU1lGb0lIMDZOa05mdSIsInVzZXJfaWQiOiJ1c2VyLTd6MFBLaklJMnVJU1lGb0lIMDZOa05mdSJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiI1d2JhZHgzMjZzQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM3MjE3NzUsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiNzA4YjliODQtM2M5My00MzI0LTk5YWUtY2VjOWQ2Y2Q4MDRiIiwibmJmIjoxNzczNzIxNzc1LCJwd2RfYXV0aF90aW1lIjoxNzczNzIxNzcwNzU4LCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX0U4dERnb3dsVm1lbnVGaWlSd0VNME1KNiIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxlWm56NXhXaUxKTzQ4WERxT2dDc29qOXoifQ.ltV3INqgv4R0rwL56if9BTNnJstlq8jiQBw86-YSJ0GOA9iRHZ9D_H27lH8OINqiPkrr8kHqnujOUKpr4W4yQUcwi4fKB1d8VtQbOZxbLF7ocesvAZFXJyL3WeoWIVWE7Y0zWejt-IvqQ83YwRNV1fukQjVxueIIUGBjh_D9vtDi6huHoNwyCJUxF7XIieHWoqvSwuUqQvOuWF3bGUuZmolNnsLZqrfU1GWVH-yVIb5S1YaGtjkblwH4KLdCSxOXnLiLPCSEu7w887EsP1WSaWHhqJ3SiRVCWMmpIHPFzqFr2JTWsCIlWeAyjLt_vDEzM4BZGsBOvFn5IlJY2DoV1TiV-OxI302T8GpNq58NyzUZ3b_DCz13ZcZCrM_jfNqK_Mwy-TixjAebQMNDv8mS38f2XAKIq41kcIVB2hKXSCol5_AdSPO3lEhjLL94R4isux82BswmI5K5CyE570meS2IJ86qHxlkS4ilgb9BJHoG8m3_-E76pRGwMeswfZWuC5BaQZ-1XycdcOvjlnkBC71Qc_sTqdqHnvOjN39OuTRHZ2N9pADVVRG9ciDnhGRAgjHdv8KU-iqUt4_J-LMve3Fz4Xjm-B1-nKzs-Ot6vQ5uyN261VkYYVdzt73OKL9rC6hntry7V6Lg_SukohHcWAGAOlqb4K9I0Z362GH5SRf4",
+      "refresh_token": "rt_-VVIaYJlolN1_zb_2ThRf37nuhVHv9qfhtMjAjyXeDI.jltupvHSlyM3bnHSQzrzdy9EqVU9ngTvGUYU5ENHKDw",
+      "account_id": "4ac2ce24-c465-4618-8cc2-3e30ea5e5fb6",
+      "last_refresh": "2026-03-17T04:29:36Z",
+      "email": "5wbadx326s@kiroxubei.tech",
+      "type": "codex",
+      "expired": "2026-03-27T04:29:35Z",
+      "password": "0x8l7wF4mpdp",
+      "first_name": "Emma",
+      "last_name": "Thomas",
+      "birthdate": "1982-07-23",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "82J2-ZK2K-ENF3-Q9M5",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317122900S45S3S",
+            "cards": [
+              {
+                "id": 197123,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336378183963",
+                "cardPassword": "686",
+                "cardData": "{\"cvv\":\"686\",\"expireTime\":\"2026-03-17T13:29:03.766927152\",\"nickname\":\"82J2-ZK2K-ENF3-Q9M5\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: d413d448-21b9-11f1-82de-8b44ab39449f | Key: 534933 01",
+                "status": 1,
+                "orderId": 256410,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  12,
+                  29,
+                  6
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  12,
+                  29,
+                  6
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  12,
+                  29,
+                  6
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "e98a074333e04c7c8b611c3e699cecce",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336378183963 03/32 686 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1Gqw4ZNUWIlhXG9Ny6JuZ...",
+            "获取 Stripe 指纹...",
+            "guid=78f3853e-d7c6-4df1-9... muid=32fbbad8-6e35-421f-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiR29OdnhoSURjZmIzM2tVVHk3SUg1QSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyMTgyMywiZW1haWwiOiJ3YXdyaGJrN2w3QHpodXJ1bnFpLmxvdmUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzI1NDI4LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZDA0ZjIwYzktMTI0OC00Y2E5LTk3MDgtNGVjZTg4MDNkZTg3IiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDQ6MzA6MjMuOTg5MDU2KzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1xUld3T05OY0VjUFZpcnBLNmMzQWlJNjUiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy13NWRQNnFoenNWTkVMTFN2ZkpaWUQ2OUkiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1xUld3T05OY0VjUFZpcnBLNmMzQWlJNjUifSwiaWF0IjoxNzczNzIxODI4LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6Ijg1ZmM5ZmQ5LWE0MTMtNGI0MC04YTUwLWE3N2UwNjI3YThlZCIsInJhdCI6MTc3MzcyMTgwNCwic2lkIjoiZTRlYmQ5NzEtMmE3OC00ZmFlLTg1MDAtZDIwYWM2YjkzNTJlIiwic3ViIjoiYXV0aDB8ZlE0bjlKY2FiTW1FczdZdUlqbmgyQXpUIn0.X-vrQKxYt16wMol7oCqItDp9Tf1jB4tjGmlcvcrYkEkwaomKoKtYUh-XoJ-kd4OVufY1JcOmXNFYec0OUgQ05SxY7mYPqgNLqj7s6YI-vyxHNyfj2O9273SKsn62-P3VewSEcMqyFig2jRDPsUU6eulVryhcXVkngD7biGM_atIfSC9vNcqq64lfrQ1dPXbX6rhIMvXHR6p4BIK9AdHHgIP1ENsL18gi8BKitkvaOPxF9N2Uh97B0tbQvrsCeO41DDghM2JwGsBCe5jfgRyg-FhrTNIjVXVxiOzFpJwL8HxcVBpCSfYvhIPzexXEf2zqSXBf5ZhonQ_7e57WdHBZ8KyvpByiNIwiXDJRrPxWiHBSImfc4YagQoXVZehT3Cgzn4QuG0zidDKrrLQs97Ycj2glfURJV6C8hsIDOhKJbbARXmuhIZrkMSGdL-NzONtf-QsC0j0KwDmAoBKD62pQ8x4EPd9YSUa3GtGJKD_VannwJXpGEW4Vw-G4zx8mKbeM1P4Juj4LnZ492nXkcNfJ4iKb8v8cO3Ca9cwH1F_LJUa7ECn9XAJjPPqMA3edfVpaoh1gmn1m1BfQUd4jt7CqvvdmRfmPVWS65IxTmLmfZ3RVeCrJVZDqo2Yi06La4ZCrk9VLjFu44YAZjuCRA2HPXbKqDkYdQqfQkxQKD2H8S6g",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTg1ODI4LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZDA0ZjIwYzktMTI0OC00Y2E5LTk3MDgtNGVjZTg4MDNkZTg3IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLXFSV3dPTk5jRWNQVmlycEs2YzNBaUk2NV9fZDA0ZjIwYzktMTI0OC00Y2E5LTk3MDgtNGVjZTg4MDNkZTg3IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLXFSV3dPTk5jRWNQVmlycEs2YzNBaUk2NSIsInVzZXJfaWQiOiJ1c2VyLXFSV3dPTk5jRWNQVmlycEs2YzNBaUk2NSJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJ3YXdyaGJrN2w3QHpodXJ1bnFpLmxvdmUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzcyMTgyOCwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJkZTk2NjdiZC0xMGI3LTRlNmMtOWM5My03ZTBkZWEzZWU0NjAiLCJuYmYiOjE3NzM3MjE4MjgsInB3ZF9hdXRoX3RpbWUiOjE3NzM3MjE4MjM5ODgsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfMTZmY0JjRVowN3BOZUVxYTFSbEc1THRkIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfGZRNG45SmNhYk1tRXM3WXVJam5oMkF6VCJ9.ciAOvGjQN85lRyCUSClsqg_SuI_iisI4NjYxbEe4OB_FhoqwJD41MoqtgJJa8nNgpZtoBTL0CS7-kbYYTqB_woNPyT5FLmPh-kfN2YGtpybXu9hqjJ7zaolDdUuyPUotRg_lk4MnWjbaP2IGv4PFy98J48t9LN88d8fP-h6JPczOKGu5vYS8F98BneLAaiUmVXi_bIb0sbBQQHghkXz6FHsx8CVcCgrOquHE0-ZaRs4Mjb4MSdB3dkA_YTc6OUw1spFhDOZaTXZzpOORn8uOmnEqv-9vZuTWlpaatsml0heHnGQr45vdIRGNgWgbnYFyNdGKfx1r48mdeAtZRWkJqJ_Aa1nhh_pV6QFTxVZKaib3f-xUBOIwx3w89vsadHULYPRy_yU5sHYexlHSODDtgcY1k1KaXNrIA9p22-oCmK119k0nTn5EGsfAgBoZHhihVv9iYZK7egA9s2vJG0kO6v0EVlpVWCyzlni9gYqUdDoD4W7VPBH6aO5e0IDnbvcFCNqI8oegwnmzSe5faAOwq3vvqv-BUJ96gz8zX7-NydzjZehBzjYcynzF29IjyZVm5V6Pd0X9oXosG8vtqeuqSUMiS2F0-EvyNdHOWIWFhxsZkA_4YcCZwbnnsIUuF7iMeNh9EyrC6bUcJhhIWqrzTURuiuFHp0KsZWf9qoN9JUo",
+      "refresh_token": "rt_zmjtS34rKyF8zwehAi36gE3oQRSat6DOCMf2GVuwpvQ.6cKoVvqR5_1fUWuKbtN7yFMswzggHP6tESwS1CdBYU4",
+      "account_id": "d04f20c9-1248-4ca9-9708-4ece8803de87",
+      "last_refresh": "2026-03-17T04:30:29Z",
+      "email": "wawrhbk7l7@zhurunqi.love",
+      "type": "codex",
+      "expired": "2026-03-27T04:30:28Z",
+      "password": "wJ9lL6NzzfPi",
+      "first_name": "Charles",
+      "last_name": "Taylor",
+      "birthdate": "1979-02-27",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "82J2-ZK2K-ENF3-Q9M5",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317122900S45S3S",
+            "cards": [
+              {
+                "id": 197123,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336378183963",
+                "cardPassword": "686",
+                "cardData": "{\"cvv\":\"686\",\"expireTime\":\"2026-03-17T13:29:03.766927152\",\"nickname\":\"82J2-ZK2K-ENF3-Q9M5\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: d413d448-21b9-11f1-82de-8b44ab39449f | Key: 534933 01",
+                "status": 1,
+                "orderId": 256410,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  12,
+                  29,
+                  6
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  12,
+                  29,
+                  6
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  12,
+                  29,
+                  6
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "e98a074333e04c7c8b611c3e699cecce",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336378183963 03/32 686 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1u6l23PjuhPvGD4VsbrWp...",
+            "获取 Stripe 指纹...",
+            "guid=988b5c90-3b2c-4ffa-9... muid=6d21e83f-5e1a-404a-8...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiVi1XcmxSb3dKbHdRa05JU1Vta1BnZyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNjg2MywiZW1haWwiOiJ4d29ldHFjZTh2QGdlbWluaWtleS5hcHAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzMwNDY4LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMDFjZDc3NTItNDc3MS00YWUwLTg4NWEtYzVkNTE0MTlmOTA4IiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDU6NTQ6MjMuOTg0NTU1KzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1iYWl6NWxMUTlJdncybFlCOWNnV1FXTG4iLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy1oTk8xYUdTTUwzbHZ0aFdmckdOcUhDZ08iLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1iYWl6NWxMUTlJdncybFlCOWNnV1FXTG4ifSwiaWF0IjoxNzczNzI2ODY4LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImUyZmVlYzliLTA3YjgtNDgzYy1hNTk3LTA3MDljZWJkMDk4MSIsInJhdCI6MTc3MzcyNjg1NCwic2lkIjoiMjZhOThlNzMtM2NhMi00NzFlLTkzMmYtM2I0YWRhNDRiNTI0Iiwic3ViIjoiYXV0aDB8TFlnWUxxZHB5RnZGUHlIVjJaNjhwcFJxIn0.fw0BiYoaLkG0v10Ru3760EU9jsE3wU72VF6zBS-9Hp8i8v6P_ls5-5hyGifrqHEDoGO3Ql9rzvVZcrGwO89i31_rvXj1Idri9xq9hDU30sLJ9Xlu8MJDQzu4_5t5iTGiqI9m67OPaI_ED1_lhMCx1Yg3-wkRTlJ1OPsLTaorSudKureGTd5s7htLDhVsJneawBwDx0vXGaXJKg33nYJtJF1DgBHQA9TVAbv5X5i_3k1ZPxTz4b8Lk6crkYxVLAoDRUmf-W-7eosRPzZcVeNwUNUdmAW-A8_V5RXHnPMdGZqO6tJ3weh87VDuodbZfna9Trgxto_UC__3iWGM4_zVNwCfZ7hKSf7Uv4qhznTeIG9unOma90TpWgRLEVDqGs20cvl5Y-mdlXarBrCJEPSDzgEir4DvPTRkZHyyOuE6wB_IHYsd61pl6ykGhOvhbky2LHdkLa87ePmcHX613BVLRlzcAAHq_1AJVOWCcfEVxbgFFnb0XCvgxWL5vfUE_WyylLPqP1wvBx8_r1HE9KtU4_jPTuFx28F1ZFJz_lHUgDXgE4CQv3lfpnD_Xoup1_vyI6ds-uyh0ww3dmx9ZWBTdJJ8wdVHzkbBljKeqnte3D04l-kAZgcKWDje_nMKy71PWmXmeeKgB2blfOJDI6IhMX1RQjndMrWCcQiEMA15F-s",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkwODY4LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMDFjZDc3NTItNDc3MS00YWUwLTg4NWEtYzVkNTE0MTlmOTA4IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLWJhaXo1bExROUl2dzJsWUI5Y2dXUVdMbl9fMDFjZDc3NTItNDc3MS00YWUwLTg4NWEtYzVkNTE0MTlmOTA4IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWJhaXo1bExROUl2dzJsWUI5Y2dXUVdMbiIsInVzZXJfaWQiOiJ1c2VyLWJhaXo1bExROUl2dzJsWUI5Y2dXUVdMbiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJ4d29ldHFjZTh2QGdlbWluaWtleS5hcHAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzcyNjg2OCwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJjMjIzN2JkNC04ZDMwLTQ0YTktOTJmZi02N2Y4YmFiMGNjY2UiLCJuYmYiOjE3NzM3MjY4NjgsInB3ZF9hdXRoX3RpbWUiOjE3NzM3MjY4NjM5ODQsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfdFVmaXBXYlowOFhqdzZGMUFLTDV5aUZSIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfExZZ1lMcWRweUZ2RlB5SFYyWjY4cHBScSJ9.AF2clahuXz6Zg4E7Indq5nCAfPkc0AlGutEqQF85UuNUpN_Va36eTblrijX_WskK8A9U8kaN_2AQHG6I246lHVCPJ4mgDtfevfNdN4tqFvHjApLebSnFVTkxmHls13ECsKK_Jo5vB3-PXlspSMKcTK4QaBREVCmKf3qufVnUsNgpHKOQCK_KRiq7bW4IHxaf0JhjVcQty018sCMXl2o0zFG2hIEEDE23RLpS5NFRlD8QAvD92_QJq3uZ0qO0VGDnkDl0_4AplRr6Y55LFopbNgeXFwpC5fR3gyO1mCJz-dzgYD_aG-fhoFuRhGJ9QJ6OBY9mVNHapbdP_A8M9fn0kJZoRP-KZH2ITTvX_4_2UFjvhpGpwKbcj8XmTooNwbYuCivd5Zdq2aT7hjj3SY7tk7gosqaS3h_mIIGKDyVgAwwqW-2xDJCoRo1A0FYi3KkS4ftH7EM2ZTXyzBAIeOyFTSCc6r75xG2LlZuTTpTXmO07qkyeRPmz6LOepgJYxaVWzc_UVmiZ9-RgwLF82JOCQIOf3d6aGq4G1CKxCUNDvTDwXUP-ZpRe0xU5VQLk-oyvgGodjEUH42iM2git1mgFZdS7cvl_guxysbWEMiKu2Sw4AjJEWo8nEM0eJ7tqIKZNd3gDk3N9iugPhjY7Hopb78vrZFppX6l1DTxt_6LMFjs",
+      "refresh_token": "rt_aPylrx0Ui_O5QtJ_ZFJavvU5_jihNuxEIz3c0ke8l4s.vB7zhEinBbSwpWInC_8VT-kfiGMLgfL87-70xtpC0L8",
+      "account_id": "01cd7752-4771-4ae0-885a-c5d51419f908",
+      "last_refresh": "2026-03-17T05:54:28Z",
+      "email": "xwoetqce8v@geminikey.app",
+      "type": "codex",
+      "expired": "2026-03-27T05:54:27Z",
+      "password": "WwCdCn7y00xq",
+      "first_name": "Jennifer",
+      "last_name": "Garcia",
+      "birthdate": "2002-02-16",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "D66X-FNUA-QMWS-DWTQ",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM202603171354045MDQ4M",
+            "cards": [
+              {
+                "id": 197697,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336376997679",
+                "cardPassword": "807",
+                "cardData": "{\"cvv\":\"807\",\"expireTime\":\"2026-03-17T14:54:07.814736597\",\"nickname\":\"D66X-FNUA-QMWS-DWTQ\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: b654c62c-21c5-11f1-bdc9-afdc8d4ad00d | Key: 534933 02",
+                "status": 1,
+                "orderId": 257264,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  13,
+                  54,
+                  10
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  13,
+                  54,
+                  10
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  13,
+                  54,
+                  10
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "232e70970b5c4c79aab03309f63be551",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336376997679 03/32 807 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1RttMuUX9xJFUvaCz0G7J...",
+            "获取 Stripe 指纹...",
+            "guid=497209f5-aa2d-4d12-a... muid=45ab44da-6b9e-4e95-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiRFdvM2F2azZMS3JaZ1NJSmk3WjFVZyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNjkxMiwiZW1haWwiOiJ0dnRrZzB3MWdwQHhwaGRmcy5tZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE3NzM3MzA1MTYsImh0dHBzOi8vYXBpLm9wZW5haS5jb20vYXV0aCI6eyJjaGF0Z3B0X2FjY291bnRfaWQiOiJjMzU5MDgwYy01NGY3LTQ3YzctYmQ0Zi1iY2I2NjlmNjA0ZTYiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfc3RhcnQiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV91bnRpbCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fbGFzdF9jaGVja2VkIjoiMjAyNi0wMy0xN1QwNTo1NToxMi40MzkwMjErMDA6MDAiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLVRVWWxiMGdIVUJST1lobGxjUHo2S0tGZCIsImdyb3VwcyI6W10sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLThldWN2bWpRaUpQSmVISDhERGR4TktDaCIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLVRVWWxiMGdIVUJST1lobGxjUHo2S0tGZCJ9LCJpYXQiOjE3NzM3MjY5MTYsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiODg0YTFiNDctZGY1Yy00Y2FjLTk1YWItMzM4NGUxNzY4YzUxIiwicmF0IjoxNzczNzI2ODkwLCJzaWQiOiJkZTQ3MGIzZi0xNjBhLTQzYzMtYjhhNi05NTMxZWM4NzkwNTMiLCJzdWIiOiJhdXRoMHxITmhvSFFQWHJ4SWROYjhFVlY0a0hlNXAifQ.Dva5IRArgkvW9__0u22hl2bSnuhehr1ZQJNFIgx-BhBxo8dDGJIyJcH5lnNUAR6l4KAomI7tGr7fY3W853tGwvPqNGdREVSxN-Pfio-3YuuR6KeBYqdk6vpFd0Nyqk1jTSmk5IknL0NV3HZQg6CVXNR_SFxf_zQP7xj--Cq0ER3jPhDozZeA-pRpS8RV0I7xaRXs-xH0Av2aMLgPAWeDUNpXX_iVmdLD-lw2jtvZebrXrphjGuXU2YlDV8-TFbcERKGJ18i9_exhBNpKFILGhv-lnxUy6gZ1NeHnh2QfjdwM9hrvzylzET8iSNDBgqC_eOopfv_814Y-w2p6AAdlS8lWrS_5vWGLt6QdWetUC-vvJqWwoHjl2dL69LCkOwkFv_u_NJ8KUaSXzGBuTzTTlpmNWWeOli1W4W156ThUeAYzkqQxcbcR8_Ykk_5KO93FmEh8TlL8KDW0gSOaQQm7SwA15iCjBZNFfRsV4V-lPgykTLPDyXHDd3lExLBgBY4dy6_GJvy02tm8L2_PNqO8qBVlCNnRVjk8qownC-ZTX6_FVFGV_SaCrQF_ey8rJrNqV_iEhqkclkLBKNtfft5Pk0pfzd07QIzFWsvzKKxev0de_uIuGL3XybS28f8Y0s_ivCChKWMty1jfUakl1dSKm0-_PzTeRvJunhW70eRHpOw",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkwOTE2LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiYzM1OTA4MGMtNTRmNy00N2M3LWJkNGYtYmNiNjY5ZjYwNGU2IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLVRVWWxiMGdIVUJST1lobGxjUHo2S0tGZF9fYzM1OTA4MGMtNTRmNy00N2M3LWJkNGYtYmNiNjY5ZjYwNGU2IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLVRVWWxiMGdIVUJST1lobGxjUHo2S0tGZCIsInVzZXJfaWQiOiJ1c2VyLVRVWWxiMGdIVUJST1lobGxjUHo2S0tGZCJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJ0dnRrZzB3MWdwQHhwaGRmcy5tZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzczNzI2OTE2LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6IjMzNzUzMzQxLWYxYTgtNDY5MS1hZTQ5LWZkNzc4ZTU1NDE0NSIsIm5iZiI6MTc3MzcyNjkxNiwicHdkX2F1dGhfdGltZSI6MTc3MzcyNjkxMjQzOCwic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc19zV2JwWENDUXFyRVNNb0pKU2xPWVNtTVUiLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8SE5ob0hRUFhyeElkTmI4RVZWNGtIZTVwIn0.CTNGrTYXZndVkCXCaKl6c_IUgpkRmUrKTmczG5pJQOvjZgKLMK3gJpp5DkUXvr1bozhd5jw_YI79Ham58X4JYD8VEmsX3HdQWFXf41ah4GC1h-raAf0dDByQZarvRxvwH6MsLefqlHat3kdVeExtQdR9_ZN7GqgdzJcip57QEjoYtBBEwoxIIQ5VaR9Dq55Q-nJZ722AiE5arL7nqTIfKGTAXd220Hl5Y0rGqHr0T19-xVCggefFoPrr-lF0Ow7ytJ9HytcPW1XN3J9kUOCUeDVYBBSSpd3nByNeB0P0n7ikN3jHOlHWqpcBQHHtER1Oq2E4jKvoWzxHKBj_m1XiuZ5kT5dLeUIFbyvQMIvHyMvxE9W5L4kcrxBhjNBcm4yi7Fwwxg7l401qBLnmHdVH8lulhdZaQYTfoeTKAVKXyzuLl9q-wzKAytkwQ69fTBoqjRFv9J4IdGCOfyw84ba8hZxxlqXZoNANTxK4RoUQD0J8NQye56v0gMTUL1FcWgRhJQeOKJ0UKrWUFQExgD_S2mD4Kk3eJJA6tYkPuYBEtQz8UGtvqSTMjV8nIOpCccQ7vfwpfdzWXCObH3Okwr7R5EUHNfvV_WuWZCP1G5SPAQ5nZG6l0N3SXMSFfNQf2cYPSgXDwainUt_QvQWKJBB8PQZNp2N-iOk-iyHJ0-bhwFc",
+      "refresh_token": "rt_hLY6HzT5EdvaFX0C9gRIqvNgRLLgF2YuYHYw6ELyiiE.mz8ZRBWb457VI9ekzrDD8on59c8dRco_vbhf7hOzgWY",
+      "account_id": "c359080c-54f7-47c7-bd4f-bcb669f604e6",
+      "last_refresh": "2026-03-17T05:55:16Z",
+      "email": "tvtkg0w1gp@xphdfs.me",
+      "type": "codex",
+      "expired": "2026-03-27T05:55:15Z",
+      "password": "Mzr63OxiHH3c",
+      "first_name": "Sophia",
+      "last_name": "Gonzalez",
+      "birthdate": "1983-05-28",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "D66X-FNUA-QMWS-DWTQ",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM202603171354045MDQ4M",
+            "cards": [
+              {
+                "id": 197697,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336376997679",
+                "cardPassword": "807",
+                "cardData": "{\"cvv\":\"807\",\"expireTime\":\"2026-03-17T14:54:07.814736597\",\"nickname\":\"D66X-FNUA-QMWS-DWTQ\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: b654c62c-21c5-11f1-bdc9-afdc8d4ad00d | Key: 534933 02",
+                "status": 1,
+                "orderId": 257264,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  13,
+                  54,
+                  10
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  13,
+                  54,
+                  10
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  13,
+                  54,
+                  10
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "232e70970b5c4c79aab03309f63be551",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336376997679 03/32 807 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1IYIHr63F4hrcBKovZWOr...",
+            "获取 Stripe 指纹...",
+            "guid=b51e6493-8484-45cb-b... muid=5d7936f9-d3a4-4521-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiSVFhVkhmYWRaLVN4dXFDb3NwaTNtdyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNzQwMywiZW1haWwiOiI5YnptZGhrNmJ1QGdlbWluaWtleS5hcHAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzMxMDA3LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZmIzZGZiNmUtNGI0NC00ZTcyLThiYTUtNDljNjI0YmI4ZDFjIiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDY6MDM6MjMuMDI2MjQ1KzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1mellWR2NuQzRjdzBpS09zY2xHblBzZzAiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy11MlFCMWNYU0tPQ0JqQnpFM2hTYlNyUUUiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1mellWR2NuQzRjdzBpS09zY2xHblBzZzAifSwiaWF0IjoxNzczNzI3NDA3LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6IjNmNGNiY2M5LTU5YzUtNGQyNi05YjY4LWY2YWNkNzQ4NDViYyIsInJhdCI6MTc3MzcyNzM5Mywic2lkIjoiY2Y1ZjViYjgtNWNiYi00OGZlLThkNTItMDEwZDY4Zjg4YzJiIiwic3ViIjoiYXV0aDB8M2FrQnpIMjk5NFdzRUluRHJpcjZnblQwIn0.gpNCJXtY7YLF_kxh1M5Vc6JW-7Sus8UcTffXge2YMb3DZRauF5XBAzgblvlFKkforQEp1W0tNhwN_MhHKifKSvL195Wq53QiV63YDMXWBQDo4SnX42qnK1DH8b1Hh3vj7pulLKSl23M629yL4T6wKmahqf42tEE033Emh_G21rYKYJrc8uPhh9jnrb5pVwehVPx9LR4v3rxxhT-34MVcaIPR798QQNE8Fcxke997lNrUyT0-bapjkWNpJMvgD6q9YMGCtRA-zEl6CDmlv7TwTaglt1cwvtJpm5AsIz3G6z98IcrrOoBF6T-udeGdgfEO0hAXhUqF1OVCA-FQrjgTUFkBaShg6okwp9pAOEJOuqfINR8XRsYgG6fWp0wqSm9QCqj3-eWKlhcwmdwzLOEVTFsfggVcTmIJOM2DHlr_OY7N3f86HHYSQ6EAznhs35N0jBmX5BUk_vbOAsp_puDXok1y9Z5tDD74hDsuDJTyZ8b9eM7Whe42bumjgZrROxOpqrUbekcjGTx1MXqjA5XR5CBOcFD3jZaGdRAOWKoDfIzwY9-RV053Ch0-IsTZ-haDd10hXuUFAT7S65ilP3ZQT89JiYClsbQL04FWJCdv6efV2y6SbXheaXEY3_kkUMD4q2vk52Ro9QiR3sUyR_NzjNOMoJ3D3zow7caQqNEI2Cw",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkxNDA3LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZmIzZGZiNmUtNGI0NC00ZTcyLThiYTUtNDljNjI0YmI4ZDFjIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLWZ6WVZHY25DNGN3MGlLT3NjbEduUHNnMF9fZmIzZGZiNmUtNGI0NC00ZTcyLThiYTUtNDljNjI0YmI4ZDFjIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWZ6WVZHY25DNGN3MGlLT3NjbEduUHNnMCIsInVzZXJfaWQiOiJ1c2VyLWZ6WVZHY25DNGN3MGlLT3NjbEduUHNnMCJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiI5YnptZGhrNmJ1QGdlbWluaWtleS5hcHAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzcyNzQwNywiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiI0MWFlNjM5MS1lZDIwLTQ4NzEtYjM4Yy04YTQzYTA0NDI5NjEiLCJuYmYiOjE3NzM3Mjc0MDcsInB3ZF9hdXRoX3RpbWUiOjE3NzM3Mjc0MDMwMjYsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfRlJEenhWMzJUY2NHYVZ2TzlnZTZwZ2kzIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfDNha0J6SDI5OTRXc0VJbkRyaXI2Z25UMCJ9.DKmf6WY8WD0JK6235QGIBqQQAkOojL7kKRIkYe-iq4GiTzKz75kFUGYuFeOHDroi9a_jY_XA5eTy-dwnWiAGTjdDViUH_Ay2piVIDRwpUQ7IQ07PnF1C70nFU5vjR-xYcIlAVUdGYDmK2VaDsgyXO6GUif_RYvPTMCY5qoMq8CSphm5s5UjORFgHDTd3gMitUvRAJVge2mQNsbD7ljaj6TTfceX2rsrjfMXT2gIAvwLS5G9qeN8k-zae8YgIxRJREOjiEjGcJQnTnekZ9I1hb73YDrdH_HAwueF_UacWjwNENeQg0Cl_MVQn8VLiSsXJILfO0Mi3OIEIVHNGgaOvuuLj8oSXfUBgtANrN3qsXeHLjY9UbqKLqYyCB36U7Ago2okqgJF0pj9Xc2ZwRMclkBSw1QnKpBWkC4YtPGyyhK7CbNf-ZctqwGEjSTUZUkyws01VVU6yirByGjKsyebc1X9aXjD6xRpW7sg9kAhvGtdW4az6bq4mViwQnZjUj3wETb-lieZ2WNy_7lN2F0TdYwigyrncHMktB9HOEap_UCHJ9RpztT_dnjyKHaASrwES_YGs7KInmEw4FYDKumoDEGWCETl9fqzDeeKrK_xbeppO5u68G1wj-7u63rMuCJIJy02bwy7fG6JepPflDiiC-mHuDx0JO_2-8xQCyomI_xk",
+      "refresh_token": "rt_YIHr9JOabB1-J5WA7gplK92c6HjT_dNU_ehN-tOxRvA.4twJ8B4rkf7YKKz2y12h93BhzxllRCRXt_vs-X7Tkos",
+      "account_id": "fb3dfb6e-4b44-4e72-8ba5-49c624bb8d1c",
+      "last_refresh": "2026-03-17T06:03:27Z",
+      "email": "9bzmdhk6bu@geminikey.app",
+      "type": "codex",
+      "expired": "2026-03-27T06:03:26Z",
+      "password": "mAP2Ai6hOquc",
+      "first_name": "Emma",
+      "last_name": "Thomas",
+      "birthdate": "1990-07-11",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "GG2D-3XP9-MADS-KG3K",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317140304PQVAWB",
+            "cards": [
+              {
+                "id": 197772,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336376995061",
+                "cardPassword": "076",
+                "cardData": "{\"cvv\":\"076\",\"expireTime\":\"2026-03-17T15:03:07.666969612\",\"nickname\":\"GG2D-3XP9-MADS-KG3K\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: f81bed64-21c6-11f1-9403-87bd866d5fb9 | Key: 534933 03",
+                "status": 1,
+                "orderId": 257441,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  3,
+                  9
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  3,
+                  9
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  3,
+                  9
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "765bb3c23e83411ebdb2144265e793c7",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336376995061 03/32 076 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1QPfOAtPVDiQIBHAz8aFu...",
+            "获取 Stripe 指纹...",
+            "guid=ab10a503-ddd1-45b2-9... muid=6de36564-5847-475d-a...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiZ3JWejdfN01UOHl0MmgxbUE0UnRhdyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNzQzNiwiZW1haWwiOiI0MW5zeGJ1cmRhQGdlbWluaWtleS5lbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE3NzM3MzEwNDAsImh0dHBzOi8vYXBpLm9wZW5haS5jb20vYXV0aCI6eyJjaGF0Z3B0X2FjY291bnRfaWQiOiI3NDMxMjgwNC1lMWQ0LTQ0Y2UtOTg2OS0xMzQ5NGYzNjNlODYiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfc3RhcnQiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV91bnRpbCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fbGFzdF9jaGVja2VkIjoiMjAyNi0wMy0xN1QwNjowMzo1Ni44MzM0MjArMDA6MDAiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLW4zZnZxTDhrenl3ZjJoVklUZE1xUVZrSCIsImdyb3VwcyI6W10sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLW9qTXlEN29ZalJka2JjS1lIc2FmdFRvMiIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLW4zZnZxTDhrenl3ZjJoVklUZE1xUVZrSCJ9LCJpYXQiOjE3NzM3Mjc0NDAsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiMjU4ZmZiMzItNTNmMi00YmZiLThjMTUtODMzODY3MWI0NjUxIiwibmFtZSI6IkNoYXJsZXMgR29uemFsZXoiLCJyYXQiOjE3NzM3Mjc0MjcsInNpZCI6IjgwZmY3MWY5LTNiMDAtNDM4My05NzI3LWViNGJhYTgyMmE3YyIsInN1YiI6ImF1dGgwfGFFbUdiUkZHelV1bUNEeGc0TkdrYWk4YSJ9.bRaTizqtIQP5JDxTz5azWLqkiZ75TfHmPhi0031luFY8B2B9CiogOMLaMrlxsXhcyALPC9O7WGwxIoU9tKYRjSysNGD_EGgrc49aWBiMFu2YKY97Sbe9DPV1fEqqf2bFDeEZyb8-mAHzaMGfeKBU_nWmskfB92b3wHfjvyCfDq-UP3Vf5eaz8CRbpIzqMa8UnDsI8sCAdPHJJ_T-S7VK6kfLag1bqXM-zDq31mCxC9W-2kAPc9kA5WdF85pcio6ma8DkoaC0jXAmGsTH226uUV8U2uw7Xe0D7b1Wo9bfPY3KusqTBQ1uu_kr4jC0N1l5v46fwaG-jh3wNud_6Dx6nwixZW9YdTeiWz1P_M9q_u021AbwTcgVgD4bPdtRtq6lDcal2A15d1f-CmhSpM1FqrvZalvzP7hW5LsSWxI5KwZkOkrfElK9cqLsHp2x8pQt7xF8QjZ7_NLZOqtL7HSs4lie2HAYRLf2N4Ta-qobxEZbHs76TQV2t_FXxS0wVBRScy1L8YKeHV0g_zqnZUePRYU89-h7OkWp1cY_rOv4Vc88ol_VA33WqOA4y3M39rq5IVm-WngCik5ErgDrd_uK6XYYPwC-xWAw5mi_Eacs7wBRZ3OhCvN7OlLuizrdVDOrmdu5j3gy3KGHGmgGncqaAPyvIrfd040R7ntx-Op-IRY",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkxNDQwLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNzQzMTI4MDQtZTFkNC00NGNlLTk4NjktMTM0OTRmMzYzZTg2IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLW4zZnZxTDhrenl3ZjJoVklUZE1xUVZrSF9fNzQzMTI4MDQtZTFkNC00NGNlLTk4NjktMTM0OTRmMzYzZTg2IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLW4zZnZxTDhrenl3ZjJoVklUZE1xUVZrSCIsInVzZXJfaWQiOiJ1c2VyLW4zZnZxTDhrenl3ZjJoVklUZE1xUVZrSCJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiI0MW5zeGJ1cmRhQGdlbWluaWtleS5lbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzczNzI3NDQwLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImVhOTdkMDM4LWViNjUtNDVlNS05ZmIxLThjNzY3MmQ4ZmZlMyIsIm5iZiI6MTc3MzcyNzQ0MCwicHdkX2F1dGhfdGltZSI6MTc3MzcyNzQzNjgzMywic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc19hNjB0TDRLa3pDQk9CYVpSSGJyMGNsbWUiLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8YUVtR2JSRkd6VXVtQ0R4ZzROR2thaThhIn0.jHhwOnM9M3Fzmk1B8aYvzSTaAHUepm-UEVEQT8NJ41Mewtec0Ov6OsvsOVwwHXppe5oSBzbyPMZLswgcUAEFp5PxcghCYleHqeambszyssQOyPPUHY508_g8rkzJYjt_FMXW9C7ROMaEgTsyp2SEHh3Usgv7uWyMVBENWJqyNx9bZ_u95x_ssTefeZ5UJyfa6RklAh7PYt-U22gk46qlNDpzzbkPI6iJgJ-WHio1AVeRSUjZJYLhY9pw3HstcdmhlOdgh2guJSRYpo_TTCtbaYFO1Td8nmxMNThh1XIz4zqjl0ikpXHjAQPQAX8CPafMy8_z3flVvNa2ns-YLArLOhN-Z7-4vtWV7cgbnJ6O93W906OOqj4YUlnqaaS5H0C6rGif_IBHFrVY8XXtA6OQlVR3V9uMKqcmWP4EgY7bulYB6Wb9sA3vISX5ZMKIB2n3KqU4wom9l8cXIRv3QmqT8rs9PgEIuTdmaFRMda0MYVCNITuqOb7QB8DyZXE6FBdQEbr-GHD0tD_oqLKNj0y8BxRebq3SbU4NzdKhRaXjUt-sZ6oJJR85UipmmukUC_3tyNkwMw379SxEU4ZWec6vJ1AGu7tL-hG8sFckJQRDI3jmi5qKSwy35V-iDmIsVjbpcLMi6DX8ML10K3ItTMEK-Gah1bL3FJ9eyXA7ltkgfe4",
+      "refresh_token": "rt_GH1oFSwHeSstK2-bWZGIYG0hsuC27Jk-HqhA-DcK7Ik.oF5p-o7vYUkQqOYxGgD2QVi5Tr5bgKPAz5dRiKsJ23E",
+      "account_id": "74312804-e1d4-44ce-9869-13494f363e86",
+      "last_refresh": "2026-03-17T06:04:00Z",
+      "email": "41nsxburda@geminikey.email",
+      "type": "codex",
+      "expired": "2026-03-27T06:03:59Z",
+      "password": "vHPf4JOBQG9R",
+      "first_name": "Charles",
+      "last_name": "Gonzalez",
+      "birthdate": "1981-02-28",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "GG2D-3XP9-MADS-KG3K",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317140304PQVAWB",
+            "cards": [
+              {
+                "id": 197772,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336376995061",
+                "cardPassword": "076",
+                "cardData": "{\"cvv\":\"076\",\"expireTime\":\"2026-03-17T15:03:07.666969612\",\"nickname\":\"GG2D-3XP9-MADS-KG3K\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: f81bed64-21c6-11f1-9403-87bd866d5fb9 | Key: 534933 03",
+                "status": 1,
+                "orderId": 257441,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  3,
+                  9
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  3,
+                  9
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  3,
+                  9
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "765bb3c23e83411ebdb2144265e793c7",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336376995061 03/32 076 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1Fnp3jyQQkEPfmUMEcclr...",
+            "获取 Stripe 指纹...",
+            "guid=f2dbddc7-1ea8-427e-a... muid=34a2c217-9693-4421-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiUElPcVJwMmF5ZE5QSnk5dFJ0c2FYUSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNzUzMSwiZW1haWwiOiIwamc1bWJxNnpjQGhjY2MuZWR1LmtnIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzczMTEzNSwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6ImZmZjAzYjJhLWI5OGMtNDE1Yy1hYTMxLTA2NDRjNTBjNDYyMyIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE3VDA2OjA1OjMxLjk1MjY5MiswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItUmR0ZllEYUNHSkFRWXdLUkdtM3FOZktpIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctc0o4OHFVcXdpbk1EeWtxdEQ3MU9UWFd5IiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItUmR0ZllEYUNHSkFRWXdLUkdtM3FOZktpIn0sImlhdCI6MTc3MzcyNzUzNSwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiI1YzU3YTZhMi0wZTFlLTQ1N2UtYmQyOC01Mjg5MDBlZmFhNTIiLCJyYXQiOjE3NzM3Mjc1MjMsInNpZCI6IjEyMjk2MjM0LTUzNTQtNDAyNi1hM2ZiLWFkNTMxZDg4Y2U2NCIsInN1YiI6ImF1dGgwfFJrTFFEVWtFbzJRa1VIWkFMQ01wUElUbyJ9.bDx5YWluTzEgPqCS13hd2i0-daJ5CwylqPa1t5pyikT20TMZVX3rpJCbRMoc-hKzaACivGnIpGo3BeJJWq46takpkRA6Mp7-dVK_PSOk2okA5TE7SVdSa0qEdLO5Pmf9E1qppT4VGa4DWBwvkpq6ejx9S9bfSD-1EBBJr07cRcHjnBIliU7iCP8IzAK_dZggzi5ZFqiP8HN5GuuOgxvX6-6SxSid10dN8BMHiofEAmopWWpn2jx3T0YP8LzbqWDJMmezApSHLUajWBjhJPyAJR6EyOAvTNDAR_GUe1gquJ4fAZZ9GKkiGeWasdRuDOxnuDPrNjl459W0ambMzxjDrCKVTBm8DqFbbpTD3Lv1njwGjXZB50BfBFIb0Rbx5SE-Hmo4UGlK0w7dhZ7NaK2J_d_tQCW4sH2Yn6ap5GX1ArCbSzDgHoEqvNjfQKu1wjuC-pv7GQh_tRW99xuPiMxJv-Ra-Jw74AiqctYP8ZGDnKp93bP9kt_lJDaoGxP2AzFV1D6G2Jlu76Ak4ydajr-T04Xqa1DFhd77KoiCjMtPMTXTdJZyJZb9l_LOhHoI7aGlWXECFNAMjOZiqqyX9niR6QMSuvLilJeLsJczzdI2vmLPmTm93pYkdNTr3lJ4QjPpXu3Fz1urwMrITPlvtGcOCd0oamtdiP0PEntGWrL4zHs",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkxNTM2LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZmZmMDNiMmEtYjk4Yy00MTVjLWFhMzEtMDY0NGM1MGM0NjIzIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLVJkdGZZRGFDR0pBUVl3S1JHbTNxTmZLaV9fZmZmMDNiMmEtYjk4Yy00MTVjLWFhMzEtMDY0NGM1MGM0NjIzIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLVJkdGZZRGFDR0pBUVl3S1JHbTNxTmZLaSIsInVzZXJfaWQiOiJ1c2VyLVJkdGZZRGFDR0pBUVl3S1JHbTNxTmZLaSJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiIwamc1bWJxNnpjQGhjY2MuZWR1LmtnIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM3Mjc1MzUsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiNDBiMGYzNGQtNGQzYy00NWRjLWJlYzQtNTY1MjU5NzhiNGYxIiwibmJmIjoxNzczNzI3NTM1LCJwd2RfYXV0aF90aW1lIjoxNzczNzI3NTMxOTUyLCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX3JNUGw2azdXNGJTVXlPZ2Z6NVloaTJUSSIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxSa0xRRFVrRW8yUWtVSFpBTENNcFBJVG8ifQ.LlnbOAkumO12UqOid81bPNe0Hb-UkhdOWP0jMSVlbz9RvvpzYJzeobeq9I-a1XtUNTMYRGbkmFwR_bnbtq2trpyoa1xPqDatU6hCGeb-hwtMRc3X2-ollDhp5hHMfMrueBkTDhX0FS1XNTITzaaaqL-cJsgKXa30EMjXeWJ2vaGhscAwDLsvj0ksb2xdaRz-nmmDdHhFyAti_q-5tDn7y38zRZZJulFYrjFuLT4xvXgOdDVxuw8b087b4Rp9Pz7xvNxUmiqPDOsHK6KWNnW1c4zoswIAfXuBi5Q43tRVbhkH9GwcpQC_m7vrEz3b_F_YhgIwnPORvpIlbCP8Jh4IqCGJ3Jgn-g-M2gTTqrUDX3PJKjOf5iuOoW4IbeWPgaR3zpPOZJw1yZwjO3oZO-RUqkx80n7L8L-5fec_S14diw2coT6gPchgzCsVGnGSHj-XZY2sgRWRHPeNxYo8hx2DlUl3dPKhXXPekFGuiSZY9DqIbghXJWJXd5iZWcCZARoQlUueaQNVp44PUQYR5tMQLIuY7fCbJ56M86rfNknLHFVorWh5MEKXy-4rc0LqfVqi0qgWpgpFqYvaQHvMRRou32bHvf-8_K4-oZmx9zlnC74NuZSLATiWb2_2fcSlmTYRcPJKYF2IfGrm5blXTLGYlT2e4DRm1gTeNkAOldgLucs",
+      "refresh_token": "rt_t_twvlu-NlkzX47lJDbYMf45YBDRIFKg0twkQYB1qUI.CXBKEZH-4jw7llvI7lu6dMjw_KD_uHuOuseHHFYZudE",
+      "account_id": "fff03b2a-b98c-415c-aa31-0644c50c4623",
+      "last_refresh": "2026-03-17T06:05:36Z",
+      "email": "0jg5mbq6zc@hccc.edu.kg",
+      "type": "codex",
+      "expired": "2026-03-27T06:05:36Z",
+      "password": "V6E0iYtYFQcS",
+      "first_name": "Liam",
+      "last_name": "Brown",
+      "birthdate": "1992-03-25",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "PX4R-4H6P-P7G6-26MT",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317140513P3TS6Q",
+            "cards": [
+              {
+                "id": 197782,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336394798968",
+                "cardPassword": "152",
+                "cardData": "{\"cvv\":\"152\",\"expireTime\":\"2026-03-17T15:05:16.622427751\",\"nickname\":\"PX4R-4H6P-P7G6-26MT\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 44f6a2dc-21c7-11f1-8139-07e8eb24c7cd | Key: 534933 03",
+                "status": 1,
+                "orderId": 257484,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  5,
+                  19
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  5,
+                  19
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  5,
+                  19
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "3b34498eed9a4c648102da473eb513a3",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336394798968 03/32 152 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1uCFfYVxh03R4SFoOf6ha...",
+            "获取 Stripe 指纹...",
+            "guid=99d74eee-a244-462d-b... muid=72d4346d-30ed-47ff-a...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiMzNjSTdDb08wOTVaU2dIcEVlTHNXQSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNzU3NCwiZW1haWwiOiIxcXh6d2dxNzNqQDg4MDMzMy54eXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzMxMTc4LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNWRjNGVmNDQtYmQ5MS00NWQxLWI5MjYtMGU0M2Y0YjZmOGY3IiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDY6MDY6MTQuNDcxNTk0KzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1oV2l1dDdaSXhaZFByWVVhTW5nTUFxeXIiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy1RRk1lbWVvVndiREozaFhBUWJLZkdvRkMiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1oV2l1dDdaSXhaZFByWVVhTW5nTUFxeXIifSwiaWF0IjoxNzczNzI3NTc4LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6IjRiOTVhZWQ3LWViYzEtNGY3Ny05M2UzLWNlMDE4NTgxZjZmYSIsInJhdCI6MTc3MzcyNzU2NSwic2lkIjoiMTBhNDkzNGYtM2NjNC00MjQxLWIwMTEtZGUyMDc0MDQwNjMwIiwic3ViIjoiYXV0aDB8NTNnTjQxalN5OE9NVDMwZTdBSkQzQVpqIn0.kgewsdXeoijdN1ZtfwaZZjDbl9uCsZDHvBgylXjynzBZfQi6B8PIaF51KoSzKA4AZm8CK-vjKKUSfj69Z2EhVc45PXYzQOTPeplpvC5ETd58CLfl4_-QTHLVrDw1VS8oldja7M6cfzuKwR4kOO8_uNXfcj9lVrBG1fQqXsHrnJRljZkxpVSwpT7ZaNxbqLbaqdR-t0_YD7hba6BpLKHy3oSZUr8u3xzLQVdjugvqcDHzJbigMBgKxtUI1lxtlKv3d2slDufUaDBFRZxewneq77ViPrpv6oY0FFg-Lt-KhI8qmH8a9gk91Tdu159qR7I9embrMB8N8G6AKf0_Q83BI40uOizLT_iIj5WN-MhJmyzxBfPouvfL_AEKjmhSy4OvxsTkDbztzxAAPSKPYkMI_hsQj7O1hxYQ4EB0Dn_h2WDV5Wt2gqYOXJumdDgsc_WhnU3wG6RJdaBSLgTfqlroO9A2nN5gE0KPfl_M20TBwY377bBDX0LMSvmOxga4mWqodhwErKRO5pGYfkrDi0GDgOyoVnhh8rmDhxiiRxUyjtCKB2Tfu4Q1PDEey7LtpsT-lF8-xkV1duEW01-XwBGBqubrBnyRtHdl1iLYY2j-jE_KR-G7lYRK6rp-N3ARwXyUzrOjuCs2cTcs1smCxukR7KJqWU3JzFgSWPLvidjeMMY",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkxNTc4LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNWRjNGVmNDQtYmQ5MS00NWQxLWI5MjYtMGU0M2Y0YjZmOGY3IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLWhXaXV0N1pJeFpkUHJZVWFNbmdNQXF5cl9fNWRjNGVmNDQtYmQ5MS00NWQxLWI5MjYtMGU0M2Y0YjZmOGY3IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWhXaXV0N1pJeFpkUHJZVWFNbmdNQXF5ciIsInVzZXJfaWQiOiJ1c2VyLWhXaXV0N1pJeFpkUHJZVWFNbmdNQXF5ciJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiIxcXh6d2dxNzNqQDg4MDMzMy54eXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzcyNzU3OCwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiI1Nzc4MGM0YS01MzBiLTQwZDktYjg3MS1kMDQyZTQyZDZmNGUiLCJuYmYiOjE3NzM3Mjc1NzgsInB3ZF9hdXRoX3RpbWUiOjE3NzM3Mjc1NzQ0NzEsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfY283Y2ZrUFBhUmlGdkswd2JpRkVVYkxmIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfDUzZ040MWpTeThPTVQzMGU3QUpEM0FaaiJ9.EEo4lW4Fptsu7XjJQdHfFtPbPYySydTJgPg9kkok2Hrdu24kylLCBHhLHO2PafTPcxaB_CWRsxTWeWRei6MDU6ZSAhvU3GxmLN31veS2OV8ahnq_0KN48uuqpNWOHh9xbhB4VRMOHK9J8NXrSwxo_jdVmYC0pRr8qDUbnu11zmTt5n63O8H_bKO1YKfnWyf-feaY-UCALdNCaMYYyMueXRmEFUoVK-ebQtyenYTrzx0eB4fQwjEjId9tnkB5XnZGQwdsVYUZdIFMPvG1ksp5PZCITrEHTgTE31YidNMbgtsoVgcr1Sp-gVh9I5nPNezMIi4PjCEpmokPxY9XRtDbLQiSYcMWtP3IxuqzrOOMdzyvqCKYNArWvZJ7QY0TRvvGKWqHtFb5T2MXKi-f0pesNj502cnQUJzCO89up_icbOFbT7xZkZri9SzDr0wKA2YQHH4c6WeHbib0ncX0nBR45G6isWDAvyk3zI50nRPBVMfphlZPf58K_G5pSA0RSRZfeXyBADNU8JzFQNddNbGiwx6HupsCLMf8E7eLCUI6lozdvcFD4az4HWiE71sgmERm41mFJfOf16FaOCthIKAzE27qOZHhjksSOF_opxZLrVLT7CWnFezb6Dp4jR7trZwO0C15mOZ1s50fykiai6TxzxUDg9EmUP153JFfaaPeOQs",
+      "refresh_token": "rt_8aVGrL-w6g0SLDGIA7j8FafRwMWQ7ZZpInwGZsPGxQQ.sVs2-8DMrjIrjtFwmh0ihtL4rfDA-y-VZHNeaKjOin0",
+      "account_id": "5dc4ef44-bd91-45d1-b926-0e43f4b6f8f7",
+      "last_refresh": "2026-03-17T06:06:18Z",
+      "email": "1qxzwgq73j@880333.xyz",
+      "type": "codex",
+      "expired": "2026-03-27T06:06:17Z",
+      "password": "DKuool2ukcSi",
+      "first_name": "Elizabeth",
+      "last_name": "Moore",
+      "birthdate": "1994-08-21",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "PX4R-4H6P-P7G6-26MT",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317140513P3TS6Q",
+            "cards": [
+              {
+                "id": 197782,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336394798968",
+                "cardPassword": "152",
+                "cardData": "{\"cvv\":\"152\",\"expireTime\":\"2026-03-17T15:05:16.622427751\",\"nickname\":\"PX4R-4H6P-P7G6-26MT\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 44f6a2dc-21c7-11f1-8139-07e8eb24c7cd | Key: 534933 03",
+                "status": 1,
+                "orderId": 257484,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  5,
+                  19
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  5,
+                  19
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  5,
+                  19
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "3b34498eed9a4c648102da473eb513a3",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336394798968 03/32 152 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1sz47syRHg53ghZ79RKPu...",
+            "获取 Stripe 指纹...",
+            "guid=381c5f97-72e6-44b1-9... muid=ff23a33b-5e55-4f4f-8...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiZks4V3FaRG9fc1JIZXp4b2MxUVE5USIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNzYyOCwiZW1haWwiOiJmNnNzMTU4bjVnQHhwaGRmcy5tZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE3NzM3MzEyMzIsImh0dHBzOi8vYXBpLm9wZW5haS5jb20vYXV0aCI6eyJjaGF0Z3B0X2FjY291bnRfaWQiOiI2MTFjYWI0Ny0xYmEyLTQ3NzctYTRlNi02ZjA1ZjU2NDYzZTUiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfc3RhcnQiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV91bnRpbCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fbGFzdF9jaGVja2VkIjoiMjAyNi0wMy0xN1QwNjowNzowOC4yNzYzODYrMDA6MDAiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWFDdHY3Mkxvb3luRFBqeEE0cERsVmZhTCIsImdyb3VwcyI6W10sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLTExbnlGQkkwNUVpNFJqYlF5cjZEamprUiIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLWFDdHY3Mkxvb3luRFBqeEE0cERsVmZhTCJ9LCJpYXQiOjE3NzM3Mjc2MzIsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiODlhZDE1MTQtYjI2Yy00YjE1LWEyYzYtYzgxZWUyZDZiNTZlIiwicmF0IjoxNzczNzI3NjE5LCJzaWQiOiI0MzRhYzI0OS0yZGFlLTQ0ODEtOWU0MS01MDU1NmRhZDkwNDkiLCJzdWIiOiJhdXRoMHwzUEZGbEJRZ2NjenExalp6MkxkSlZ0Q3cifQ.e2dCyFCa0I4mK3LksvSDTwK4vkdIyLWqUoQDhoJz_Le2e2P5dOgyT24IMGm5eYWiDnQ5ZXFXZEk064SqKoebTq1s8cS2UFdKkgcHzcCJP6yO6rNubhtzQVwRarmZ5Gq6JUbCK0tXe_m2WCQ7wd5FseqyAPHeLFP8daCD7u-v9-ueQbTiZJOaODXPG9CRcdBQ1bJu6XMNHtmNg0P7ssizhA4orykAQJxVdtKaDRZxcQ84oYpUtQcWJT57MOePc9yxgQOlj2gBaX75ukJw6Tb7Ya21lqRbz4zC5_2cPoe6icIdxe-wLcNYmko-NVM4Mhux7WSCesCnm4_IlCrVl-GNbi7p4nVpykcJr4EAAXLwoS8OXWls1ekgMU3h8ZPPR4lkxFDbwTp2rtErasMRel1kqkZb0q4KF1BrxHrpwklFHdzq3fJ4UpsToDG9GOZ2zNy_UzO4PuFamdaLUjbH4dQrffqS4-xLTfRkPZqCM997r8ap9thFBvAmFaI3uD6JDw3dvPrTqLGwiOC_O9icoSFkOojkxTwIx5TTtOrAZTz_PCHEUNw7cwdc1yPf4f_7i2-e9AF5qDgzDQxz8BlmlsU8W8ZcNxfbx-MM0f7NYMA0-qUxpGMGVh_6AGrT2q_ECUWhHS60zGrRPCmeZh7oW2pLRL2PJ402-9Sp9ujyDEXmrow",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkxNjMyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNjExY2FiNDctMWJhMi00Nzc3LWE0ZTYtNmYwNWY1NjQ2M2U1IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLWFDdHY3Mkxvb3luRFBqeEE0cERsVmZhTF9fNjExY2FiNDctMWJhMi00Nzc3LWE0ZTYtNmYwNWY1NjQ2M2U1IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWFDdHY3Mkxvb3luRFBqeEE0cERsVmZhTCIsInVzZXJfaWQiOiJ1c2VyLWFDdHY3Mkxvb3luRFBqeEE0cERsVmZhTCJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJmNnNzMTU4bjVnQHhwaGRmcy5tZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzczNzI3NjMxLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6Ijg3ZGRiYWQxLTIzNmYtNDI1Yy1hYTc3LWZjN2M1Njc3MDNjNCIsIm5iZiI6MTc3MzcyNzYzMSwicHdkX2F1dGhfdGltZSI6MTc3MzcyNzYyODI3Niwic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc196d2g5d3FmNUtKV25MV1BBUFREMXpBYUciLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8M1BGRmxCUWdjY3pxMWpaejJMZEpWdEN3In0.P89HVX9GuXdkJZFBs0oMnaBjKCmEeRuo9-T3-XBvPMlo5vw9SlQSDo3F7PiHo-fPoTIWSjN7DplWG9bj-P03ye52BAIHzNdy0d8CsDIYKFlsl8IWwgZZlfJ1HBUC-T_OiaWE1Rrdr_4XEtnsPtXp4rXiGsBK_QsR51iCzRTamHeIyPxOz3uYMd_OejV6a55cPwXhK7j9JmMXi1fO23xdwuii-FIn_J40j472sa7uwmD3S3Bk5nOyijoJJf5vudL8blIcrnT9I9K2F93LNemhKkUH5OOxk3g-P1rO54FDb7l5q3MdEA75zBvYuAwJYY5FKVfM2oeDtGi5idWOOLExsYLvCQAZr6_4zg9obEjz22xmRZdHpDQIwOY9lB4728CYK9LjxyzJOl_QIrOF4SfiDMbpHEoLoPpINNEjxWNvwgRMrOlTSgnHA_d1B3teeYVb32Ptfk9E3skTEiI6rFMdGRIivqiII_B5EMGIN7MkMbkQANeoRzNexfYKbc2tIQtlMvPiEcmPMrve4qWS2otZeI7XwqNruq8N0M2_-Fc1-sCyhwQhSOCO4Sce5GSeBHqTuf11yD2mjZ_C8XlWhT85cQikkMojoK0SO6wsYmywZ-NY5jmButPO6FGFSxU74qAhOpQuM8SVUecRPGDCqod-XCRYefioG5b0dRJhYlChzmk",
+      "refresh_token": "rt_qbRVFOB1eUhHm3_Ynz-KBrgOZDoCmwBDful1X7iF1tY.AqMYFRQb-Plyv236ijAw3A4OB8t4GQsiFhqgJg-ypA4",
+      "account_id": "611cab47-1ba2-4777-a4e6-6f05f56463e5",
+      "last_refresh": "2026-03-17T06:07:12Z",
+      "email": "f6ss158n5g@xphdfs.me",
+      "type": "codex",
+      "expired": "2026-03-27T06:07:11Z",
+      "password": "tEvezTvJZIBz",
+      "first_name": "Elizabeth",
+      "last_name": "Anderson",
+      "birthdate": "1992-01-19",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "SC3Q-F8Z2-7ZAC-UESK",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM2026031714065038J7T6",
+            "cards": [
+              {
+                "id": 197787,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336341225669",
+                "cardPassword": "143",
+                "cardData": "{\"cvv\":\"143\",\"expireTime\":\"2026-03-17T15:06:53.507756367\",\"nickname\":\"SC3Q-F8Z2-7ZAC-UESK\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 7eb6e504-21c7-11f1-b46d-6b40dfcb1348 | Key: 534933 03",
+                "status": 1,
+                "orderId": 257519,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  6,
+                  55
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  6,
+                  55
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  6,
+                  55
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "ddd4c380f60f400885c177d435b86a6c",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336341225669 03/32 143 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1o7SJdS7ccM2vhbiL2pL2...",
+            "获取 Stripe 指纹...",
+            "guid=44297850-511d-47ad-9... muid=579d76bd-93b3-4a76-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiQWRkUHRnU200WU9qVXpMeTI4UkxhZyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNzY3NiwiZW1haWwiOiJ5M3FiYWtndHJsQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzczMTI4MCwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6IjcyOTBmZGViLTQ1MmQtNGNkNy1iMmIxLTA1YmIyOGUyODIwOCIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE3VDA2OjA3OjU2LjY2ODA5NiswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItdHJYd3FHeXRVa25yaXBMZzFDdUIwNDhFIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctbVV5b3M4NDBxNW1aZWJXelpzVUFFa0JuIiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItdHJYd3FHeXRVa25yaXBMZzFDdUIwNDhFIn0sImlhdCI6MTc3MzcyNzY4MCwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiI4YTA3YTRlMS0zZDY1LTRkMDUtYTQ2NC0zYjA2MmI4NmU1MzQiLCJuYW1lIjoiTm9haCBEYXZpcyIsInJhdCI6MTc3MzcyNzY2Nywic2lkIjoiM2ZhYWMzZGItNzc4Ny00YWZlLWFlMzQtMDFmY2ZhYTE5YzA5Iiwic3ViIjoiYXV0aDB8VTlUZVJhMWNBWEtOM2RwUllWOWRMYlBYIn0.iScTMDm0i052Cm_Q_ukKGHXGvGfK1htxMOQl3ZSPABMiRlWceCvBk8XU8bXCpD0pcFjK7qZZA98fuiezKJqb_ix-Fwy8vlZIFAA5cc41s-g1mdN9tMefFqQjIsHiH_RNM2EQ3nmtTqMv2RE347bdKizVpwb2xbm9wyw2IdqYJ16bJTcBBPrscDB7b2idn9t6VP3zP-R8YfH8QvENbTSU5vTgqPnJ1d7YezOJD-I4GKAAPHbvGTOjYwkKtYyaLXkXE7-lzFtoPHKhG0PNSxGU4AFC2b99R7VR4GfQWT5qLmUb4JhuV0uPf3JAVMMCwVzBtzRckc9564acUCZ0THukR6Ae4KfDYgSovcQpbrF09HR8eFQI6uPzpyjpoS6OcyhnTNR-9THa6bymcNSFwUVWe8cPMLNOq61zHYJQPgT9e-Iu2mW3lZA2NzGs2Kjn-L7NbUvEO0PQu30PfXrOb-If8YES9VX3Is19L4OPhle3l_UOgu-ClT5H1cmjmo5Owl-H-LeCawiaG61cK5IZXHXtNvQXBPeo29iANt7a3FtMOBhPCO7vwLui4ai9TugkhvVVQXoKxp19Nz5b3FhhlJpmOJDdJxV13C6Qp9qNasa5-rRmvRW8JSlleliz32IGGoBjzW3ejGiB_Fstzdvf6dMw6Nhs9dhINq6e0HjOOAs-duE",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkxNjgxLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNzI5MGZkZWItNDUyZC00Y2Q3LWIyYjEtMDViYjI4ZTI4MjA4IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLXRyWHdxR3l0VWtucmlwTGcxQ3VCMDQ4RV9fNzI5MGZkZWItNDUyZC00Y2Q3LWIyYjEtMDViYjI4ZTI4MjA4IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLXRyWHdxR3l0VWtucmlwTGcxQ3VCMDQ4RSIsInVzZXJfaWQiOiJ1c2VyLXRyWHdxR3l0VWtucmlwTGcxQ3VCMDQ4RSJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJ5M3FiYWtndHJsQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM3Mjc2ODAsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiNDU0ODdhYTctZWI4Yy00Mzk1LWIzZTctMWNiMDg4MmM1MDA0IiwibmJmIjoxNzczNzI3NjgwLCJwd2RfYXV0aF90aW1lIjoxNzczNzI3Njc2NjY3LCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX1RjQUdKZFhWYnhaM1pWWWpYbzZsR3hlaiIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxVOVRlUmExY0FYS04zZHBSWVY5ZExiUFgifQ.bvP6iXVV9o7jYa_5d1zk45Cm4uSheYzBSrrhaNLXIL_KcdPJuleNxL5Jd5fIVQPkObh8kPS57fjS3ydT92wLYOaWvGFtW1hSTSFge-CR6cyYg8Bm6wSxtYexLoYiBCiCKNrFlrxlRySESsz5kFA2FbQe22h6BBpb28tplWFkJ17btBjataUBIRBYt6pa2XmDYKaf9muwgQsRL0GgGTZkuQSd6yxa9hksOq4LWOtyIhZ7m4QmwejgDkMPC9KYIBBuWu8tJAapCEZn4fvlryXtwgoVkOEdWTdFDTT6aioyTSH7U4dR0QJPSVgR3DDIPUQ0o1-FTfG6GlWaOwZUEGHukSr7AJf0TAMk-UFkUjM9AsBrQxJleEE2jVesespxDZ8TH2zEZy5s4Fe0ZOdUa1jLmX6ajww9P3IQJFbbv-UxykQjLz1G2hysjVC6bZOufnOeaiUSPDdxwo_hbrz5NLHzuelj2jBdAPKeOE-dwfhmHvw0j7iGx-6nbxk80qr4jbYk-OCRYXnBVGcGg6AkxE8bkpCncM06U0QpvNUEpOl5bMNO2Ge9NP_siRGVt4iLRSXpHKGZTXtFfHrYhYxG_yJV1U3P6R5COln2iP8fb5WhEHOJg2h25jdWf65zylcJEmZ23vwS039DeMPwxS_gtpSWTRJW64Gil0m7aEoGfj6pp5s",
+      "refresh_token": "rt_mhvWh9we59a1U8MfCJe0n3MjEX6MYk-16qRBXwo3f8s.lCeJoLXct72pxCAfW8OF29-i9csfJLgYkT8ho6PlPgE",
+      "account_id": "7290fdeb-452d-4cd7-b2b1-05bb28e28208",
+      "last_refresh": "2026-03-17T06:08:00Z",
+      "email": "y3qbakgtrl@kiroxubei.tech",
+      "type": "codex",
+      "expired": "2026-03-27T06:08:00Z",
+      "password": "k4PLgfKqbKJn",
+      "first_name": "Noah",
+      "last_name": "Davis",
+      "birthdate": "2004-12-11",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "SC3Q-F8Z2-7ZAC-UESK",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM2026031714065038J7T6",
+            "cards": [
+              {
+                "id": 197787,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336341225669",
+                "cardPassword": "143",
+                "cardData": "{\"cvv\":\"143\",\"expireTime\":\"2026-03-17T15:06:53.507756367\",\"nickname\":\"SC3Q-F8Z2-7ZAC-UESK\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 7eb6e504-21c7-11f1-b46d-6b40dfcb1348 | Key: 534933 03",
+                "status": 1,
+                "orderId": 257519,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  6,
+                  55
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  6,
+                  55
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  6,
+                  55
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "ddd4c380f60f400885c177d435b86a6c",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336341225669 03/32 143 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1LnZf6EUaImFQG1iNI2L4...",
+            "获取 Stripe 指纹...",
+            "guid=f486ebaf-1773-44f7-8... muid=d26eed89-7691-4e99-9...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiRUV5bThiRllpZG1YU1ZsazVXVVNPQSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyNzczNiwiZW1haWwiOiJhbGk2M250dGJ6QGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzczMTM0MCwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6ImUwNDhiMzZkLTA2OWItNGE0NS1iMzIyLTlkYjVkMmUxZDczNSIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE3VDA2OjA4OjU2Ljk1NjE0MiswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItR3lvSkNnVDVIb1VudUNIR1NnWG5tUWxQIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctb0N4YlRubW9aYmFOVmFSMWRWa1pNVWVaIiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItR3lvSkNnVDVIb1VudUNIR1NnWG5tUWxQIn0sImlhdCI6MTc3MzcyNzc0MCwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJhNzU1ZmZhYS04MzI3LTQwZDUtYTU3ZS1kNDY3YWI2YjZiZTIiLCJyYXQiOjE3NzM3Mjc3MjgsInNpZCI6ImUyOTE1ODI0LTA1OWItNDE2Zi05ZGUxLTBhZDc5YWVkZjM5YyIsInN1YiI6ImF1dGgwfG54cnc5alFkREh0c2pYZmlDQzE1eXN2cCJ9.eLBAjobufs9E09g685k6llkZuSkxXHW3AMWxKu325iPH2_trthc0mQcMxOfLuGLjGBuxQxQlxBat04kUyUmt89Xys9e1mDXLTV1ehnl3qVtNTYxj7BKvu_HsaZJQ-sqQFJswniBT4P4ZSvQwqgiR5YmwBlIwCePZwcGFYFuac4SQ573FqyZXqXY28co03wK1YBNTsyyumVj7g2iAdH_wD1SxolxOpMDRA6q66dZIhsuiKvvo2_qxQA9Kv1CMB0iFDbykGRLfV-WVRpdQKGD8LdSlVaR6sdT5sBmQpSzMxntQoOXwI_diJMKBAjNmJSah9l4AdqIxTDQ4e6eJnDfjIi74RId_tsYZL-5QeNnzXVcFT3ObB_XdVg0OZFtQk9H8sIjJeZNeCRYdLTExdWN4KLb0XSHd_E5v-K92HKWGHHCEJ9FyZaOZx9TBm9uLGeFD99xDfl2q_ejT40MAhFnAK3REIouCv-9D0oxNVt9PojN8t2LNfi4mz8O_Qo5JMvjhXBBzMvPuTPAmZfA-tgm0hDEA3wJ1_WN78JyhiHuEbZiWKsMbh81q0Xc8k7XYpkL142sGMRUZn638mPr061ylVWh0OAWOdyymSO7W461RT19BO6Z1INfASF7CeRXc61Rzw6xCiiBWN4yGga_fhuGfqbGm9AZwTXmtRaU9JH3J2Os",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkxNzQxLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZTA0OGIzNmQtMDY5Yi00YTQ1LWIzMjItOWRiNWQyZTFkNzM1IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLUd5b0pDZ1Q1SG9VbnVDSEdTZ1hubVFsUF9fZTA0OGIzNmQtMDY5Yi00YTQ1LWIzMjItOWRiNWQyZTFkNzM1IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUd5b0pDZ1Q1SG9VbnVDSEdTZ1hubVFsUCIsInVzZXJfaWQiOiJ1c2VyLUd5b0pDZ1Q1SG9VbnVDSEdTZ1hubVFsUCJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJhbGk2M250dGJ6QGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM3Mjc3NDAsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiZjkwZGU1NzktNDEzMi00ZTFhLTkyZmUtMzZhMjdhMGQ1NDdlIiwibmJmIjoxNzczNzI3NzQwLCJwd2RfYXV0aF90aW1lIjoxNzczNzI3NzM2OTU2LCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzXzRuUjBmSzh5Q0ZxbFVMaGJlMlkyRFhPTSIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxueHJ3OWpRZERIdHNqWGZpQ0MxNXlzdnAifQ.J8LUF10BYDuech8YRBK3a_DqeGf_VQYt5wN7LXGlZRL_bOCN8JJG85KETcVC6Y35JSsVeinganbhbX3A0-VjXSOccKcdNFbZ4907JG8VMGwBUYN1hWay1d2BrbUDm6XLm3bT-DkJyzzEZI5v01xx3tFZIfC5pi4HUdIqityB44KZKcrgMEI_e_acqUd1dbOG_Y42Zt9DJJJJ0UljNoYzZUELWdTZwdqbaQuLEC73TiJWhVtUGUwMDiqpaex6n8zXKk0owOxs10Dxe4hBu2PgmgnsecXr2hxUPPIEcEjj7YU4ph9EKRxyIXKH8N5-84m0lgEXBmsF4-AyEvBY-LDzukiEMyEWEJyvt-OTUX1O2eTDqAsC_EaQACmgzP3tdU4k23H5P5DUHHR1Ujp0KKL8Mc74oaRFwIQfi8lZwiFTEdC6ueaMYAClpRKvK3c8NccdRANhE1nZGGfquIpbeib1aE9qFqckInZry9HLT_8BPKT7E7Y_cbzGrDxT9YQlp4XiJHsUDn8lzvwJGqe7NzLUINZzd9QGcDyMESfBmAiPTt5pHyeiOVmg0mB4567HOSGkd-Hmcr-3AVWymL9wt5wDWAp3d-Ln4Nam_XqmpUYCTlFAByzl9L4Whqfn4IEM0EAKwuhdRuxjoHDwMnIgEUZXEiXjrlPZsVmEIsysAIiU1xM",
+      "refresh_token": "rt_TsDhqlYPAHtvJpG1SXfLocv-MQFq-0Mg6S16s6H4njk.YBhZS1V-wD0z2jPHauMlKEmkPjJ1OSwmoUQivhe2xqw",
+      "account_id": "e048b36d-069b-4a45-b322-9db5d2e1d735",
+      "last_refresh": "2026-03-17T06:09:00Z",
+      "email": "ali63nttbz@kiroxubei.tech",
+      "type": "codex",
+      "expired": "2026-03-27T06:09:00Z",
+      "password": "w4dkqDdxDKkh",
+      "first_name": "Jennifer",
+      "last_name": "Brown",
+      "birthdate": "1998-04-28",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "S9C6-C7XE-GAD3-Z4RZ",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM202603171408343NTDB4",
+            "cards": [
+              {
+                "id": 197795,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336302144149",
+                "cardPassword": "570",
+                "cardData": "{\"cvv\":\"570\",\"expireTime\":\"2026-03-17T15:08:40.802058685\",\"nickname\":\"S9C6-C7XE-GAD3-Z4RZ\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: beab3fca-21c7-11f1-9041-93ecc18b420e | Key: 534933 03",
+                "status": 1,
+                "orderId": 257550,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  8,
+                  43
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  8,
+                  43
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  8,
+                  43
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "4e23119d44d948d3bf1caf3babf43e60",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336302144149 03/32 570 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1uR4Ejku4lk4n4V8C99oB...",
+            "获取 Stripe 指纹...",
+            "guid=6ca612a6-94da-4910-b... muid=ea49e6cd-6188-4b52-9...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoieHg3bXIxXzlIc2lJejE1NTg0cEJfQSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyOTMxOCwiZW1haWwiOiJ1cmQ3ZDY0c3dkQHpodXJ1bnFpLmxvdmUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzMyOTIyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMWJlNmYwMjItZjUyMC00ZGM0LWI2YTktZTNiN2ZiNWE4YTcwIiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDY6MzU6MTguNTkwODg1KzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1jSG1hWTRMbDVWc1I5NzRHNVlSN1BhM0wiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy1rb3BhdkFTQU0xdzcwcDNDcWg0dThvbmwiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1jSG1hWTRMbDVWc1I5NzRHNVlSN1BhM0wifSwiaWF0IjoxNzczNzI5MzIyLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6IjU1MDFjYTFhLTI4MWMtNDc5Yi1iYzk2LWQ0YjZlOTFlMTM3MiIsInJhdCI6MTc3MzcyOTMwOCwic2lkIjoiYTQ5ZmEyM2MtMWM4OC00MTg1LWJmZTQtMTZjYjVkNzNlZjM3Iiwic3ViIjoiYXV0aDB8T2JoaUhBRVBvRjJHS2d0Qm4zMW5XRWFNIn0.gmsTg5L529Od0bo5Iy632g07-v_Z_b3nmO-dNrg8eNPaMcAW5R_OzjuI5v-UAcHjxvBr1Coo1ZakUn9Oppsbx7II8JKVx-iVfJkL_arMpqrSakufh0RJwctiTpTGxoKtv2U_tYK1pv4NhDphnqt07SPwwCKloFAmAil9sRNf985T-LQVmfBY5tpwWcHnmZudXMSNsw2wFwNNbm5fF6ZEyDGlMZDcdlJVkNcivIILDUdQpZdMZf_1rrN6XC5NwH9Fu2fOJDD9okZ4FkeA2US_Fm66Qt4TYHcTH2CvulmgSJJuV6QHxSRTkm5AhQJp4ixB469_ZMYOL8PgrJ5_Glmnnv1dsGvofGJtpBMuflSrSX11UT2ZZ-nO41jUqrlXfk5f_6yuaLF937RZRzg470FyMldseLSe4Ibbnq0o-ivw9lwTk-0CD-j2vQER18Bx2jw8sfEQDZB8pB_qsIG4oolzkcCVp7IWUIPPFPOGsi7F0qrC5-stqbCjCnaGxDgyS7gEWmFZhvzkEUoOIone7twxJQiCztGZrVi4ByhS_tZKlV9GBKVSr1Svc3HEwk-4F_H5ye9ATcf_q1s27g_aDffpMjJAbGG03TXf0eYX_MA4_wVc6X4i7-krIQZXSRhogXlKYJkuFiyDw-1pLrQQ1GgPIuzCPEzGx7UDSRFRnhDpZMI",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkzMzIzLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMWJlNmYwMjItZjUyMC00ZGM0LWI2YTktZTNiN2ZiNWE4YTcwIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLWNIbWFZNExsNVZzUjk3NEc1WVI3UGEzTF9fMWJlNmYwMjItZjUyMC00ZGM0LWI2YTktZTNiN2ZiNWE4YTcwIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWNIbWFZNExsNVZzUjk3NEc1WVI3UGEzTCIsInVzZXJfaWQiOiJ1c2VyLWNIbWFZNExsNVZzUjk3NEc1WVI3UGEzTCJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJ1cmQ3ZDY0c3dkQHpodXJ1bnFpLmxvdmUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzcyOTMyMiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJjNTA0Y2VkZi1hMjA1LTRiNzAtOWNiZC05YTkyZDE3ODk2ZjEiLCJuYmYiOjE3NzM3MjkzMjIsInB3ZF9hdXRoX3RpbWUiOjE3NzM3MjkzMTg1OTAsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfOTJVRE9Eamh2dFlkTnkwajlraUQ2T0xGIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfE9iaGlIQUVQb0YyR0tndEJuMzFuV0VhTSJ9.IZk2R17T5FLZ80l4EW_ulW12ACW4VSIfpAxFB176yDfR0LKLt490v_y2Nldux5pHR84AQeWlNXFc3k6-eL5-j2t16oEN-V8eX6MGeZvyJfkH8H0J2QSTTvmqu_HC022Wq5PphCuh4Jsd7X47CHQ2hKWvrtYXzrZgnFwGmR3Y88rji8x_LWC_ojc1N4DV9jbGhTZGPeaaQr_v2etbNDzPDMneqt3D0zOUHs-RBAgg5raf5tkXDvRa41h4St7BsxSraoj_SvO23lxGSraeQys12Mk5Mwdg9UcxG__Y3A0cvk3QgfurT6ZFWqh2qILunLrgtkq3ee3RFs0zMEPZvB5QniEueZqoJW480u9aqWeXPxlTIAl2ZlE3miYFGizeUUBMoaXzaKz-zuO-Fr56Jfhn0E-dEOkgzuGiSHGeeJJwqWQGxPhJETJijfsHRTmLQMx8kkZlqDF8Aggswg-Tjxf3APT7CLHenjqmyqYtHib2F7-eYMjH_cpZrtaWbLgt2CVEnId1An8pR0bt-Op45PUePLYbwHfymRIqUYPPbEyHjbshtrYsHrKcpBtcsdc5QgeeR9ht4G7c4r6VCfXVzSifRcI9HOA7295OzsuMlQlrA9eoNk5qDuCV05YqZjPp6I0utGqVUloWSE-G9ln-HU97tWW9-ooo-diIslmzqBJPP0g",
+      "refresh_token": "rt_m-opqriEGgQdlL83OWyCCr43k960rXmEOdWQx1UaUug.3RoCb7Xyemya_Dqf9v6ZktjI_LO2hIhEhM6T7Lrkps8",
+      "account_id": "1be6f022-f520-4dc4-b6a9-e3b7fb5a8a70",
+      "last_refresh": "2026-03-17T06:35:23Z",
+      "email": "urd7d64swd@zhurunqi.love",
+      "type": "codex",
+      "expired": "2026-03-27T06:35:23Z",
+      "password": "L7QMgylQG4jM",
+      "first_name": "William",
+      "last_name": "Rodriguez",
+      "birthdate": "1982-01-03",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "FWUD-Y53K-VUDX-CZV2",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317143456ECSBS2",
+            "cards": [
+              {
+                "id": 197983,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336329595737",
+                "cardPassword": "228",
+                "cardData": "{\"cvv\":\"228\",\"expireTime\":\"2026-03-17T15:34:59.99738211\",\"nickname\":\"FWUD-Y53K-VUDX-CZV2\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 6bf293b0-21cb-11f1-ad6d-c770ad6e4d1d | Key: 534933 01",
+                "status": 1,
+                "orderId": 257863,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  35,
+                  2
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  35,
+                  2
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  35,
+                  2
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "5e5c118e785d4d44959764af181dc83e",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336329595737 03/32 228 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a18XWjpNSVlSKyMvQFW0ro...",
+            "获取 Stripe 指纹...",
+            "guid=ef12e26c-21c8-406d-a... muid=896c1d87-1ee4-44b5-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoieHdPM2VzOGVKVW5uYUlKMm1mUnNydyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzcyOTg5OCwiZW1haWwiOiJpb3V3c2FtbjNpQGdlbWluaWtleS5hcHAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzMzNTAyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiOWI0NjlkYmEtZjlmYi00ZGIwLWE0NjAtZDgyYTFiMDBkYzZiIiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDY6NDQ6NTguMDg1MjAwKzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci10S3JXSGFoNzFJVTlxZzZsVjk4b3kxdFoiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy1PNk5qVUlUbkJpeE1BUmRzQktnSjdHNmIiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci10S3JXSGFoNzFJVTlxZzZsVjk4b3kxdFoifSwiaWF0IjoxNzczNzI5OTAyLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6IjM0YmU0ODA1LTkxYzEtNGNlNi05NmUzLTY4ZGVhMDk3YTdhNiIsInJhdCI6MTc3MzcyOTg4OCwic2lkIjoiNzNlZjk4MTUtNzI3Yy00Y2Y0LWI1N2MtMjdjZjNiMzM4MmRmIiwic3ViIjoiYXV0aDB8S0FoZjhjTzQ2QW9CZ1BtdTlvbU14WTNTIn0.VOzeECNVvxqebnGVuLSvwuGiE5aNcFby5yAI_rC2fztdHQCVJH08OxBoMmbRhwktdgXHdEO--e6wcbiy8I98EASpdvA6nMg1DevggMGvgJ1aRa_6hVjb_0VvYiGG_zCEY80oO16tS6Vh__dng2TA_VeH7bK5d1_BLgHFNAM_44AXVXuBOka6TE6DTLa0_tE7U7lcSzSYlPbcZHfFxdAJns9b9wum6Yc37bqi4Y22wF42_X87o4RBfTH0ow4K7BjoZ-9ySihOC-l0TimI6mft_gPscqw7x4VuzNdPDnnTh9Mbl3tMhsMhDpY75r0I8kscm9EgO-mOX85a981qBi1NdoX84K-tneRxi4QL914eoQSjDs4BwAzverKszm1oi6Qz6pwbP9WQKRq0CUYc3CZqVYNWurZl7vtLaguZBOK-D-0QMUECD7fwOaWLjrJYPK2v-f-mIu8RXbCwol4BIC_D8-FYt5RDkYrivta8Wqk_9n469qsA95_0cPHjUo488riMAfAaIIH47t9t4oTXShq11sZ48fsGUfU_Eadns9VWqF_1kbHtQFB-dvPhNOVLPawDCspReMLdEvnQ3J3YMpRVE3KDKB1uWaxFetzTs_5r9Qux7VFLDkBzjtUdA7F5lY8JKh0rkZZsTc3wHbHu3mxqY8oAFAcup3MolxpoXlQITaw",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTkzOTAyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiOWI0NjlkYmEtZjlmYi00ZGIwLWE0NjAtZDgyYTFiMDBkYzZiIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLXRLcldIYWg3MUlVOXFnNmxWOThveTF0Wl9fOWI0NjlkYmEtZjlmYi00ZGIwLWE0NjAtZDgyYTFiMDBkYzZiIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLXRLcldIYWg3MUlVOXFnNmxWOThveTF0WiIsInVzZXJfaWQiOiJ1c2VyLXRLcldIYWg3MUlVOXFnNmxWOThveTF0WiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJpb3V3c2FtbjNpQGdlbWluaWtleS5hcHAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzcyOTkwMiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiIxYzRkYWQ4YS04ZThlLTRjMzQtOGFhMy1jZmU1YjI4NjQ1NDMiLCJuYmYiOjE3NzM3Mjk5MDIsInB3ZF9hdXRoX3RpbWUiOjE3NzM3Mjk4OTgwODUsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfbERZclJRbEZOQW4wNGhKOUROUEJrbzBCIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfEtBaGY4Y080NkFvQmdQbXU5b21NeFkzUyJ9.pF1vLscf7hMXC3QMQCIZ7DlCd67LeVljFscIciV0JLEIRr1L2Nl1GBSqh3BOfHILqTYDbt3mqbOxLJj7DZPstJrLFf9Nh-aL6lvOINvhOqOyP89mnAQ3a2q_J3D3bnngkNwS2-Y8XhcQiGwCa64pAg27TUSLD0lOB7fRSnSs9JZMlmnGXhAH3d9e4z4cDpoT36Zae6x-joGntedrPMiMIxCQwXaTpa5ke-7Cz6bj9UOBs2mHyP_oIkj0v9HyWLj493ETMHtUMBcKKJUOtEr1YVNoZ4UTS_nQr7GeqgeDhU2DcjB3sEE7O936_jyPXdpw7tWIQR-IG5CfxEKNglZWORpShuJwm9YEbCjj_R9su4HoHWaWfVi4KcZzlC9fKxDujyGA4t640osAmjQil_MqfDtVig8XvKyRY0-jij1QE2OWGmTDC3xwJCvLIs7TqPp89xL9mX_-k3g-fjsWEPuAbSK1ErBM1frPIH1aWbK3oWfpMxuA3QbZxQWQNbo0s938Tfb9RLr13qXKC2OIxt--dyU-l9XoLh86DOooUiPExKbzteXTvr8PDyk1Gk5f6uS-n8HgZVhLSZCcVbKDxTa7RaW3GijrzwHQ4svJ9wdU5doXHoGpKnNpnsqFnTmvj6fdthLvyw2MDjKL_iwkcviSRI46n9J7n67LEA-FqB_ChRw",
+      "refresh_token": "rt_Biq9GLCm-k0C3TpxX9FyjgajlCbtGCzmaeeBX5syMV8.mfOz2-QFtfQnOdpDENK41ECd9CfHdSq-I5HwI-zOm_s",
+      "account_id": "9b469dba-f9fb-4db0-a460-d82a1b00dc6b",
+      "last_refresh": "2026-03-17T06:45:02Z",
+      "email": "iouwsamn3i@geminikey.app",
+      "type": "codex",
+      "expired": "2026-03-27T06:45:01Z",
+      "password": "ZZVPiaSRV1Cv",
+      "first_name": "Elijah",
+      "last_name": "Thomas",
+      "birthdate": "2006-03-09",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "FWUD-Y53K-VUDX-CZV2",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317143456ECSBS2",
+            "cards": [
+              {
+                "id": 197983,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336329595737",
+                "cardPassword": "228",
+                "cardData": "{\"cvv\":\"228\",\"expireTime\":\"2026-03-17T15:34:59.99738211\",\"nickname\":\"FWUD-Y53K-VUDX-CZV2\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 6bf293b0-21cb-11f1-ad6d-c770ad6e4d1d | Key: 534933 01",
+                "status": 1,
+                "orderId": 257863,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  35,
+                  2
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  35,
+                  2
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  35,
+                  2
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "5e5c118e785d4d44959764af181dc83e",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336329595737 03/32 228 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1qc4uq5b1fEBBsbEz27QS...",
+            "获取 Stripe 指纹...",
+            "guid=b85ae394-6333-4ce0-8... muid=14b8b9d8-ff17-4c9f-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiWEpfUVlabmlYZDgyT3FIYm05ZlVkUSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMDI0MiwiZW1haWwiOiI0aDF3cWQzaWVqQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzczMzg0NiwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6IjhiOGIyODliLTM1ZDYtNDQwMy1hMTQ3LTkyMWUyNmEwYzg3YyIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE3VDA2OjUwOjQyLjcyNzI2MyswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItQ0pRbFJjNkFrWjJRSmpLdklaclBSSnZiIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmcteU5HcjFDWjl2OG0zWFJjM1Z4TXFvTEo2IiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItQ0pRbFJjNkFrWjJRSmpLdklaclBSSnZiIn0sImlhdCI6MTc3MzczMDI0NiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJhOWVkODA5YS1lMjljLTQyNGItYTlhNS02MzM4NTNiODNmMDUiLCJyYXQiOjE3NzM3MzAyMzQsInNpZCI6ImMxYjhjMmY2LWI4ODEtNDNjYi1iZGJmLTA1NGFiNjZhODA1MCIsInN1YiI6ImF1dGgwfEZsTnQ0UWVoWUtMdng2Yk50cFUyVjk1aiJ9.Ev_H0c6wp0Q2c2SqzBznxUZBUFqVL8J6lCaQ4uJai6YyNQ7rfhE3gmZZtq6328LSMqGs_QQD6hrE4pAFF6kJIAkQmOqwI10JYszoaragx8ktmnI6jpqpNNSvQDUG5uMXdvDr7qQtZzaQ9QoTyXlj1nh3lcSSJeDklNm9vN-63q5MMDK2HyqmOAuL-RCc39h7y3qJ3AQx1hFH27PjpuaTR5TcIUyXs3J589naaiPIgYUE702J_BmgtTc99AOpbF89x4Y2HCPjKNAAi4ZHPNIFSWM_TEwgDL5qBVqUKF5sB4pm9GhsC9JTEAhC-TLBvj3OcynBgvWBem2azvMML5AkibxYJ_i5qXEEONXNKhCwHrveVWgVti_kbM9vodVkixJhci8lfkVA_FiRgq0_bgQSH3TjgShrSS0dHf3-nowVBa9l8EIYGP4WHKW1g2piWvWur-_yAVaAGKcfmEY5YeIuVN0Nm53dUYcEwna2-gNYrpJLlPU2QcxLQLqvEhOZH0LwjuwZ1FGY7cY-PNn3i5JnWySush5HfdlxZp5WJd2QyZy66puR_3tpkQ7_1ajGfTZ8uCPkuA0-t3GHFPnq6ik0c4CrgEk2rETdVqZTwqR0meYaAiDEVRAfLQ3mn-LL_k_nszf1bUCTjd7etVw6niy7R4dWxbW6EmHk3cbQiigmI_U",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk0MjQ3LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiOGI4YjI4OWItMzVkNi00NDAzLWExNDctOTIxZTI2YTBjODdjIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLUNKUWxSYzZBa1oyUUpqS3ZJWnJQUkp2Yl9fOGI4YjI4OWItMzVkNi00NDAzLWExNDctOTIxZTI2YTBjODdjIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUNKUWxSYzZBa1oyUUpqS3ZJWnJQUkp2YiIsInVzZXJfaWQiOiJ1c2VyLUNKUWxSYzZBa1oyUUpqS3ZJWnJQUkp2YiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiI0aDF3cWQzaWVqQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM3MzAyNDYsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiMGMwNjJiOTYtMDczZi00NzY2LWFjNTItNDY0OTRhYjcyNDU5IiwibmJmIjoxNzczNzMwMjQ2LCJwd2RfYXV0aF90aW1lIjoxNzczNzMwMjQyNzI3LCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX2o4eUt1NDNIOHZUSUYyUFFMYlVhckNiNyIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxGbE50NFFlaFlLTHZ4NmJOdHBVMlY5NWoifQ.Etrh-BjpODivBs6vuQNkM808NnAQJLSm_ktpxs9baoRjIAj69AOMEP2IJllApy-R0J2vnqsT38zBtkw1fuVQTmCXrZgyWtWm4eYe3jyctRvvR3vQyHVRixIkkZY-gOrGJKQ8ad-te4SmmJHI_Un7_Ysa-kc0bbvR-A1hOEBpTQm2pqaW7x_EwAf3FdNDHhYMt-usaD62XWytv_j4Jz8yP65IPkOKYekBWUp6q9rl76NutyvPR4illVXEoZWHRRXAXlxeWDQrVE6ZjQKq4qqP_uOo0rMW6MeWK5ViRF3ptjFGPg00n9pV0vVYXnxCGj4XT14fdspisYF2LaZMiOYkP738wAfrt4OL_b-EYYFeI36Vkbczn9JNfcBtneUgkOqcnOjrxLDapXRLOs0yJZ2SIATPGQLg6O8T3ih9TV4DDkIWEWOzgC9ZGp9jranoPmd04ISDMct-haVeRu_zkdKKjfCudw_OKtc8vCNIZRVQ2SRPqgwehAzVeAzJVR2xz95hTaZ6-L5Y8P76amIwROijNIZJXc1SNssA1XE3mTxe1VUUlY-knv0UuxtvmMdyfm3QKpxr7_2Kg2LwBKIkMtauGm3JGbdF7ipXyxI-XBs-iXFnN8W2P1Kvu0Gn9cTeBdGDIwMGHlIcaqmmKVCwqyPt1l6ntA9cYF1PLQxxskZJ15A",
+      "refresh_token": "rt_yaW16yE3vQhcUDWogTSJoDeIw5RT_0BlktwFQWFgHso.DXB3OQszwmyHAz_UePbm7V21aPudYFB-a8MLEvfwioc",
+      "account_id": "8b8b289b-35d6-4403-a147-921e26a0c87c",
+      "last_refresh": "2026-03-17T06:50:46Z",
+      "email": "4h1wqd3iej@kiroxubei.tech",
+      "type": "codex",
+      "expired": "2026-03-27T06:50:46Z",
+      "password": "eFbCkiNx4mCi",
+      "first_name": "William",
+      "last_name": "Thomas",
+      "birthdate": "1981-07-18",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "H63W-C7PP-5VME-3TLS",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317145024MNUGQJ",
+            "cards": [
+              {
+                "id": 198094,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336360051780",
+                "cardPassword": "059",
+                "cardData": "{\"cvv\":\"059\",\"expireTime\":\"2026-03-17T15:50:27.63412751\",\"nickname\":\"H63W-C7PP-5VME-3TLS\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 94dbcb50-21cd-11f1-a3e4-5b5d68af0a7e | Key: 534933 01",
+                "status": 1,
+                "orderId": 257990,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  50,
+                  29
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  50,
+                  29
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  50,
+                  29
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "ba4e0b905ee14cdf9c11abe6a773a08c",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336360051780 03/32 059 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1RJ66EGO9ONM9a6Xomk55...",
+            "获取 Stripe 指纹...",
+            "guid=d23e7647-f677-423f-a... muid=71575ffe-84e6-4544-a...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiSHo3N3UyeDllVjdfY2lvU2Y3N3VBdyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMDU0OCwiZW1haWwiOiJ5eXpzZjB5dDRjQGdpdC1odWIuZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzM0MTUyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNGVmNGZiZDQtZDk2YS00NWFjLTg0M2UtZWE3Yjk1ZTFmZTRhIiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDY6NTU6NDguNTY5NzA1KzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1HU2M5bXIxcVFGRzJTeHBTdFk5WUpxaEIiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy1GQzk3Q1dvUnJSMllLQXA4b3Q0V1hyUHMiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1HU2M5bXIxcVFGRzJTeHBTdFk5WUpxaEIifSwiaWF0IjoxNzczNzMwNTUyLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6IjY3NzRiNTg5LTRlZmQtNGMyZi1hNjBiLTIzOWM0N2EwNGUxOCIsIm5hbWUiOiJQYXRyaWNpYSBKYWNrc29uIiwicmF0IjoxNzczNzMwNTM5LCJzaWQiOiJlMWFmYTdiZS03NmRkLTQ3NWQtYWNjNS0yMjRjNjJiZjFhMTEiLCJzdWIiOiJhdXRoMHxPekN1VHljR29RUjdzNWM3VnBqSlFJb2cifQ.T7GaGkH2ES4IwzCJkelYyf7ElWH_JlxeR-iQQGj2_Mb3QBzZewXRYRq8VmaM9mIQlm56EY_hn5OYqAK1ezGxY5Uo76-s-yeuVpm7RwJI-Ay7k2XFmbbeJMQabHHNvHumf4_g6gYW_eBWK7IEIAu99fD3b_wF0cVZAidv0vPrhbkS-22kYSWIHUoqmCrDytQyVRq4dq3ZKMvOqC1PII5injRzslkXo2OQ5EzSY_95M1LUA5rwC-vPRjqbT6UItzLtgSyEfCsCO06YntxHJMQ61I0wW32RQUmmWQsDj0g-4TpuKuwj3sfON1SZq55wIGVItFZuq-BTX-N_YbjQshqawbFmhZ07mW2IO1SEw9utBZLyqcCuHX9nJpuc-UlrwZ76T_AeOxvgXt6ATW8RM6NeWFHbGit_H_XFZkA_F-Oubvkupn7t1VQNgL6nAfyLZyRR1Bnc1vp8iEGAyUhh2KXgOdAT79JS6aYmrbPWZKdhRay3oLguzLD-HRCHGsD5MpSe6CwscneM0LbyN2Hak6UaotdFBBwOp0ibzLShqijLTKQHPZNc1FiL_UkWj0erC_nHeWz2pjfiMIw2ZU72h-XgA50rMqWGRoTW9c5v0op5bOIkIxte8O4s7DZQ32rrl336c69vEFNa3_kz1v9Hzof2qEXE6vPJgyzfv4zzHA35TGc",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk0NTUyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNGVmNGZiZDQtZDk2YS00NWFjLTg0M2UtZWE3Yjk1ZTFmZTRhIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLUdTYzltcjFxUUZHMlN4cFN0WTlZSnFoQl9fNGVmNGZiZDQtZDk2YS00NWFjLTg0M2UtZWE3Yjk1ZTFmZTRhIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUdTYzltcjFxUUZHMlN4cFN0WTlZSnFoQiIsInVzZXJfaWQiOiJ1c2VyLUdTYzltcjFxUUZHMlN4cFN0WTlZSnFoQiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJ5eXpzZjB5dDRjQGdpdC1odWIuZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzczMDU1MiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJkMmYwNGQ0Ny1lYzY5LTRlMzAtOWFjMi1lMDFkOWI2YjRlZjEiLCJuYmYiOjE3NzM3MzA1NTIsInB3ZF9hdXRoX3RpbWUiOjE3NzM3MzA1NDg1NjksInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfRWNEZTlQRmI5U3U3b1o2UzVHU0lxQ3Q5Iiwic2wiOnRydWUsInN1YiI6ImF1dGgwfE96Q3VUeWNHb1FSN3M1YzdWcGpKUUlvZyJ9.ab2laErjQrRPawu1t3G1d3vffsMQz4jybYnlgX8DtKrvoQwymbgAhVnN07To_ZucgWSbHBJ87uCvuqFbp3u9tbkfGDL4HhvqXcR5pmkufsplGKEkeKfbsndLEfscx3t9wUKU8K0ZKRacyHgwZEPYZaA4ZTAhNcrvXZVJ3p-w9xwWPVcgPdNCeItSonio3dGMDkxUFScJ-kvYREIUXnufghuhrcUYuefgnqPymB5A6JvQvvZpaqcM5luM-KGgGRGXvhuMMLOZaCDlXLStfGglUYMPsVeChQg7dBiSwMDjBI9A75YUSfPmH15Tna8SZvlobOlm7-d-zzRBiWLZDJmQXpvN3MBKNtJH2MHmWxIx9g-dzbizo2khBXnwZviigLCGIbdyxUuZVIqfxh0SDp5AykTd2n1ipstbd2ATRMbG0YL2h3V4fQTna5YFHdfSYfiKlTBA7aSzGIR3JTKCw5bS5wmppohDM8djwnn0YDmI7qk-LazQgiG5xyEjFxcQJ9xcLwk_8o5YeE8ge8wUEYcPseKy02KCu_PY44m-mjKf9DA0c1o2Ff93is30ekzmIuulpd0CNA7u9P9Pxva8x2DhLSOAmtvYwNX0HfduzWHUP9uII88HkGSH_8YDgzitPLZnI22WECqgpdT85mi_xgwKSzo5yucGb3iLXMihxXxcNdE",
+      "refresh_token": "rt_A8T-4df9IjHAOqO_T6pgjklRNOItcx2k30qE-Ufdz_U.-zX6WnEggicYYDgKldNZ_ByCK-Bp29d2JbifkkCahlg",
+      "account_id": "4ef4fbd4-d96a-45ac-843e-ea7b95e1fe4a",
+      "last_refresh": "2026-03-17T06:55:52Z",
+      "email": "yyzsf0yt4c@git-hub.email",
+      "type": "codex",
+      "expired": "2026-03-27T06:55:51Z",
+      "password": "Hdy2HXhS85hL",
+      "first_name": "Patricia",
+      "last_name": "Jackson",
+      "birthdate": "2004-09-17",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "H63W-C7PP-5VME-3TLS",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317145024MNUGQJ",
+            "cards": [
+              {
+                "id": 198094,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336360051780",
+                "cardPassword": "059",
+                "cardData": "{\"cvv\":\"059\",\"expireTime\":\"2026-03-17T15:50:27.63412751\",\"nickname\":\"H63W-C7PP-5VME-3TLS\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 94dbcb50-21cd-11f1-a3e4-5b5d68af0a7e | Key: 534933 01",
+                "status": 1,
+                "orderId": 257990,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  50,
+                  29
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  50,
+                  29
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  50,
+                  29
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "ba4e0b905ee14cdf9c11abe6a773a08c",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336360051780 03/32 059 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1whdH9dGE57bp3dDKhgUF...",
+            "获取 Stripe 指纹...",
+            "guid=1da278a0-5cca-47ec-8... muid=a9b0a896-4aa4-407f-a...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiSWFtSUd0dmhhV09xQnZvNEttWDN3dyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMDYwNSwiZW1haWwiOiJrcmhkc2o3Z2QwQGhjY2MuZWR1LmtnIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzczNDIwOCwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6IjkyZTQwYTc5LWQ2OTUtNGRiMC1hZmM5LThkYzY5MjViYzY0OCIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE3VDA2OjU2OjQ1LjEwMzU1MSswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItbjEyV25zM0pWckhad1dUVEJzemRPSjROIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctbk55M2FMaEUyczNXaEJsTFpIVFA3amJYIiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItbjEyV25zM0pWckhad1dUVEJzemRPSjROIn0sImlhdCI6MTc3MzczMDYwOCwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiI1NTNjOWFlMi1lMWQ5LTRmMWItOWNhOC1kMGJkYTVjMDFkNzIiLCJyYXQiOjE3NzM3MzA1OTIsInNpZCI6IjIyOGI4YWUzLWFjMzAtNGE0Zi05MGRiLWZlOTAzNDlhNWZjNCIsInN1YiI6ImF1dGgwfHlzRmFNS0M2QWNlZlMxdldwbHlEVUdtQSJ9.FP7D0LFrB7cEPvAy9BttRcEDGUhzruVhlcHCApHkqT5zjAZx12ItJCpGMVHvuafsINoc-Facw4H4JHy3JICoT5sTVgTB5fik-aS5hmSHlDu-_JeDsnj89lNcXHLGk-oKn59k4wopz7qbbAIvdgodaLgJ_6oIFi3fg5l8bsoMj0pp1J1FDi9YsvIiaVjAD-tlhNUro9b1C95N-usIcVtLzcnNH2EiBxO8MogBD7ZBebYMy8vnkos1_xc9rDXOyPMtciLAlFH8Yj9cnVSO0FmClof-3SaJnAq2-SMNZ5ZLXh9Hfcd8V2d3Y6CeOfqfPZU0LJoigTZhQUjzkrjQtrKJzLrVmaSEGP-eSwuI7ogUcVvfWNUHTIFKfWC22W3RtkEsG_X0kg61Ip_mnX-yQ54fcyDiCUqhZmbxCSoq1l6766XYnjymU8mmxtnZP7q77B66u4YZXsB5WgRI0hj9u-xqs4r__nXsei9P76jQX61pCvAhj_8we7RKwBbDkKjlKXv05_0fPOzf31asNw7DVZZF7425gPoEx08VtSLg7wwrzXyXovFkt_Ngg0NxmwAi8NSeTl4Qwg5zEN_4ZlSV2EmPajDs7UWrADo2kd0mcn0vF2zQ-UE4eBDawvuGdepUa0LXKemxXT2Wy0sZ6kqT9xABrSDLRi8Uppr75FrPtb1452M",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk0NjA5LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiOTJlNDBhNzktZDY5NS00ZGIwLWFmYzktOGRjNjkyNWJjNjQ4IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLW4xMlduczNKVnJIWndXVFRCc3pkT0o0Tl9fOTJlNDBhNzktZDY5NS00ZGIwLWFmYzktOGRjNjkyNWJjNjQ4IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLW4xMlduczNKVnJIWndXVFRCc3pkT0o0TiIsInVzZXJfaWQiOiJ1c2VyLW4xMlduczNKVnJIWndXVFRCc3pkT0o0TiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJrcmhkc2o3Z2QwQGhjY2MuZWR1LmtnIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM3MzA2MDgsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiYzI3YzJkZjAtYjNlNS00NjY3LWFiMTQtZjhjNTRkZTY2NjdiIiwibmJmIjoxNzczNzMwNjA4LCJwd2RfYXV0aF90aW1lIjoxNzczNzMwNjA1MTAzLCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX0FnVDBRQ0t3SGxXZVlnTnJjTUU3b3ZJZSIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHx5c0ZhTUtDNkFjZWZTMXZXcGx5RFVHbUEifQ.BTWfd470InETPtMbdyCqKVxrs-JRAH5ahQqgkMgNt-o0dyrsg9Vx-m0SUNBhkIS7mj73raOCo_kr6vDReF9JGOyusX9HlXt-lTwQ58mPMP4M7ZCJl3hOdDPdLWU-7swr9Eu1Rpq2wkBk_E4PLQUF-H6amc6FHhxq8dR07BJSEklUtfEnMHegI9e1kvQ_yhZipiMAvWXuDwzqz5yzPvAuUv274_ieb2-HQA1kekIwsnWvTXkYitgNWXRvu2_etj3La9qMkHHXIL3J5TKslP6_lyBTU-tWdilSXI3xtlUT8xa-Jc1nFeYfiGeZXWH49BszV7LzP6jmoN0L_Av20xVC8csoLLn-KCcXJBkae7IsptuvzZBxZSdGS4M6pG77A8n80eYolRCoA5c9SpUbxQL5MlqYVa8DBWf03XQ5ha0YOE4raWQ42ULk8fRjzmv4DN8U1XY__xkg7a9wbbBOh7FKT5SRrMW1Mxx89EKAz4nDaaImC7vaX1QgK0tFL_MmzFT-bdXyTxhC01G-gpHtqL0DtfdKI3Q9EuqkGoDTjfAlTW4YLw5f19XQzHI0UuzRLmPnJDoSSnon8OdTXZae_5JKfSP-66c95ffpsnJo0rGsFAIyec1goJ8grECUB0nEYwH9iwunqZZxKldS72F01dzOz2PdXxtNEKlN-AigDRwl9t0",
+      "refresh_token": "rt_JZyk0iMovJYsjlUMRmvQdxrJbdWgfS5ZTMo0ynGf_r0.--nBnJyuyPZO-9FgRGxvfATBSu_kHX1wtNDiW7x-PRk",
+      "account_id": "92e40a79-d695-4db0-afc9-8dc6925bc648",
+      "last_refresh": "2026-03-17T06:56:48Z",
+      "email": "krhdsj7gd0@hccc.edu.kg",
+      "type": "codex",
+      "expired": "2026-03-27T06:56:48Z",
+      "password": "ZtWckTs95Zsp",
+      "first_name": "Richard",
+      "last_name": "Thomas",
+      "birthdate": "1979-03-27",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "ZNUC-VAUM-EZE3-3AK6",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317145622PR4S24",
+            "cards": [
+              {
+                "id": 198141,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336319280142",
+                "cardPassword": "293",
+                "cardData": "{\"cvv\":\"293\",\"expireTime\":\"2026-03-17T15:56:25.960778548\",\"nickname\":\"ZNUC-VAUM-EZE3-3AK6\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 6a6c4538-21ce-11f1-bcf8-6fb9a4b17d90 | Key: 534933 03",
+                "status": 1,
+                "orderId": 258042,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  56,
+                  28
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  56,
+                  28
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  56,
+                  28
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "9ac13b6b6a974d59bbbd143659d8455f",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336319280142 03/32 293 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1XILSjppByI1GCzQIDxlY...",
+            "获取 Stripe 指纹...",
+            "guid=cca4e809-bfdb-428a-b... muid=611b1f20-6868-4ef5-a...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiWV9Mb2NrNkN6UU5rc0YzQjhROFhpUSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMDY1OSwiZW1haWwiOiJpNTZvYzlxNGYxQGdpdC1odWIuZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzM0MjYyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNGVlNWE1NDAtNzhhYS00Y2M4LTlkODAtMDI5ZDU3ZTMxOTVkIiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDY6NTc6MzkuMDg4ODg0KzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1YcHBoNDVFSnl4anpQbzRwVXdTMnRQUmYiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy1ITXJsRlRiNFRRZnl5ZGpveG9kd0tMZ2oiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1YcHBoNDVFSnl4anpQbzRwVXdTMnRQUmYifSwiaWF0IjoxNzczNzMwNjYyLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImI1ZWViNjdhLWJhODctNDNjMS1hNTRjLTFjOTVjM2Y4NDk5NiIsInJhdCI6MTc3MzczMDY1MCwic2lkIjoiYjA4ZTM1MTEtZDY2MS00ZjRmLWFmYzctYWQ0ZGU5NTg5MGJhIiwic3ViIjoiYXV0aDB8aEpWdW5NZzBUVXUxZDBNMk5EcnFWYWRqIn0.gubZB9rzOboKc2qARBg_wtN9kVbPbf0WG1WzDJEWSt5yuziw7HpXOWNG_jzXSTemsDc1wQyoM_VTZGieKJXxd6WqjW194AfZp9Lt9-VV8lZh8T_W8fBJl-6Ay7Zzkbzgukitx59vjoIYdxMn4f5JLqfxONCb77dDEOBPig4N_FQZkEE6ajDZWbOLPFIRZiWNMKhoUcE0N_3-4H7QuXpAR37N7hP41-GI3Mcx7pwka7RiRl9MPR106Ju05jDhqQePjSSBYUEbRtzXwuqVOXNMITEUROzHNT0VfP5zcG_KNMJagFQhlhMzxNmKrs7pkchC1TGJ4rn6wWnyqHQ9U2JcLkinrEFXopk-Xb7YIeC4vqJifxg0IDEqR5JKOx4PfiRrAgObmylQT4yywuQjvRBtlnSMCQ0Iz9AfT9jXepcAT-f2wdceNY2ipuNi1NZuIy3nKMqakpio2SUnUu8o5yNYwRAFbqL9R__NjRgpCf81voCmftJ8lawg0Qv02Zc2rAidGCThVuPddKek3QRwAEFV-zcWyqzusadFePwgol2uGi_7iY_ITVtY1GPYP53Ied_0YoHxQExwEwWVC6MH7pQJqvGF6fDb5lNIBGyqj7DoPoDiBvGJnJWnYBhJPxaxkip0rxAL0a6CYrdEdBGnOkK-yaGRzhm_niJeZSR-nt4y7o8",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk0NjYzLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNGVlNWE1NDAtNzhhYS00Y2M4LTlkODAtMDI5ZDU3ZTMxOTVkIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLVhwcGg0NUVKeXhqelBvNHBVd1MydFBSZl9fNGVlNWE1NDAtNzhhYS00Y2M4LTlkODAtMDI5ZDU3ZTMxOTVkIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLVhwcGg0NUVKeXhqelBvNHBVd1MydFBSZiIsInVzZXJfaWQiOiJ1c2VyLVhwcGg0NUVKeXhqelBvNHBVd1MydFBSZiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJpNTZvYzlxNGYxQGdpdC1odWIuZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzczMDY2MiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiI3NzgwODhlNy00ZWMyLTRiYzktODE3My1iNDc4NzRmMjljN2QiLCJuYmYiOjE3NzM3MzA2NjIsInB3ZF9hdXRoX3RpbWUiOjE3NzM3MzA2NTkwODgsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfRVRiMXZyWGo0NDF0dmtrNDZwTEl5d1h2Iiwic2wiOnRydWUsInN1YiI6ImF1dGgwfGhKVnVuTWcwVFV1MWQwTTJORHJxVmFkaiJ9.mRX3OJFGmXzb_fzVw1F-YN4sXr62yWtvJMvAbeB7sdT2CYYpWDEA7etFy80UmhE7PSii4izdLgbuEjFjNhC4ecCq1j7qpWppjO_4BXi779uJUFmkPdAaeC5mYNFJY5oKEwUADOIBnO-vwkfH4dGkABBIRkOCRPfUUxkshsfY3QhiK8wJPHI9OiX_zkMzY3NX00sUEt_Nqt9PYa2OTUEFY93Un-CMDfWs0njchNqfnWXrFxYfw_Ein49GeVumW0Y8AkRwdwM_0mMBuSYARQ2GcPejB6fzx6b0vUMOSHPM3kiI-3_yqLSfjvgMn1OcjXZ0SQCHKYzAmcS_5b7V5ign2eKY8DA3BTqcz-YsiPjbg0Q610HcAwxDEiBhtYQNoiNf1juI9pqsbReNTO2zMwBJK_j5L2JBmW2gKPP5yYi5_VVAmkGwIClTgaleMJ548Y364LBVUyYJlZhvHQ1fZocncnQyh5FwDIhm4fF99AweMp3cu8dnX7izboQY1AatbItb1H-raKK46WF_JmIDB5oTodedo7C0-7fLqDbVhoZeVx0re-YUxiLcP2wHHRubKv5EbnLv_KkjxfR4qFi_Tv6Rzzf3zvhDk7uZFNeU3MFQBheKXsqwh88vn98PzIAnpONmN8FPxGa_6OCwEGUDQujcYB_bG-SRBdbICPa7FBzBMvE",
+      "refresh_token": "rt_Y1xjrx1tQoOulLFgA4IIODLQLsG61e56XeSF1WExL9E.gMvYxhICt6-X-9_uDSP-WzWSjmuwHPfM7yM1AKu5yiE",
+      "account_id": "4ee5a540-78aa-4cc8-9d80-029d57e3195d",
+      "last_refresh": "2026-03-17T06:57:43Z",
+      "email": "i56oc9q4f1@git-hub.email",
+      "type": "codex",
+      "expired": "2026-03-27T06:57:43Z",
+      "password": "GtczZ80kB6R9",
+      "first_name": "Barbara",
+      "last_name": "Davis",
+      "birthdate": "1986-04-26",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "ZNUC-VAUM-EZE3-3AK6",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317145622PR4S24",
+            "cards": [
+              {
+                "id": 198141,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336319280142",
+                "cardPassword": "293",
+                "cardData": "{\"cvv\":\"293\",\"expireTime\":\"2026-03-17T15:56:25.960778548\",\"nickname\":\"ZNUC-VAUM-EZE3-3AK6\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 6a6c4538-21ce-11f1-bcf8-6fb9a4b17d90 | Key: 534933 03",
+                "status": 1,
+                "orderId": 258042,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  56,
+                  28
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  56,
+                  28
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  56,
+                  28
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "9ac13b6b6a974d59bbbd143659d8455f",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336319280142 03/32 293 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1t6xY6myijronwKDZmT2J...",
+            "获取 Stripe 指纹...",
+            "guid=e77e8c03-fa46-49b5-8... muid=af04b794-bbcc-4340-9...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoidTJNQUpISUVYN1UwYl9ZOWVlSnpKZyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMDc4NiwiZW1haWwiOiJvdzhtdXpyNGJxQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzczNDM5MCwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6IjUwZjgwMGNjLWU4MjYtNDIwMC04N2NmLTQ3NzdlZWYyODA0MiIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE3VDA2OjU5OjQ2LjM1Mjg2NyswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItcFYxak1kTTFWNE1TdTdUWW9OT3JLSWJVIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctMXJrdnFsTFpiTmx2N0t0MVJWbnBIY1JhIiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItcFYxak1kTTFWNE1TdTdUWW9OT3JLSWJVIn0sImlhdCI6MTc3MzczMDc5MCwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiIzNGI4MDJjZS1lZDAyLTQ2NTQtODdjNy1iMjI3MmJiYmM0YWQiLCJyYXQiOjE3NzM3MzA3NzcsInNpZCI6Ijc0OWUyNTM4LWU4ZjItNDFlMy05ZDcxLWI5MWVhNjU5MDg5YSIsInN1YiI6ImF1dGgwfExWUWlubG5DbWFGNDVTcDdORGNlMGREeCJ9.Eggc_SE6IUUvD5LCrlVTTi2uOqkUCcTK1joY8QOcem2NFn7MecsuSwhUVBmhnYVY8amrdEbzaBfpOzp_yJbR195SkLlM27MyHtCM9d7SwV9AAU9Km3q3_ovzNW2XCQpc6ZKkng4JOQ8ApL41RiE9GPpX_fUdLnPgKWJVgzzCU9iWDwcnoerUVR6r1BMf45qDKGCsas1Bpf_8ZJ9_rkEcWnk-cFA2qXOgaNDqiJbDadxlpPVGUTLz4bAYNzFle_pTkMTgwuZjfIo_8dhQUGSAnwHzRTvjOEE5g8Fjr4QWbQtof910OXuNPlwagxmgQkppN3hWD9V9mFCrb1Nn5W2-vRU-DxtDyaJMA2L4Kqptc2CtMifbC4zZboqV4OT7fEPIdZcACUh8Ct6tJzIkRGqtDrCI08ml5lh6MMSA0gIDCpiulE3bqi4jroQvj6xs9wIPbEGegXC1-D7mN7syJRrySSW_tsS0CeDSkDGf7sX01l_XOjeye24RR0yKI8MMCfBDbcV6qMl8atCQkU2ozeKFwbqnKyPOydHzACex-Kfyj20KWFpglBtNQEXDaaxtYE7CKLgwXO5lqC_HdXD3RWISW7iVzEpdjFZTZQkZ9f8zMshtgZoo9HzlAOh-fd1W6U4m-pxkbCUo0h4XIG0A9ZV-Mi5GLZicpycB3kwMjy06h4s",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk0NzkwLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNTBmODAwY2MtZTgyNi00MjAwLTg3Y2YtNDc3N2VlZjI4MDQyIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLXBWMWpNZE0xVjRNU3U3VFlvTk9yS0liVV9fNTBmODAwY2MtZTgyNi00MjAwLTg3Y2YtNDc3N2VlZjI4MDQyIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLXBWMWpNZE0xVjRNU3U3VFlvTk9yS0liVSIsInVzZXJfaWQiOiJ1c2VyLXBWMWpNZE0xVjRNU3U3VFlvTk9yS0liVSJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJvdzhtdXpyNGJxQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM3MzA3ODksImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiNWU2MDdlNmUtNTA1Zi00MjM2LTk2NGEtMDM4YWYwZmRhOTI0IiwibmJmIjoxNzczNzMwNzg5LCJwd2RfYXV0aF90aW1lIjoxNzczNzMwNzg2MzUyLCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX2Y3b25MeUVDa0tFVFdpakVHaEVJM3loZSIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxMVlFpbmxuQ21hRjQ1U3A3TkRjZTBkRHgifQ.NFDCIgny-CQ-uZWAQ_SNIpfYfZpMAihZ5R2ioHKK0_YJrplAameliBkpKmXUsTUu-tKjw03DmEK2WBcJiXqMfPjtEWf9p56BLUiQJGaVUeqfmmKq_3B33gN5GnYQDM-az5UGmZunUeIGeLHC0HdHe64zDsFNvjBldVfxutRLG3CUQO5_KGCBls-haRKNz82c1ft6UpKtngRkGmmYXI5kHeS8UNURIRpSmX8oZBdPRnXu0iEohdV8-2C0YLomTTck4H_o9VCkrl8IySKnltAkEzjWNVPNa9nOpBrKpV4j7-1O4CetrHAjtDHNVy0EoV_BLILhvZBNsKOIe5KVSpcBPQz9fGRCsdpYD2k9T-eoBbnbIl06djR7RPorAZMZc5nZszpcCXPQaTcDJTgG9a7C_4byHMdEJGqCD-Q46IL2clzqumikiLL_Jps8XIuikuagzttTHV9cQ8fjwUmUkLYICi5B62GTCzUzLM5U1-OhXCaHbK7K8ljlGhxjEd6bieZLFFhJgd_Hiz1V4-OZaarfFN_BYPF6ILkv0rozYdHtV8hItPGq3s1diae1MdmzqVGytW4FBT2Ke4-BOUmJRiAq8qsSTNyLRo5WigIA332E2HJ4icEX7vTS6LSC94p-D6h_jwGvlkDawf5o6-Q1OKhw-G1M1wYH1OjW1CyZrs1f3IQ",
+      "refresh_token": "rt_ge5uzkKQ5bS5LLDLRiNO94A3JdJLx8pu2aOjUejlpUc.r8gT_V-Wxv5-IRCGGmJ8MHx4RokpqhgojUZgPKXWDW8",
+      "account_id": "50f800cc-e826-4200-87cf-4777eef28042",
+      "last_refresh": "2026-03-17T06:59:50Z",
+      "email": "ow8muzr4bq@kiroxubei.tech",
+      "type": "codex",
+      "expired": "2026-03-27T06:59:49Z",
+      "password": "2KeOkCGGMf3S",
+      "first_name": "Liam",
+      "last_name": "Jackson",
+      "birthdate": "1996-07-19",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "JTR4-VHD7-L6W4-7BKV",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317145825J2NEAY",
+            "cards": [
+              {
+                "id": 198155,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336377740508",
+                "cardPassword": "524",
+                "cardData": "{\"cvv\":\"524\",\"expireTime\":\"2026-03-17T15:58:36.705970611\",\"nickname\":\"JTR4-VHD7-L6W4-7BKV\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: b85be910-21ce-11f1-a48a-e7edc7c3ada4 | Key: 534933 03",
+                "status": 1,
+                "orderId": 258061,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  58,
+                  39
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  58,
+                  39
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  58,
+                  39
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "703ec1776fdd48348300eac9301d2a12",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336377740508 03/32 524 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1icSlZGMbHCZvSm0Ci783...",
+            "获取 Stripe 指纹...",
+            "guid=17714a17-a15b-4e6b-a... muid=e7866b8c-5573-466a-8...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiMUlmbXdSTU9JbDFMYWdybVBWTmlIUSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMTcwMiwiZW1haWwiOiI2bmNpOW16N2RvQGdlbWluaWtleS5lbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE3NzM3MzUzMDUsImh0dHBzOi8vYXBpLm9wZW5haS5jb20vYXV0aCI6eyJjaGF0Z3B0X2FjY291bnRfaWQiOiIwYzgyODc4Ni1iNzk5LTQwODEtYjJiZC03OGI5YmQzYzk1ZTQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfc3RhcnQiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV91bnRpbCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fbGFzdF9jaGVja2VkIjoiMjAyNi0wMy0xN1QwNzoxNTowMi4yNjI1MjgrMDA6MDAiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLTJ1d3VmbDlGM2xyMllQUWFMRXUxNW9XZSIsImdyb3VwcyI6W10sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLXo5V1dESmRmWkJhaWFKNFV6dXNuQTVYYyIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLTJ1d3VmbDlGM2xyMllQUWFMRXUxNW9XZSJ9LCJpYXQiOjE3NzM3MzE3MDUsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiOWM0NTUzMWMtNTdiMy00MzVjLTk1OWItZjBjYTQ0YTU3MDc3IiwicmF0IjoxNzczNzMxNjkyLCJzaWQiOiI5MTAwYWYwNS0wOTc0LTRlZjMtODRkZS1hNzU3NWYxNjVjNTciLCJzdWIiOiJhdXRoMHw3NVNMZzR2ZElDdEtsQnlwejdueVc1REgifQ.kmR02rl0SyHamE3kVFkJWanAGVprHKJVRR66OnLN3yYXSw878KnPPFUYIHFSgzhSHMC58RgdZte88udXsST76ZLuzRGf84ca4VsqzYd7l1o2ETsel9zmwHi1nyfx_hjZmrl7R4uD0TfuQGfRMFIzwhVg4ayPSj-8h2_B4neTQr_arRZX40Q-eppPEJ9fT25rERAoMR5yjXj19x-1Hil4k9yJh2NwbyQMtvcrt20v_VbpPr9ucsdv2va_a3_F5lpS7BD6wmyDaGrl36hFJBZeRhcXqSd_iuiBZR91cMbVRlzMlPL__4NMu7j8ji--mWhkfZN2nb2ZyK0QOMGJMdyvO7OK9SlIBfkiiA442MZ9_F7FSZhun-PM1DAvrq_j-fTUcNNCK__ZWWVgfhvF1nMq1jD8pCInLphLrWPTBUXhllFI0QJa_PfTEUL_mwqQyfMfZZpLwuqDuHFbOLhu93B0EoREIAxTN-2k7v1tSq39XsQSrG7K8duv-4B6KqzqSr2kTtWpnsFeZ5n2CImFVr023hEyAvZlH_WMs36zPafLnkD3eH0YK6OGj70wVwAYvVOwfuNB_3wiFe8Y2z-eUG1NuCqr83m2xTXKlDZ_rJPhMoaEZGO2Bkml6Zk4Q0i4w3v7623szNJ6A_sl7Lz5HmYmH6uwJUtZazYwwye616lNafc",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk1NzA2LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMGM4Mjg3ODYtYjc5OS00MDgxLWIyYmQtNzhiOWJkM2M5NWU0IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLTJ1d3VmbDlGM2xyMllQUWFMRXUxNW9XZV9fMGM4Mjg3ODYtYjc5OS00MDgxLWIyYmQtNzhiOWJkM2M5NWU0IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLTJ1d3VmbDlGM2xyMllQUWFMRXUxNW9XZSIsInVzZXJfaWQiOiJ1c2VyLTJ1d3VmbDlGM2xyMllQUWFMRXUxNW9XZSJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiI2bmNpOW16N2RvQGdlbWluaWtleS5lbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzczNzMxNzA1LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImI3MDhmMWJlLTgzMDEtNDQ2MS1hN2RlLTg3Zjk0MGE4Y2I0ZSIsIm5iZiI6MTc3MzczMTcwNSwicHdkX2F1dGhfdGltZSI6MTc3MzczMTcwMjI2Miwic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc19MMDU4YlBaOEIzRU5SUzIxaTNqT0VJWWkiLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8NzVTTGc0dmRJQ3RLbEJ5cHo3bnlXNURIIn0.Mi3IjQR8HtgO59XrPxQ3wrDFbqc-xHi9uhLHMbgx_7Qvom-BGDRcEYijZyjyUNiT9SptyXNlRiXIBsx31ugbmsIX01adH-SrUXFebyVLhvuMlb7oH3X5eYcLGqoKWCxHtKS3Kw1IoP1XaQyUGbRo9ikgQNRzEZGwmjgcP7KH2i5DncKqqpR35sobcfH8tp395WVKRBOQGijkbYvamTMok-5Mm3qcJ9kelESeGOGszJ7wh2_fPTLni2vZa5RuFhnXhu3pKo3UGnH5dV5EesX008ZJZ4sfWnLJ1SU1oTG8x0vyt5bbZ3I1ebPECjxkvV9960Sa6zZ_oxgG8gMsiBoYXx81KjuMJZytwP9ok8lZBkXsvig10in_epwQqSF-L8WoGUfZ7mlBhdtaLnq8NzZgW8Y0P43-MjUCbzHIUK0tbTQASlCRdRa-7DVTH0jklxfg_wgWYn6s28bv3wuVnswPuXpwAl85iYze1WQEo4gNLFSqLG6qJthkreKozpmA5BLfiOmxYebLTilkTrw8fCtcXDPRQC4KE8DVrgb9dZnv7ZYIUwcWaVL31RUKamMzaObHK2dDXJYtr5NZZRV_hR5VL4JtdlJsaXwweioCBA96Zo2QHSoow6XaIRo_7ZsVTNZgmUw1Dt02k0THgbH6sybkf03KtdztYNHqcA2v9gkx_nk",
+      "refresh_token": "rt_ef3nUJ8dUJ8dB56_77JTgzvM-1ed5fwdpPmEdABQ2ic.vPcLcnGjHJ4OhbKnXIaFQ_EsN1W825s9AgPfg2FiFRY",
+      "account_id": "0c828786-b799-4081-b2bd-78b9bd3c95e4",
+      "last_refresh": "2026-03-17T07:15:06Z",
+      "email": "6nci9mz7do@geminikey.email",
+      "type": "codex",
+      "expired": "2026-03-27T07:15:06Z",
+      "password": "2En0QSp3LqpU",
+      "first_name": "Jessica",
+      "last_name": "Davis",
+      "birthdate": "1993-05-05",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "JTR4-VHD7-L6W4-7BKV",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317145825J2NEAY",
+            "cards": [
+              {
+                "id": 198155,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336377740508",
+                "cardPassword": "524",
+                "cardData": "{\"cvv\":\"524\",\"expireTime\":\"2026-03-17T15:58:36.705970611\",\"nickname\":\"JTR4-VHD7-L6W4-7BKV\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: b85be910-21ce-11f1-a48a-e7edc7c3ada4 | Key: 534933 03",
+                "status": 1,
+                "orderId": 258061,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  58,
+                  39
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  58,
+                  39
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  14,
+                  58,
+                  39
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "703ec1776fdd48348300eac9301d2a12",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336377740508 03/32 524 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1fsKV1kk6o0YWVMNm8v6K...",
+            "获取 Stripe 指纹...",
+            "guid=199dda53-e28c-429c-9... muid=ead21ba8-ac5c-45e3-8...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiaGJ3b20xc1dHUGVsWU9JSC03YU1jZyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMTgxOCwiZW1haWwiOiJhaDE5dmoxcngwQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzczNTQyMiwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6ImU5ZjE3ZTRhLThkMmItNGZkNC1hMWVkLWIzNGFkMzk0YWMyNyIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE3VDA3OjE2OjU4Ljc2NTc3NiswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItWk45Y29teGNVMll4MkZQbnhOZGxQVFljIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctck1KZEhaZU41SFBkc2w2eEd6RkpmbGV6IiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItWk45Y29teGNVMll4MkZQbnhOZGxQVFljIn0sImlhdCI6MTc3MzczMTgyMiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJmZjcxMWQzNi1jM2I0LTQxMTItYjYyNi04ZTAxMmUwM2Q0ZTIiLCJyYXQiOjE3NzM3MzE4MDksInNpZCI6IjBmOGIxMzRhLTg3YmEtNDk5OS04MTZkLTIwNWQwOWNjODkzYSIsInN1YiI6ImF1dGgwfGNFMER1R0lxNkVQSmJzUklZY3kyY3EzUyJ9.FCe8c9yq8CnXjDyXU98Mv94hApfzizN-SuXSrr2ib6JGMAIlIAjwC5m9PBmaLk0KSPGyiE8AV73PqU1CoYQD8xifVDi0yd1VBejNDHDktkRIv9alIGzBeVdmwGTQaO2HAcba4DOYrK0BuqvU7FRIz5BOy6ddtdzL_HT650yyVLzo7V3Fz2jLU8-3JsrjL35OZu860LlEjX5P9SaJwWZ8cBengot0G-4d_wErAzR0njHKkpJ0iQjgWHIhm8607JVEQonCCAnjhd_ysD9ATJiCs0uGjnFVY6y5h-cjBICPz1dcd45Tpiy39ijzZrgoBn7DAWoQQk_YvlZzzyHRdyUARiqDLW0HuPKHwAzTVkaVDY-GXyyjMaaFJwpo_lNzT3skSP3yCj78vyrzGzmbzUrToHzIom4znNH_TJ16Fwm0BVW7F0bDhXH0YqAeBiOPVtdL8G2i6a95eAisWUbm-iVWuxcofF2lUOESz3DpbS4OtEA7sNr_5mtZVO4bwTHceqvYxpRndEC-v4ptTdQTtic6TNz55b589us6ObknFX13GZfxGe6cgVGL-uXtAd8bJJ5SGNoWI7uWUjOpO9IpyKGFqf-j7mNqKBzLOaHY-dN55dINgDZRl6qhh_p-GYn3tT0gP7PqXHVb6oUeUHpt--edqGzrWYWCI3XqUnivMPqdiQk",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk1ODIzLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZTlmMTdlNGEtOGQyYi00ZmQ0LWExZWQtYjM0YWQzOTRhYzI3IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLVpOOWNvbXhjVTJZeDJGUG54TmRsUFRZY19fZTlmMTdlNGEtOGQyYi00ZmQ0LWExZWQtYjM0YWQzOTRhYzI3IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLVpOOWNvbXhjVTJZeDJGUG54TmRsUFRZYyIsInVzZXJfaWQiOiJ1c2VyLVpOOWNvbXhjVTJZeDJGUG54TmRsUFRZYyJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJhaDE5dmoxcngwQGtpcm94dWJlaS50ZWNoIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM3MzE4MjIsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiYjc2YzJlMGYtYTVkNS00MTFhLWI5NWMtZWFlMGQ0MDM5MzA1IiwibmJmIjoxNzczNzMxODIyLCJwd2RfYXV0aF90aW1lIjoxNzczNzMxODE4NzY1LCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX1hJNmpjQzc2VGFjamNFQ05zd1Z5d253RCIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxjRTBEdUdJcTZFUEpic1JJWWN5MmNxM1MifQ.ItgChyg8djxg_E_ItGPDOes8tq4J_Cf7w58oBMSKM1_W5vLxciNSou-xakHfaU6qY7ApxozqD-GbcYjW0dzm0ext4FGPE9kMmrlmXJr1CrKayRCAiAkVnFGlwTRbRQMf35h2YFqhi9szwEDbOrOBekePjkylSbp6XljhC6bkB4DxNyqfYg48UUlvcnuSvF6Tl0Ys6OxWuvOs3x8olFR8x5GLmlcE64OJaOKyrnlu3gFcu2vdYwIcNnssNArVsj0xrOOLX52FIsnbJDO6Y4H_CbYL5-6VTSEOKEI9YjaBKhX7X3Q4wJngkXMQuGh8JdctV3OuQoTDkWHWsjBxOdQik8UzfUYOIB9WMLXoGyO78BQxS9zz2rSzTVGmTq3_UAevSMHCnMlHktrcnpdrj-KhqYRdHPdjSG581itQHR-_fACG_dYa2EbzB_CT725Vgaw1wrVrVW8QA0Ei6RUYC6aTJhI7a6LsBb0YqWXLZWJH9SqR4DQ2bWwP6uJ_nuS1jEcapd_96njsRrHM74TJonvBM1X3bYC4F97282oqkiiFfk9b7GNa0OiOUR_uS60WD8LNFYFpXp3btQdnLoYwbnCCMU8Y4ODvvfBy09zB7mxJhekLRLFn0CZUQ6rY2k9xuXQm4w5cdCRJrTofam8i0wW1r4JHoNuEc4SW0X59M1SSz34",
+      "refresh_token": "rt_dVl9dCHHMPQEded-eMOj7ZB3xPL6v4mLjuZwY-6Mbzg.H3OQvxRyJj2cy-TYutaU5QC-uMv6I3skuEj2nRgjEig",
+      "account_id": "e9f17e4a-8d2b-4fd4-a1ed-b34ad394ac27",
+      "last_refresh": "2026-03-17T07:17:03Z",
+      "email": "ah19vj1rx0@kiroxubei.tech",
+      "type": "codex",
+      "expired": "2026-03-27T07:17:03Z",
+      "password": "k98d16LZrWCg",
+      "first_name": "Oliver",
+      "last_name": "Martin",
+      "birthdate": "1995-12-20",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "Y9LE-6XWY-SBFB-3DVM",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317151636C2ZMNK",
+            "cards": [
+              {
+                "id": 198267,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336346881300",
+                "cardPassword": "567",
+                "cardData": "{\"cvv\":\"567\",\"expireTime\":\"2026-03-17T16:16:41.290611252\",\"nickname\":\"Y9LE-6XWY-SBFB-3DVM\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 3ed75130-21d1-11f1-8a63-6f6ffd407ed8 | Key: 534933 02",
+                "status": 1,
+                "orderId": 258256,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  16,
+                  44
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  16,
+                  44
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  16,
+                  44
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "5ea7429dba6f4f808abd0bd1e4b29f03",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336346881300 03/32 567 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1CTvCkUtctLvtthKkfJf7...",
+            "获取 Stripe 指纹...",
+            "guid=7aa15920-9060-4f61-8... muid=c55478bb-ce3d-4891-9...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiaXBmU0RLUjk0ZzZObUxsQUdJN3dMdyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMTg2NSwiZW1haWwiOiJmbHVzNHo2dzhvQDg4MDMzMy54eXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzM1NDY4LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMWUxMjIxZTAtYjJiYi00ZmQyLWFlZTgtOTA1NjUxY2Q2NjQ1IiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDc6MTc6NDUuMDQxODkzKzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1MUjdIOHZ5YUlaSFkydWdLSER5a00zUWgiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy1tbUpVT29nNzVWNmRRdzdKNVBFSmp4dWIiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1MUjdIOHZ5YUlaSFkydWdLSER5a00zUWgifSwiaWF0IjoxNzczNzMxODY4LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImRjY2ViZDcyLTc0MzctNDQxYS05MDljLTVhZTVjMGMxNTcwMiIsIm5hbWUiOiJSaWNoYXJkIExlZSIsInJhdCI6MTc3MzczMTg1Niwic2lkIjoiYTIyOTdjYTItMTM3Yi00ZGRiLTkwNmYtZjcwZGM5NWIwMzY2Iiwic3ViIjoiYXV0aDB8UEhac2ZKMnRHSGZGaGpiM3Rid0s4ZG1vIn0.lZwme4i8WSOVx9GAZvhta9OW-di3pTXPuNMAJyETCH0v05XJ0cPVM8Oae9WzEiGHIALpWuCZJrZl8SFky4O0KrEKEMtRjjUCiUpzphEuAXO_KV5-LGfybJatX_UYK2fuvUUNbwD9dW_OnMVRlV73acHpg6GkjLukgoQknnX6YbLK5lLAVmFZEZauDR4X7kpHW_Ulqc7K5gMjYIFVj-l14ZNqbN1SoNIYCgJjN9EPH1VTYNX_j_eibYF4rilAJNJhpOtDGTaiE3Sv5KXKkoaPzQFtBojbx7C_mn3mA01Zq5TKX4cKO2-3RjTT-DmyGdBlob7vPYolixQ-0MICF7wL3xuu5Kb-yNSnS5WAbbwp3Bk39ygKfs9tIctPsmsqINlgEF3mumHzLLar1AijFBNpb2w65ar7JaCl_PGbQZVwp9-2lXnUEyMmsgoIehY2pA97KoHc6-K9QWJ9wy6OqpOe2GD4j1R3NwlZULlb0LHFNkzL5giOjH1zvLimo9Nj34gY9_1AeSxK0XwS4JCUjJQsYGoCgjRsV_KqLMCFe2NUjMzML886g9vRT8HAr15W96q49zG_788yGBDiPnRe_VE0_Oh3UtV9_DtIUzLbB-wfIgaylKM2jGqD-oJYyIiJiq5F-KT1bC9WzCm9X8DlLpm7-_9IZW7vZ3e59EFPPGzpjoA",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk1ODY5LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMWUxMjIxZTAtYjJiYi00ZmQyLWFlZTgtOTA1NjUxY2Q2NjQ1IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLUxSN0g4dnlhSVpIWTJ1Z0tIRHlrTTNRaF9fMWUxMjIxZTAtYjJiYi00ZmQyLWFlZTgtOTA1NjUxY2Q2NjQ1IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUxSN0g4dnlhSVpIWTJ1Z0tIRHlrTTNRaCIsInVzZXJfaWQiOiJ1c2VyLUxSN0g4dnlhSVpIWTJ1Z0tIRHlrTTNRaCJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJmbHVzNHo2dzhvQDg4MDMzMy54eXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzczMTg2OCwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJhNGEzYmUxMy0xZjBiLTQyYjEtOTJjNC03MTExYWZlYTkxMmQiLCJuYmYiOjE3NzM3MzE4NjgsInB3ZF9hdXRoX3RpbWUiOjE3NzM3MzE4NjUwNDEsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfSFhKd1NGdU1jV044RkM2ZXVnazlSVWpJIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfFBIWnNmSjJ0R0hmRmhqYjN0YndLOGRtbyJ9.AlT-FkoB9VHJYZefGAZ2-0PHE4KyqYBKnGgocVwB7Ip8xh-Tg69ymoCluSNG3ye8RmWXuPjf0S9tGfohBF7ZQGLD8Kef7D9UPrRdxA3ryl38_l4eN3oK8z2_GMTqibXohaEQmWji9AVdE0dqO1co7gwDZ9DWmRQ6HIWgGLo_7MI-ueRiYewGR2y8nuDDkysvDUWm6NLN7Ouz8eQZmPUwTNY3_3aeAYMevhFR2szDvMd9I-ofgJMuE4guUDxGtHY1yQ1JSqWJxqwaBnVWR4LTfLHIrW1D78N7UXtfk3PXE-WAz8kvbyEEP-YTjNfvHL9c4DFRnbn9i02nm5GdDYyqhsXsNKGujjnBI5DmqlPvqeLdgpaVav_SI-DXCOvnsG2Nv1iVzvcPQpbRvepgWewmlSntoTxKBnQv8CVosB0B4hsG8D-c_8UeOvxsC-sY8f_N542OdvgIMIaVbZAvDX19kAjPsX3-OS1qH_mSwYhO_Sftf0mZbaTv5EoaQsAuYt5qIZwug31amzbx3LpH6AMxdIl-lYTSjPeF2LVh3_skehSxn1MPFkwxUnxp2_4k80zfutK3uBnOo4QJQQS3MbuKu_nObJaWz1J4beZDWLAx6GElaQI7TO13fINU_A1dtFC_SjDB1uJgrR8UfljE3Uswg2Sq0byKfctzj6T2lXZH_fE",
+      "refresh_token": "rt_QGjGl_JVxJVUTCuVX3g7CAJjM-RU9m2qC-usfQ_fNrw.O9dg1ntl0NG-mcM-oMqdz07tYc1zEp4t63F3byVx_ok",
+      "account_id": "1e1221e0-b2bb-4fd2-aee8-905651cd6645",
+      "last_refresh": "2026-03-17T07:17:48Z",
+      "email": "flus4z6w8o@880333.xyz",
+      "type": "codex",
+      "expired": "2026-03-27T07:17:48Z",
+      "password": "ssYcvB1wWuIP",
+      "first_name": "Richard",
+      "last_name": "Lee",
+      "birthdate": "1981-11-06",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "Y9LE-6XWY-SBFB-3DVM",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317151636C2ZMNK",
+            "cards": [
+              {
+                "id": 198267,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336346881300",
+                "cardPassword": "567",
+                "cardData": "{\"cvv\":\"567\",\"expireTime\":\"2026-03-17T16:16:41.290611252\",\"nickname\":\"Y9LE-6XWY-SBFB-3DVM\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 3ed75130-21d1-11f1-8a63-6f6ffd407ed8 | Key: 534933 02",
+                "status": 1,
+                "orderId": 258256,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  16,
+                  44
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  16,
+                  44
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  16,
+                  44
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "5ea7429dba6f4f808abd0bd1e4b29f03",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336346881300 03/32 567 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1eU9fJV3EfDNiQHEfGbcs...",
+            "获取 Stripe 指纹...",
+            "guid=bc30b373-c51a-46c2-a... muid=2f7e9900-337f-4ad3-9...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiTnFkTlNRQ1RIMzJCUE02Q1pVLV9RQSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMTkxMSwiZW1haWwiOiJ6ZzRmZnBiMXFhQHhwaGRmcy5tZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE3NzM3MzU1MTUsImh0dHBzOi8vYXBpLm9wZW5haS5jb20vYXV0aCI6eyJjaGF0Z3B0X2FjY291bnRfaWQiOiJkZTcxZjVlYy00MzVmLTQyOTMtYjQ0OC1mZTQ3ODg4Y2IxM2IiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfc3RhcnQiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV91bnRpbCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fbGFzdF9jaGVja2VkIjoiMjAyNi0wMy0xN1QwNzoxODozMS45NTg4MTMrMDA6MDAiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWtLa1BZUk92dTZHUlo5T0REdVJpTXZhZyIsImdyb3VwcyI6W10sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLUlsc1NDNVRiOHNVRHpGMTh3ZWZWRUt0TCIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLWtLa1BZUk92dTZHUlo5T0REdVJpTXZhZyJ9LCJpYXQiOjE3NzM3MzE5MTUsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiYTEwNjk5ZDAtMGM2Zi00YWQ4LWE5ZGQtY2M5MzNkYThjM2M2IiwicmF0IjoxNzczNzMxOTAyLCJzaWQiOiJmM2E2N2ZlYi1mNWU3LTRhM2UtYjNhMC01MWViYjU1MzI1YmQiLCJzdWIiOiJhdXRoMHw1RFpQRUFnd3d4SXFJU1l6d2kwOFoxcUYifQ.G15-0Weh6DCV8hQ96iKCDtdezix0mwETzu9bMds8rSZNZozVbHKJSmHXGm9XnEhzVPy_hRM008eMBlmgtIF5-ttTh9durt9-GJVCRVzMmA7NzdNZk0UAYYa-pgcYuKdAnYioipRpvSVrW9waOZC6aCDL43BAljliPOkL12SCsQ8YTIbji87X3c4XMeAZEei4_sdI8271O9r8cxc7VIj160tYmmLB1Yehs0gxbZAoY6reDLeRYn8Ky1OKf2QR_B9SB-_4Z9_cPW_irwnPBIOWIWy1fYrbSReSCmx4nxkzOvcMklkhh41Y7mnklq9pqBkyFBRZbulOG3xIlw55qoNeuESZ31DcypiElmrw6AClS5xyIQCbXPeYWzIcDvQXjAMtcm4tLEWGwbCJMxvM1ubqypPLrRD_kJHteNwtqaWQIXcwIcZ531621mVJ5l7h_yEfofvaNZrYgUx15roa4ONvv0UtCereBGemBeISJZhazPGlGya3R0zlMvyLujloZ7opY7n1nLcVCyL_UDyle1G285JVyPVtbQjAUqSsHvJi0PTXjp2A4jdrgvbCNia9Kv6mTUooXUPpjnzdrP7Pc9OD5TVZQ4qgHNV59VB4mmZ1WRMSNq209zVF7wWTINQUNbbDfjnljKxKfFKgCp9RPAfTM2tp5gfwUdLVA-wCvt3ztdg",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk1OTE2LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZGU3MWY1ZWMtNDM1Zi00MjkzLWI0NDgtZmU0Nzg4OGNiMTNiIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLWtLa1BZUk92dTZHUlo5T0REdVJpTXZhZ19fZGU3MWY1ZWMtNDM1Zi00MjkzLWI0NDgtZmU0Nzg4OGNiMTNiIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWtLa1BZUk92dTZHUlo5T0REdVJpTXZhZyIsInVzZXJfaWQiOiJ1c2VyLWtLa1BZUk92dTZHUlo5T0REdVJpTXZhZyJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJ6ZzRmZnBiMXFhQHhwaGRmcy5tZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzczNzMxOTE1LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6Ijg2MzVjODAxLTBiNmYtNGMzYy1iM2RiLWRmNmJiODhjOTgwNiIsIm5iZiI6MTc3MzczMTkxNSwicHdkX2F1dGhfdGltZSI6MTc3MzczMTkxMTk1OCwic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc19FSXh4NGhTUWdwdkh5dkMyNWQ0Nzdqb04iLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8NURaUEVBZ3d3eElxSVNZendpMDhaMXFGIn0.hQ1hzPD96IWCmeQKKNx6D1JQh09IbqkK5u9oMJI0ix6hS4xhbSGgHqjj80iN1_De2juGtkqoKP7qVbzwvo33_cKirQbbRGJEo1tWI3ok_7fjfdDOspOECQI92rgd2SeH7GJ_iWnj_TI0UdP5vr7-pUdpM89jB9IW5XBIDhP0j6N757oDPD63L8V2AuFCmqMfhmf5I5TqwZRC0EY8uX16MCFu-nEWznhtegOUnqvkGhYs_bab-1caXsxfC8sfXH-vy87MBVsAZHTatopMeAraq8jqiI_E0N6LZbjI17hxPRTapU6JHqRpsUsjDRd2fpBa_HDuDhRZ_KxRVq9VGJDgg9nnTTME1SqaC1dloCWSMvgkQ0XU_7SdEd0u15xeo42Ej1aFAmn9bNhLJ7om1mfQIVDb4qdRoVDzH2I4Iydplbz0Eda8aGrdF5xvMWTww1Ah5_T5E1s0oYo_XZR_C5yAUITfX2hz2r8NuYEv9XBkMFLPb9Z3IAbHN5KWZEkMp_yroK-EcOOD_Zw_W6kh6R5S6PmxdTS8MG2MNRhfpAUWkqmQemE_3SLUBQsv2KRQzbz7gUxN_Jeqfl1fPk5TvpzG4f5NVKK4iDRx-4067TzRrxDBru0oNxB5AfZo8OrxlXNJ9i8cFi2NiqlmClG-Ee5U3uzyhBtU7djrRo4XF0-Z45Q",
+      "refresh_token": "rt_gaxa9KZPgfbIQr4qjsVr_VnZm3AClA0S6X6AM5wyPAw.4B_ATiMGkTeYHOv9DiDgLRwFtUa7nxCjzO4fDY9WdCY",
+      "account_id": "de71f5ec-435f-4293-b448-fe47888cb13b",
+      "last_refresh": "2026-03-17T07:18:36Z",
+      "email": "zg4ffpb1qa@xphdfs.me",
+      "type": "codex",
+      "expired": "2026-03-27T07:18:36Z",
+      "password": "leYpN4le3mKw",
+      "first_name": "Richard",
+      "last_name": "Thompson",
+      "birthdate": "2003-07-17",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "BQXA-Q95K-V5XP-GVBW",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317151809L8H6NQ",
+            "cards": [
+              {
+                "id": 198283,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336311224494",
+                "cardPassword": "047",
+                "cardData": "{\"cvv\":\"047\",\"expireTime\":\"2026-03-17T16:18:15.643185922\",\"nickname\":\"BQXA-Q95K-V5XP-GVBW\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 7715a772-21d1-11f1-b4ed-2bb169fd53f3 | Key: 534933 02",
+                "status": 1,
+                "orderId": 258284,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  18,
+                  18
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  18,
+                  18
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  18,
+                  18
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "88899a81453841e4b4e1113478844226",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336311224494 03/32 047 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a104X2a8XNqE4rdBkCvkOq...",
+            "获取 Stripe 指纹...",
+            "guid=51778540-9178-455f-8... muid=30e550df-a7c7-4b9f-9...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiWktnYlkyX2FHZUs2OFhNZUNycnQ1QSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzczMTk2NywiZW1haWwiOiI1eWtrb2c4Y3B3QHpodXJ1bnFpLmxvdmUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzczNzM1NTcyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMWE3YWFlNjQtZmMzYS00ZGRhLTlhYWUtN2U2YzJiMDVkNjM4IiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMTdUMDc6MTk6MjcuOTUzMTM3KzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1ITks2MU9FVER6SzZ3U2E4M3U5eVBuTEQiLCJncm91cHMiOltdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy13ZTB3WjRMQUJueEJDT2gwWXhMQ05ENVQiLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1ITks2MU9FVER6SzZ3U2E4M3U5eVBuTEQifSwiaWF0IjoxNzczNzMxOTcyLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImZmOWZmZWYwLWE0YmYtNGU5MS1iMzgxLTFhNGY3YTNmY2ZjMCIsIm5hbWUiOiJKZW5uaWZlciBTbWl0aCIsInJhdCI6MTc3MzczMTk1OCwic2lkIjoiNjA2M2MzMDEtOGJkNS00MDk0LWJlN2MtZWNkNmMwZGE0NzkyIiwic3ViIjoiYXV0aDB8eU9DRDFHUEN0RmdDa0FzcFVUUWdPS21rIn0.C3ddzV6YGBbWzLHhdWoMQO-JQjjzbOVuTP-fg3FQr-XvgBXVVAijb6KudoCaGK1p_u41gnq6ou_4sHcSYDn6cX1FBjhlzfxmmqYUNUkGJYBxthR9y83vOdN8UudXpvrBNGZP-pnXsM5WIN7VKGSb2DZm91wgjL0mdjFQUm1eM9-I877XHQyUk-sGbWBzkbef1l6iLHqx8bdjKQx-pFcQ_nLwtc3NjebwtlCY0tdB8Jk2lN6mQuR0OTAkyZ9ClA2CgyLRVPdhaVTJR3iLgCTDXogc8tsR3RWQaipnAxAanDBHi_R4pZN4R0lYaEYSq7nNlhlXNl3Yrnpwi64WPe7JLw-xb7IUDZz-QArcusZN5zcVtj3FEvLn5_eytm51qUJyn78KI6kZIHwuLqSVQCT1xLcOJZPnlYvrKS62XaYH40CZygs-XM10F43ZFGead7NAsmmHs-ugsHdEQLO6rs_B-ajGsfBPLRuS2Wr_94PgdFVXMxpgn74LCsfxcJyrCV1kKDmET_ycq3GUs9R0Ig0mVtKLWbtnnAeqKuPZDw0JHtPFE39rL0jPnc-52L7r2oN9ekRVNqo0ZcMCAedxo0CUndvWQRXc2gPAHTsv7XkCT2aGlwecMJjtNXUUfiBP-_ItO0xvlZK5ZnOMojTlW2NwG8H7HP5iMirwayH5nebqRwI",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NTk1OTcyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiMWE3YWFlNjQtZmMzYS00ZGRhLTlhYWUtN2U2YzJiMDVkNjM4IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLUhOSzYxT0VURHpLNndTYTgzdTl5UG5MRF9fMWE3YWFlNjQtZmMzYS00ZGRhLTlhYWUtN2U2YzJiMDVkNjM4IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUhOSzYxT0VURHpLNndTYTgzdTl5UG5MRCIsInVzZXJfaWQiOiJ1c2VyLUhOSzYxT0VURHpLNndTYTgzdTl5UG5MRCJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiI1eWtrb2c4Y3B3QHpodXJ1bnFpLmxvdmUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3MzczMTk3MiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJmMzVjZTgxNS05MWUxLTRiOTItOThkNy04ODViMmI5MzEyYTkiLCJuYmYiOjE3NzM3MzE5NzIsInB3ZF9hdXRoX3RpbWUiOjE3NzM3MzE5Njc5NTMsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfTjljRTU3aW9RekhWYXFGbmlmQTVRQ1NEIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfHlPQ0QxR1BDdEZnQ2tBc3BVVFFnT0ttayJ9.e3bXMxcbXh535yJbM_BLUBlh83PURCQYBlyMPp608n9BKqgkfYPHQrxp9io9nHugaoqFJn63xszSO-y_beeUQYMCJKMV9HXItJUYh9hubOFENBvOMwXRYaBFCSktgV6ud1Zo07yUUSgKwJqfzRwZxnFALLiYbvPGTeMPZvI8JRWlb-EieCKoR9e5l5okvLAOquHPuxFQpPFPT-tqVQe9INTvZGrDqnOvcq0qnJgGxladM4K85Cb_5qMOVdLmcxtSMOLvbZpLF0J53s5Dim0ALxd7GVfnhbFjIQXMR7v8xYGLc9m4Ttk4MEaSkEOfZ42_m167pGs9LznG26egPpu6aEZzg8qn3Zdcm_llR2NqBmbEff1DWll0c_GQw-jsAXF7gKa05bgG7aSNrVXwOdrwuFUs8BUJCz8yPp-HRm_-pqJSn0OrlP-HyRPJmEB0r7KKh2eGl8jQBkBS1KrGXnvhIrGSY1CxK94FskmAjT4_-I5ENq-KVZl2HjPL9vXov8vNEvCRn_76fBrkFFxMhZz4Hf8gbMh8ESxRw4MKbtGFO6NRpgcsc7btkIxHH3rccS_FUVF7cM6Y6jAtqxwvq47LXK9FoEHsPMDQHEy6TJvRC4ZQQdklvATHYIArWjAQlDKIsxtGO3cafkZ2iKJAFmkUXHln8FTjJA5PWuJgSJTOtDw",
+      "refresh_token": "rt_0RF3-24oZvNEFwkFWUH1CvS0SDuHa6J1m5Dh919IWbc.VtkHpFt1RvcMpxuY16x_2AEdUHnQhoUWX7HX8xvnn40",
+      "account_id": "1a7aae64-fc3a-4dda-9aae-7e6c2b05d638",
+      "last_refresh": "2026-03-17T07:19:32Z",
+      "email": "5ykkog8cpw@zhurunqi.love",
+      "type": "codex",
+      "expired": "2026-03-27T07:19:31Z",
+      "password": "pJ0wYLabJDFA",
+      "first_name": "Jennifer",
+      "last_name": "Smith",
+      "birthdate": "2004-09-18",
+      "email_provider": "npcmail",
+      "custom_domain": false,
+      "validate_result": {
+        "requested_code": "BQXA-Q95K-V5XP-GVBW",
+        "status_code": 200,
+        "response": {
+          "code": 200,
+          "message": "操作成功",
+          "data": {
+            "orderNo": "RDM20260317151809L8H6NQ",
+            "cards": [
+              {
+                "id": 198283,
+                "userId": 13,
+                "productId": 18,
+                "cardNumber": "5349336311224494",
+                "cardPassword": "047",
+                "cardData": "{\"cvv\":\"047\",\"expireTime\":\"2026-03-17T16:18:15.643185922\",\"nickname\":\"BQXA-Q95K-V5XP-GVBW\",\"limit\":0,\"expiry\":\"0332\"}",
+                "remark": "API Card ID: 7715a772-21d1-11f1-b4ed-2bb169fd53f3 | Key: 534933 02",
+                "status": 1,
+                "orderId": 258284,
+                "cardSequence": 1,
+                "soldTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  18,
+                  18
+                ],
+                "createTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  18,
+                  18
+                ],
+                "updateTime": [
+                  2026,
+                  3,
+                  17,
+                  15,
+                  18,
+                  18
+                ],
+                "expiry": "0332"
+              }
+            ],
+            "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Avion Allen\n地址 1137 Richmond Road\n城市 Lyndhurst\n州 OH\n邮编 44124\n国家 United States",
+            "progress": "已成功创建1张卡",
+            "cardFormat": "",
+            "taskId": "88899a81453841e4b4e1113478844226",
+            "status": 2
+          }
+        },
+        "formatted_text": "5349336311224494 03/32 047 1137 Richmond Road, Lyndhurst, OH, 44124, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1ojd3O0J8FMK7SkLM0NWY...",
+            "获取 Stripe 指纹...",
+            "guid=4cb91be0-97c7-41cd-b... muid=ae2a6e0a-caf0-457d-8...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    }
+  ]
+}
