@@ -18,6 +18,7 @@ import pprint
 import tty
 import termios
 import unicodedata
+import html
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse, parse_qs, urlencode, quote
 from dataclasses import dataclass
@@ -28,6 +29,20 @@ import urllib.error
 
 from curl_cffi import requests
 
+try:
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.table import Table
+    from rich.text import Text
+
+    RICH_AVAILABLE = True
+except Exception:
+    Console = None
+    Panel = None
+    Table = None
+    Text = None
+    RICH_AVAILABLE = False
+
 # ==========================================
 # Tempmail.lol API (v2)/叫我小杨同学 Linuxdo
 # ==========================================
@@ -37,11 +52,11 @@ CONFIG_DIR = os.path.join(BASE_DIR, "config")
 CONFIG_PATH = os.path.join(CONFIG_DIR, "config.json")
 CONFIG_PY_PATH = os.path.join(CONFIG_DIR, "config.py")
 DEFAULT_CONFIG: Dict[str, Any] = {
-    "cdkey_file": "config/CDKEY.json",
-    "code_file": "config/code.json",
+    "cdkey_file": "config/cdkeys.json",
+    "code_file": "config/redeem_codes.json",
     "code_results_file": "code_results.json",
-    "teams_file": "teams.json",
-    "output_root": "Log",
+    "teams_file": "data/team_accounts.json",
+    "output_root": "",
     "target_type": "mother_count",
     "target_value": 0,
     "tempmail_base": "https://api.tempmail.lol/v2",
@@ -53,6 +68,8 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "gptmail_api_key": "gpt-test",
     "tm_reg_prefix": "",
     "tm_reg_domain": "",
+    "tm_local_email_file": "data/local_graph_accounts.txt",
+    "tm_local_email_cursor": 0,
     "tm_use_cd": False,
     "tm_custom_domains": [],
     "tm_tm_addr": "",
@@ -61,6 +78,7 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "aisub_base_url": "https://sub.zenscaleai.com",
     "aisub_api_key": "sk_c1561e264e8b0b164d737603e696cba53e0040cc64fec55c",
     "subscribe_plan": "team",
+    "card_max_use_count": 2,
     "subscribe_retry_new_account_enabled": True,
     "subscribe_retry_new_account_limit": 50,
     "oauth_redirect_uri": "http://localhost:1455/auth/callback",
@@ -145,7 +163,15 @@ ANSI_RESET = "\033[0m"
 ANSI_DIM = "\033[2m"
 ANSI_BOLD = "\033[1m"
 ANSI_MENU = "\033[38;5;110m"
-MENU_OPTIONS = ["开始注册", "执行次数", "其他配置", "退出"]
+MENU_OPTIONS = ["开始运行", "生成账户数", "配置中心", "退出程序"]
+CONSOLE = Console() if RICH_AVAILABLE else None
+
+LOG_STYLES = {
+    "INFO": "bold cyan",
+    " OK ": "bold green",
+    "WARN": "bold yellow",
+    "ERR ": "bold red",
+}
 
 
 def _now_hms() -> str:
@@ -168,7 +194,13 @@ def _fmt_duration(total_seconds: float) -> str:
 
 
 def log_line(tag: str, message: str) -> None:
-    print(f"[{_now_hms()}] {tag} {message}")
+    line = f"[{_now_hms()}] {tag} {message}"
+    if RICH_AVAILABLE and CONSOLE:
+        style = LOG_STYLES.get(tag, "white")
+        CONSOLE.print(f"[dim][{_now_hms()}][/dim] ", end="")
+        CONSOLE.print(f"[{style}]{tag}[/] {message}")
+        return
+    print(line)
 
 
 def log_info(message: str) -> None:
@@ -188,6 +220,9 @@ def log_error(message: str) -> None:
 
 
 def log_section(title: str) -> None:
+    if RICH_AVAILABLE and CONSOLE:
+        CONSOLE.rule(f"[bold cyan]{title}[/bold cyan]")
+        return
     bar = "=" * 18
     print(f"\n{bar} {title} {bar}")
 
@@ -236,6 +271,16 @@ def _extract_verification_code(content: str) -> str:
     if match:
         return match.group(1)
     return ""
+
+
+def _strip_html(text: str) -> str:
+    raw = str(text or "")
+    if not raw:
+        return ""
+    cleaned = re.sub(r"<[^>]+>", " ", raw)
+    cleaned = html.unescape(cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned.strip()
 
 
 def _generate_password(length: int = 16) -> str:
@@ -287,6 +332,177 @@ def _load_custom_domains() -> list[str]:
     return []
 
 
+def _local_email_file_path() -> str:
+    return _resolve_config_path(str(CONFIG.get("tm_local_email_file") or DEFAULT_CONFIG["tm_local_email_file"]))
+
+
+def _parse_local_graph_account_line(line: str) -> Optional[Dict[str, Any]]:
+    raw = str(line or "").strip()
+    if not raw:
+        return None
+    parts = [part.strip() for part in raw.split("----")]
+    if len(parts) < 4:
+        return None
+    account: Dict[str, Any] = {
+        "email": parts[0],
+        "email_password": parts[1],
+        "client_id": parts[2],
+        "refresh_token": parts[3],
+    }
+    if len(parts) >= 5 and parts[4]:
+        expire_time_str = parts[4]
+        for fmt in ("%Y年%m月%d日", "%Y-%m-%d"):
+            try:
+                account["refresh_expires_at"] = datetime.strptime(expire_time_str, fmt).timestamp()
+                break
+            except ValueError:
+                continue
+    return account
+
+
+def _load_local_graph_accounts() -> list[Dict[str, Any]]:
+    path = _local_email_file_path()
+    if not os.path.exists(path):
+        raise RuntimeError(f"本地邮箱文件不存在: {path}")
+    accounts: list[Dict[str, Any]] = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line_no, line in enumerate(f, start=1):
+            parsed = _parse_local_graph_account_line(line)
+            if parsed is None:
+                if line.strip():
+                    log_warn(f"跳过格式无效的本地邮箱账号，第 {line_no} 行")
+                continue
+            accounts.append(parsed)
+    if not accounts:
+        raise RuntimeError("本地邮箱文件中没有可用账号")
+    return accounts
+
+
+def _create_local_graph_mailbox_context() -> Dict[str, Any]:
+    accounts = _load_local_graph_accounts()
+    cursor = max(0, _to_int(CONFIG.get("tm_local_email_cursor")))
+    index = cursor % len(accounts)
+    selected = dict(accounts[index])
+    CONFIG["tm_local_email_cursor"] = cursor + 1
+    save_config()
+    profile = _generate_profile()
+    selected.update(
+        {
+            "email_provider": "local_graph",
+            "custom_domain": False,
+            "password": _generate_password(),
+            **profile,
+        }
+    )
+    return selected
+
+
+def _refresh_graph_access_token(client_id: str, refresh_token: str, proxies: Any = None) -> str:
+    if not client_id or not refresh_token:
+        return ""
+    resp = requests.post(
+        "https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data={
+            "client_id": client_id,
+            "grant_type": "refresh_token",
+            "refresh_token": refresh_token,
+            "scope": "https://graph.microsoft.com/.default",
+        },
+        proxies=proxies,
+        impersonate="chrome",
+        timeout=30,
+    )
+    if resp.status_code != 200:
+        try:
+            payload = resp.json()
+        except Exception:
+            payload = resp.text
+        raise RuntimeError(f"Graph 刷新 access_token 失败: HTTP {resp.status_code} {payload}")
+    try:
+        payload = resp.json()
+    except Exception as exc:
+        raise RuntimeError("Graph access_token 响应解析失败") from exc
+    return str(payload.get("access_token") or "").strip()
+
+
+def _fetch_graph_mail_code(mailbox: Dict[str, Any], proxies: Any = None) -> str:
+    client_id = str(mailbox.get("client_id") or "").strip()
+    refresh_token = str(mailbox.get("refresh_token") or "").strip()
+    access_token = str(mailbox.get("graph_access_token") or "").strip()
+    if not access_token:
+        access_token = _refresh_graph_access_token(client_id, refresh_token, proxies)
+        mailbox["graph_access_token"] = access_token
+    if not access_token:
+        return ""
+
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Accept": "application/json",
+    }
+    resp = requests.get(
+        "https://graph.microsoft.com/v1.0/me/messages",
+        headers=headers,
+        params={
+            "$top": 10,
+            "$select": "id,subject,from,receivedDateTime,bodyPreview",
+            "$orderby": "receivedDateTime desc",
+        },
+        proxies=proxies,
+        impersonate="chrome",
+        timeout=15,
+    )
+    if resp.status_code != 200:
+        return ""
+    try:
+        payload = resp.json()
+    except Exception:
+        return ""
+    messages = payload.get("value") if isinstance(payload, dict) else None
+    if not isinstance(messages, list):
+        return ""
+
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        sender = str(message.get("from", {}).get("emailAddress", {}).get("address") or "")
+        subject = str(message.get("subject") or "")
+        preview = str(message.get("bodyPreview") or "")
+        combined = " ".join([sender, subject, preview]).lower()
+        if "openai" not in combined and "chatgpt" not in combined:
+            continue
+
+        detail_id = str(message.get("id") or "").strip()
+        content = " ".join([subject, preview])
+        if detail_id:
+            detail_resp = requests.get(
+                f"https://graph.microsoft.com/v1.0/me/messages/{quote(detail_id)}",
+                headers=headers,
+                params={"$select": "body,subject,from,bodyPreview"},
+                proxies=proxies,
+                impersonate="chrome",
+                timeout=15,
+            )
+            if detail_resp.status_code == 200:
+                try:
+                    detail = detail_resp.json()
+                except Exception:
+                    detail = {}
+                body = detail.get("body") if isinstance(detail, dict) else {}
+                body_content = _strip_html((body or {}).get("content") or "")
+                content = " ".join(
+                    [
+                        str((detail or {}).get("subject") or subject),
+                        str((detail or {}).get("bodyPreview") or preview),
+                        body_content,
+                    ]
+                )
+        code = _extract_verification_code(content)
+        if code:
+            return code
+    return ""
+
+
 def _npcmail_request(method: str, endpoint: str, *, body: Any = None, proxies: Any = None) -> Any:
     api_key = str(CONFIG.get("tm_npcmail_apikey") or "").strip()
     if not api_key:
@@ -324,6 +540,54 @@ def _tempmail_plus_request(endpoint: str, *, proxies: Any = None) -> Any:
         headers={"Accept": "application/json", "X-Requested-With": "XMLHttpRequest"},
         proxies=proxies,
     )
+
+
+def _create_tempmail_lol_inbox(proxies: Any = None) -> Dict[str, str]:
+    payload = _request_json(
+        "POST",
+        f"{TEMPMAIL_BASE}/inbox/create",
+        headers={"Accept": "application/json", "Content-Type": "application/json"},
+        json_body={},
+        proxies=proxies,
+    )
+    if not isinstance(payload, dict):
+        raise RuntimeError("Tempmail.lol 创建邮箱失败")
+    address = str(payload.get("address") or "").strip()
+    token = str(payload.get("token") or "").strip()
+    if not address or not token:
+        raise RuntimeError("Tempmail.lol 返回邮箱或 token 为空")
+    return {"email": address, "token": token}
+
+
+def _fetch_tempmail_lol_code(token: str, proxies: Any = None) -> str:
+    if not token:
+        return ""
+    payload = _request_json(
+        "GET",
+        f"{TEMPMAIL_BASE}/inbox?token={quote(token)}",
+        headers={"Accept": "application/json"},
+        proxies=proxies,
+    )
+    messages = payload.get("emails") if isinstance(payload, dict) else None
+    if not isinstance(messages, list):
+        return ""
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        content = " ".join(
+            [
+                str(message.get("from") or ""),
+                str(message.get("subject") or ""),
+                str(message.get("body") or ""),
+                str(message.get("html") or ""),
+            ]
+        )
+        if "openai" not in content.lower():
+            continue
+        code = _extract_verification_code(content)
+        if code:
+            return code
+    return ""
 
 
 def create_registration_email_context(proxies: Any = None) -> Dict[str, Any]:
@@ -372,6 +636,21 @@ def create_registration_email_context(proxies: Any = None) -> Dict[str, Any]:
             raise RuntimeError("NPCmail 返回邮箱为空")
         context.update({"email": address, "email_provider": "npcmail", "custom_domain": False})
         return context
+
+    if provider == "xiaomajiang":
+        inbox = _create_tempmail_lol_inbox(proxies)
+        context.update(
+            {
+                "email": inbox["email"],
+                "email_provider": "xiaomajiang",
+                "custom_domain": False,
+                "tm_token": inbox["token"],
+            }
+        )
+        return context
+
+    if provider == "local_graph":
+        return _create_local_graph_mailbox_context()
 
     body = {}
     if reg_prefix:
@@ -458,25 +737,29 @@ def get_oai_code(mailbox: Dict[str, Any], proxies: Any = None) -> str:
     provider = str(mailbox.get("email_provider") or "gptmail").strip().lower()
     receiver_addr = str(mailbox.get("tm_addr") or "").strip()
     receiver_epin = str(mailbox.get("tm_epin") or "").strip()
+    tempmail_lol_token = str(mailbox.get("tm_token") or "").strip()
 
-    print(f"[*] 正在等待邮箱 {email} 的验证码...", end="", flush=True)
+    log_info(f"等待验证码: {email}")
     for attempt in range(60):
-        print(".", end="", flush=True)
         try:
             if mailbox.get("custom_domain") and receiver_addr:
                 code = _fetch_tempmail_plus_code(receiver_addr, receiver_epin, proxies)
             elif provider == "npcmail":
                 code = _fetch_npcmail_code(email, proxies)
+            elif provider == "xiaomajiang":
+                code = _fetch_tempmail_lol_code(tempmail_lol_token, proxies)
+            elif provider == "local_graph":
+                code = _fetch_graph_mail_code(mailbox, proxies)
             else:
                 code = _fetch_gptmail_code(email, proxies)
             if code:
-                print(" 抓到啦! 验证码:", code)
+                log_ok(f"收到验证码: {code}")
                 return code
         except Exception:
             pass
         if attempt < 59:
             time.sleep(3)
-    print(" 超时，未收到验证码")
+    log_warn("验证码超时")
     return ""
 
 
@@ -605,11 +888,12 @@ VALIDATE_HEADERS = {
     "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
 }
 
-AISUB_API_KEY = str(CONFIG.get("aisub_api_key") or DEFAULT_CONFIG["aisub_api_key"]).strip()
-AISUB_HEADERS = {
-    "Authorization": f"Bearer {AISUB_API_KEY}",
-    "Accept": "application/json",
-}
+def _aisub_headers() -> Dict[str, str]:
+    api_key = str(CONFIG.get("aisub_api_key") or DEFAULT_CONFIG["aisub_api_key"]).strip()
+    return {
+        "Authorization": f"Bearer {api_key}",
+        "Accept": "application/json",
+    }
 
 
 class RetryWithNewAccount(Exception):
@@ -620,6 +904,12 @@ class RetryWithNewAccount(Exception):
 
 class StopScript(Exception):
     """满足停止条件，结束脚本。"""
+
+    pass
+
+
+class SkipCurrentCode(Exception):
+    """当前兑换码无法继续使用，需要跳过。"""
 
     pass
 
@@ -717,6 +1007,79 @@ def save_code_array(code_array: list[dict[str, Any]]) -> None:
         log_error(f"写回 code 文件失败: {e}")
 
 
+def _load_plain_codes(file_path: str) -> list[str]:
+    if not file_path or not os.path.exists(file_path):
+        return []
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            raw = f.read()
+    except Exception:
+        return []
+    return _extract_code_lines(raw)
+
+
+def _extract_code_lines(raw_text: str) -> list[str]:
+    items: list[str] = []
+    seen: set[str] = set()
+    for part in re.split(r"[\s,;，；]+", str(raw_text or "").strip()):
+        code = str(part or "").strip()
+        if not code or code in seen:
+            continue
+        seen.add(code)
+        items.append(code)
+    return items
+
+
+def _save_plain_codes(file_path: str, codes: list[str]) -> None:
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, "w", encoding="utf-8") as f:
+        if codes:
+            f.write("\n".join(codes) + "\n")
+        else:
+            f.write("")
+
+
+def _append_cdkeys_from_text(raw_text: str) -> int:
+    incoming = _extract_code_lines(raw_text)
+    if not incoming:
+        return 0
+    file_path = _cdkey_file_path()
+    existing = _load_plain_codes(file_path)
+    merged: list[str] = []
+    seen: set[str] = set()
+    for code in existing + incoming:
+        if code in seen:
+            continue
+        seen.add(code)
+        merged.append(code)
+    added = len(merged) - len(existing)
+    _save_plain_codes(file_path, merged)
+    return max(0, added)
+
+
+def _append_redeem_codes_from_text(raw_text: str) -> int:
+    incoming = _extract_code_lines(raw_text)
+    if not incoming:
+        return 0
+    existing_items = load_code_array(quiet=True)
+    existing_codes = {
+        str(item.get("code") or "").strip()
+        for item in existing_items
+        if isinstance(item, dict) and str(item.get("code") or "").strip()
+    }
+    added = 0
+    merged = list(existing_items)
+    for code in incoming:
+        if code in existing_codes:
+            continue
+        existing_codes.add(code)
+        merged.append({"code": code, "use": 0})
+        added += 1
+    if added > 0:
+        save_code_array(merged)
+    return added
+
+
 def sync_code_file_from_cdkeys() -> int:
     """启动前将 CDKEY 文件中的未使用码补充到 code 文件。"""
     cdkey_file = _cdkey_file_path()
@@ -788,22 +1151,25 @@ def get_cdkey_count() -> int:
 
 def print_card_inventory_summary() -> None:
     """打印运行前卡片库存摘要。"""
-    cdkey_count = get_cdkey_count()
     virtual_card_count = len(load_code_array(quiet=True))
-    log_section("运行前卡片信息")
-    log_ok(f"读取 CDKEY 数量: {cdkey_count}")
-    log_ok(f"虚拟卡数量: {virtual_card_count}")
+    _render_kv_table(
+        "运行前卡片信息",
+        [
+            ("虚拟卡数量", str(virtual_card_count)),
+        ],
+    )
 
 
 def get_available_card_use_count() -> int:
     """按 use 计数计算当前虚拟卡还可用多少次。"""
     code_array = load_code_array(quiet=True)
+    max_use_count = get_card_max_use_count()
     available_uses = 0
     for item in code_array:
         if not isinstance(item, dict):
             continue
         use_count = _normalize_use_count(item.get("use"))
-        available_uses += max(0, 2 - use_count)
+        available_uses += max(0, max_use_count - use_count)
     return available_uses
 
 
@@ -847,12 +1213,8 @@ def save_code_result(code: str, result: Dict[str, Any]) -> None:
 
 
 def create_run_output_dir() -> str:
-    """创建本次运行的输出目录。"""
-    now = datetime.now()
-    dir_name = f"{now.year}年{now.month}月{now.day}日{now.strftime('%H:%M:%S')}"
-    output_dir = os.path.join(_output_root_path(), dir_name)
-    os.makedirs(output_dir, exist_ok=True)
-    return output_dir
+    """日志目录已停用，保留空实现以兼容旧调用。"""
+    return ""
 
 
 def load_teams_entries(file_path: str) -> list[Dict[str, Any]]:
@@ -897,7 +1259,7 @@ def get_aisub_balance(proxies: Any = None) -> Dict[str, Any]:
         aisub_base_url = str(CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"]).rstrip("/")
         resp = requests.get(
             f"{aisub_base_url}/api/v1/balance",
-            headers=AISUB_HEADERS,
+            headers=_aisub_headers(),
             proxies=proxies,
             impersonate="chrome",
             timeout=20,
@@ -953,9 +1315,9 @@ def get_aisub_balance_snapshot(proxies: Any = None) -> Dict[str, Any]:
 
 def print_aisub_balance_summary(title: str, snapshot: Dict[str, Any]) -> None:
     """打印 AISub 余额汇总。"""
-    log_section(title)
     status_code = int(snapshot.get("status_code") or 0)
     if status_code != 200:
+        log_section(title)
         raw = snapshot.get("raw") or {}
         message = ""
         if isinstance(raw, dict):
@@ -965,8 +1327,13 @@ def print_aisub_balance_summary(title: str, snapshot: Dict[str, Any]) -> None:
     remaining_times = int(snapshot.get("remaining_times") or 0)
     available_card_uses = get_available_card_use_count()
     estimated_positions = min(remaining_times, available_card_uses) * 5
-    log_ok(f"AISub 预计可用次数: {remaining_times}")
-    log_ok(f"预计可生成位置: {estimated_positions}")
+    _render_kv_table(
+        title,
+        [
+            ("AISub 可用次数", str(remaining_times)),
+            ("预计可生成位置", str(estimated_positions)),
+        ],
+    )
 
 
 def _display_width(text: str) -> int:
@@ -981,6 +1348,63 @@ def _pad_to_width(text: str, width: int) -> str:
     return text + (" " * pad)
 
 
+def _shorten_path_display(path_value: str, max_len: int = 42) -> str:
+    text = str(path_value or "").strip()
+    if not text:
+        return "未设置"
+    if len(text) <= max_len:
+        return text
+    return f"...{text[-(max_len - 3):]}"
+
+
+def _mask_secret(value: str) -> str:
+    raw = str(value or "").strip()
+    if not raw:
+        return "未设置"
+    if len(raw) <= 8:
+        return "*" * len(raw)
+    return f"{raw[:4]}...{raw[-4:]}"
+
+
+def _print_menu_hint(text: str) -> None:
+    if RICH_AVAILABLE and CONSOLE:
+        CONSOLE.print(f"[dim]{text}[/dim]")
+        return
+    print(f"\n{ANSI_DIM}{text}{ANSI_RESET}")
+
+
+def _render_brand_header(title: str, subtitle: str = "") -> None:
+    if RICH_AVAILABLE and CONSOLE and Panel:
+        CONSOLE.print(
+            Panel.fit(
+                STARTUP_BANNER.strip("\n"),
+                title=f"[bold cyan]{title}[/bold cyan]",
+                border_style="bright_blue",
+                padding=(1, 2),
+            )
+        )
+        if subtitle:
+            CONSOLE.print(f"[dim]{subtitle}[/dim]")
+        return
+    log_section(title)
+    print(STARTUP_BANNER)
+    if subtitle:
+        log_info(subtitle)
+
+
+def _render_kv_table(title: str, rows: list[tuple[str, str]]) -> None:
+    if RICH_AVAILABLE and CONSOLE and Table:
+        table = Table(title=title, show_header=False, expand=True, box=None, pad_edge=False)
+        table.add_column("key", style="bold white", ratio=1)
+        table.add_column("value", style="cyan", ratio=1)
+        for left, right in rows:
+            table.add_row(left, right)
+        CONSOLE.print(table)
+        return
+    log_section(title)
+    _print_dashboard_rows(rows)
+
+
 def _print_dashboard_rows(rows: list[tuple[str, str]], gap: int = 6) -> None:
     left_width = max((_display_width(left) for left, _ in rows), default=0)
     for left, right in rows:
@@ -988,13 +1412,11 @@ def _print_dashboard_rows(rows: list[tuple[str, str]], gap: int = 6) -> None:
 
 
 def _get_startup_dashboard_data(proxies: Any = None) -> Dict[str, Any]:
-    cdkey_count = get_cdkey_count()
     available_card_uses = get_available_card_use_count()
     aisub_snapshot = get_aisub_balance_snapshot(proxies)
     aisub_times = int(aisub_snapshot.get("remaining_times") or 0) if int(aisub_snapshot.get("status_code") or 0) == 200 else 0
     estimated_positions = min(aisub_times, available_card_uses) * 5
     return {
-        "cdkey_count": cdkey_count,
         "available_card_uses": available_card_uses,
         "aisub_snapshot": aisub_snapshot,
         "aisub_times": aisub_times,
@@ -1004,14 +1426,17 @@ def _get_startup_dashboard_data(proxies: Any = None) -> Dict[str, Any]:
 
 def print_startup_dashboard(proxies: Any = None) -> Dict[str, Any]:
     data = _get_startup_dashboard_data(proxies)
-    log_section("运行前卡片信息")
-    _print_dashboard_rows([
-        (f"读取 CDKEY 数量: {data['cdkey_count']}", f"AISub 预计可用次数: {data['aisub_times']}"),
-        (f"虚拟卡可用次数: {data['available_card_uses']}", f"预计可生成位置: {data['estimated_positions']}"),
-    ])
+    _render_kv_table(
+        "运行前卡片信息",
+        [
+            ("AISub 可用次数", str(data["aisub_times"])),
+            ("虚拟卡可用次数", str(data["available_card_uses"])),
+            ("预计可生成位置", str(data["estimated_positions"])),
+        ],
+    )
     print("=" * 56)
     print("> 1. 开始注册")
-    print("  2. 执行次数")
+    print("  2. 生成账户数")
     print("  3. 其他配置")
     return data["aisub_snapshot"]
 
@@ -1033,12 +1458,25 @@ def _select_from_menu(title: str, options: list[str], selected_index: int = 0) -
         while True:
             _hide_cursor()
             _clear_screen()
-            print(f"{ANSI_BOLD}{title}{ANSI_RESET}\n")
-            for index, option in enumerate(options):
-                if index == selected_index:
-                    print(f"{ANSI_BOLD}{ANSI_MENU}▶ {option}{ANSI_RESET}")
-                else:
-                    print(f"{ANSI_DIM}{ANSI_MENU}  {option}{ANSI_RESET}")
+            if RICH_AVAILABLE and CONSOLE and Panel:
+                lines = []
+                for index, option in enumerate(options):
+                    prefix = f"{index + 1:>2}. "
+                    if index == selected_index:
+                        lines.append(f"[bold bright_cyan]▶ {prefix}{option}[/bold bright_cyan]")
+                    else:
+                        lines.append(f"[dim]  {prefix}{option}[/dim]")
+                CONSOLE.print(Panel("\n".join(lines), title=f"[bold]{title}[/bold]", border_style="blue"))
+                _print_menu_hint("方向键 / J K 选择，Enter 确认，Esc 返回")
+            else:
+                print(f"{ANSI_BOLD}{title}{ANSI_RESET}\n")
+                for index, option in enumerate(options):
+                    prefix = f"{index + 1:>2}. "
+                    if index == selected_index:
+                        print(f"{ANSI_BOLD}{ANSI_MENU}▶ {prefix}{option}{ANSI_RESET}")
+                    else:
+                        print(f"{ANSI_DIM}{ANSI_MENU}  {prefix}{option}{ANSI_RESET}")
+                _print_menu_hint("方向键 / J K 选择，Enter 确认，Esc 返回")
             key = _read_menu_key()
             if key == "up":
                 selected_index = (selected_index - 1) % len(options)
@@ -1075,7 +1513,7 @@ def _read_menu_key() -> str:
             return "up"
         if first in {"j", "J"}:
             return "down"
-        if first in {"1", "2", "3"}:
+        if first in {"1", "2", "3", "4", "5", "6", "7", "8", "9"}:
             return first
         return ""
     finally:
@@ -1110,77 +1548,254 @@ def _prompt_input(prompt: str, default: str = "") -> Optional[str]:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
 
-def _render_startup_menu(selected_index: int, dashboard: Dict[str, Any], started_at: datetime, cdkey_added_count: int) -> None:
-    _hide_cursor()
-    _clear_screen()
-    log_section("Team 注册机")
-    print(STARTUP_BANNER)
-    log_info(f"欢迎使用Team注册机,现在是{_fmt_local_dt(started_at)}")
-    log_info(f"已从 CDKEY 文件补充 {cdkey_added_count} 个新码到 code 文件")
-    log_section("运行前卡片信息")
-    _print_dashboard_rows([
-        (f"读取 CDKEY 数量: {dashboard['cdkey_count']}", f"AISub 预计可用次数: {dashboard['aisub_times']}"),
-        (f"虚拟卡可用次数: {dashboard['available_card_uses']}", f"预计可生成位置: {dashboard['estimated_positions']}"),
-    ])
-    print("=" * 56)
-    for index, label in enumerate(MENU_OPTIONS):
-        if index == selected_index:
-            print(f"{ANSI_BOLD}{ANSI_MENU}▶ {label}{ANSI_RESET}")
-        else:
-            print(f"{ANSI_DIM}{ANSI_MENU}  {label}{ANSI_RESET}")
+def _prompt_multiline_input(title: str, finish_hint: str = "连续输入，空行结束，ESC 取消") -> Optional[str]:
+    _show_cursor()
+    print(f"{title}")
+    print(f"{finish_hint}")
+    lines: list[str] = []
+    while True:
+        try:
+            line = input()
+        except EOFError:
+            break
+        except KeyboardInterrupt:
+            print()
+            return None
+        if line == "\x1b":
+            return None
+        if not line.strip():
+            break
+        lines.append(line.rstrip("\n"))
+    return "\n".join(lines).strip()
 
 
-def prompt_execution_count() -> None:
-    current_target_type = str(CONFIG.get("target_type") or DEFAULT_CONFIG["target_type"]).strip()
-    current_target_value = int(CONFIG.get("target_value") or DEFAULT_CONFIG["target_value"] or 0)
-    current_display = current_target_value if current_target_type == "register_count" else 0
-    raw = _prompt_input(f"请输入执行次数，0 表示不限，当前为 {current_display}: ")
-    if raw is None or not raw:
-        return
+def _parse_config_value(raw: str) -> Any:
+    text = str(raw or "").strip()
+    if not text:
+        return ""
+    lowered = text.lower()
+    if lowered == "true":
+        return True
+    if lowered == "false":
+        return False
+    if lowered == "null":
+        return None
     try:
-        target_value = max(0, int(raw))
-    except ValueError:
-        log_warn("输入无效，保持原配置")
+        return ast.literal_eval(text)
+    except Exception:
+        return text
+
+
+def _update_config_value(key: str, prompt: str, *, default: Any = "", parser: Any = None, success_text: str = "配置已更新") -> None:
+    value = _prompt_input(prompt, "" if default is None else str(default))
+    if value is None:
         return
-    CONFIG["target_type"] = "register_count"
-    CONFIG["target_value"] = target_value
+    parsed = parser(value) if parser else value.strip()
+    CONFIG[key] = parsed
     save_config()
-    log_ok(f"执行次数已更新为 {target_value}")
+    log_ok(success_text)
 
 
-def prompt_other_config() -> None:
+def _parse_positive_int(raw: str) -> int:
+    return max(1, int(raw))
+
+
+def prompt_file_settings() -> None:
+    selected_index = 0
+    while True:
+        options = [
+            f"本地邮箱文件: {_shorten_path_display(str(CONFIG.get('tm_local_email_file') or DEFAULT_CONFIG['tm_local_email_file']))}",
+            f"CDKEY 文件: {_shorten_path_display(str(CONFIG.get('cdkey_file') or DEFAULT_CONFIG['cdkey_file']))}",
+            f"兑换码文件: {_shorten_path_display(str(CONFIG.get('code_file') or DEFAULT_CONFIG['code_file']))}",
+            f"成功账号文件: {_shorten_path_display(str(CONFIG.get('teams_file') or DEFAULT_CONFIG['teams_file']))}",
+            "返回",
+        ]
+        selected_index = _select_from_menu("配置中心 / 文件路径", options, selected_index)
+        if selected_index in {-1, len(options) - 1}:
+            return
+        if selected_index == 0:
+            _update_config_value(
+                "tm_local_email_file",
+                "请输入本地邮箱文件路径，支持相对路径: ",
+                default=CONFIG.get("tm_local_email_file") or DEFAULT_CONFIG["tm_local_email_file"],
+                success_text="本地邮箱文件已更新",
+            )
+        elif selected_index == 1:
+            _update_config_value(
+                "cdkey_file",
+                "请输入 CDKEY 文件路径，支持相对路径: ",
+                default=CONFIG.get("cdkey_file") or DEFAULT_CONFIG["cdkey_file"],
+                success_text="CDKEY 文件路径已更新",
+            )
+        elif selected_index == 2:
+            _update_config_value(
+                "code_file",
+                "请输入兑换码文件路径，支持相对路径: ",
+                default=CONFIG.get("code_file") or DEFAULT_CONFIG["code_file"],
+                success_text="兑换码文件路径已更新",
+            )
+        elif selected_index == 3:
+            _update_config_value(
+                "teams_file",
+                "请输入成功账号文件路径，支持相对路径: ",
+                default=CONFIG.get("teams_file") or DEFAULT_CONFIG["teams_file"],
+                success_text="成功账号文件路径已更新",
+            )
+
+
+def prompt_import_settings() -> None:
+    selected_index = 0
+    while True:
+        options = [
+            "粘贴追加 CDKEY",
+            "粘贴追加兑换码",
+            "返回",
+        ]
+        selected_index = _select_from_menu("配置中心 / 导入数据", options, selected_index)
+        if selected_index in {-1, len(options) - 1}:
+            return
+        if selected_index == 0:
+            raw_text = _prompt_multiline_input("请粘贴 CDKEY，可多行/空格/逗号分隔")
+            if raw_text is None:
+                continue
+            added = _append_cdkeys_from_text(raw_text)
+            if added <= 0:
+                log_warn("未追加新的 CDKEY")
+                continue
+            synced = sync_code_file_from_cdkeys()
+            log_ok(f"已追加 {added} 个 CDKEY，并同步 {synced} 个新码到兑换码池")
+        elif selected_index == 1:
+            raw_text = _prompt_multiline_input("请粘贴兑换码，可多行/空格/逗号分隔")
+            if raw_text is None:
+                continue
+            added = _append_redeem_codes_from_text(raw_text)
+            if added <= 0:
+                log_warn("未追加新的兑换码")
+                continue
+            log_ok(f"已追加 {added} 个兑换码")
+
+
+def prompt_email_settings() -> None:
+    selected_index = 0
+    while True:
+        options = [
+            f"邮箱提供商: {str(CONFIG.get('tm_email_provider') or 'npcmail').strip()}",
+            f"注册邮箱前缀: {str(CONFIG.get('tm_reg_prefix') or '').strip() or '未设置'}",
+            f"注册邮箱域名: {str(CONFIG.get('tm_reg_domain') or '').strip() or '未设置'}",
+            "返回",
+        ]
+        selected_index = _select_from_menu("配置中心 / 邮箱注册", options, selected_index)
+        if selected_index in {-1, len(options) - 1}:
+            return
+        if selected_index == 0:
+            provider_options = ["npcmail", "gptmail", "xiaomajiang", "local_graph"]
+            current_provider = str(CONFIG.get("tm_email_provider") or "npcmail").strip().lower()
+            provider_index = provider_options.index(current_provider) if current_provider in provider_options else 0
+            provider_choice = _select_from_menu("邮箱提供商", provider_options, provider_index)
+            if provider_choice == -1:
+                continue
+            CONFIG["tm_email_provider"] = provider_options[provider_choice]
+            save_config()
+            log_ok(f"邮箱提供商已更新为 {CONFIG['tm_email_provider']}")
+        elif selected_index == 1:
+            _update_config_value(
+                "tm_reg_prefix",
+                "请输入注册邮箱前缀，留空则清除: ",
+                default=CONFIG.get("tm_reg_prefix") or "",
+                success_text="注册邮箱前缀已更新",
+            )
+        elif selected_index == 2:
+            _update_config_value(
+                "tm_reg_domain",
+                "请输入注册邮箱域名，留空则清除: ",
+                default=CONFIG.get("tm_reg_domain") or "",
+                success_text="注册邮箱域名已更新",
+            )
+
+
+def prompt_service_settings() -> None:
+    selected_index = 0
+    while True:
+        options = [
+            f"NPCMail API Key: {_mask_secret(str(CONFIG.get('tm_npcmail_apikey') or ''))}",
+            f"GPTMail API Key: {_mask_secret(str(CONFIG.get('gptmail_api_key') or ''))}",
+            f"AISub API Key: {_mask_secret(str(CONFIG.get('aisub_api_key') or ''))}",
+            f"Redeem Base URL: {_shorten_path_display(str(CONFIG.get('redeem_base_url') or DEFAULT_CONFIG['redeem_base_url']), 50)}",
+            f"AISub Base URL: {_shorten_path_display(str(CONFIG.get('aisub_base_url') or DEFAULT_CONFIG['aisub_base_url']), 50)}",
+            "返回",
+        ]
+        selected_index = _select_from_menu("配置中心 / 接口与密钥", options, selected_index)
+        if selected_index in {-1, len(options) - 1}:
+            return
+        if selected_index == 0:
+            _update_config_value(
+                "tm_npcmail_apikey",
+                "请输入 NPCMail API Key，留空则清除: ",
+                default=CONFIG.get("tm_npcmail_apikey") or "",
+                success_text="NPCMail API Key 已更新",
+            )
+        elif selected_index == 1:
+            _update_config_value(
+                "gptmail_api_key",
+                "请输入 GPTMail API Key，留空则清除: ",
+                default=CONFIG.get("gptmail_api_key") or "",
+                success_text="GPTMail API Key 已更新",
+            )
+        elif selected_index == 2:
+            _update_config_value(
+                "aisub_api_key",
+                "请输入 AISub API Key，留空则清除: ",
+                default=CONFIG.get("aisub_api_key") or "",
+                success_text="AISub API Key 已更新",
+            )
+        elif selected_index == 3:
+            _update_config_value(
+                "redeem_base_url",
+                "请输入 Redeem Base URL: ",
+                default=CONFIG.get("redeem_base_url") or DEFAULT_CONFIG["redeem_base_url"],
+                success_text="Redeem Base URL 已更新",
+            )
+        elif selected_index == 4:
+            _update_config_value(
+                "aisub_base_url",
+                "请输入 AISub Base URL: ",
+                default=CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"],
+                success_text="AISub Base URL 已更新",
+            )
+
+
+def prompt_runtime_settings() -> None:
     selected_index = 0
     while True:
         options = [
             f"默认代理: {str(CONFIG.get('default_proxy') or '').strip() or '未设置'}",
-            f"邮箱提供商: {str(CONFIG.get('tm_email_provider') or 'npcmail').strip()}",
+            f"单卡最大绑定次数: {get_card_max_use_count()}",
             f"subscribe 失败重开号: {'开' if bool(CONFIG.get('subscribe_retry_new_account_enabled', True)) else '关'}",
             f"subscribe 失败次数上限: {int(CONFIG.get('subscribe_retry_new_account_limit', 50) or 50)}",
             "返回",
         ]
-        selected_index = _select_from_menu("其他配置", options, selected_index)
-        if selected_index == -1:
-            return
-        if selected_index == 4:
+        selected_index = _select_from_menu("配置中心 / 运行策略", options, selected_index)
+        if selected_index in {-1, len(options) - 1}:
             return
         if selected_index == 0:
-            value = _prompt_input("请输入默认代理，留空则清除: ")
-            if value is None:
+            _update_config_value(
+                "default_proxy",
+                "请输入默认代理，留空则清除: ",
+                default=CONFIG.get("default_proxy") or "",
+                success_text="默认代理已更新",
+            )
+        elif selected_index == 1:
+            raw = _prompt_input("请输入单卡最大绑定次数: ", str(get_card_max_use_count()))
+            if raw is None:
                 continue
-            CONFIG["default_proxy"] = value
-            save_config()
-            log_ok("默认代理已更新")
-            continue
-        if selected_index == 1:
-            provider_index = 0 if str(CONFIG.get("tm_email_provider") or "npcmail").strip() == "npcmail" else 1
-            provider_choice = _select_from_menu("邮箱提供商", ["npcmail", "gptmail"], provider_index)
-            if provider_choice == -1:
+            try:
+                CONFIG["card_max_use_count"] = _parse_positive_int(raw)
+            except ValueError:
+                log_warn("输入无效")
                 continue
-            CONFIG["tm_email_provider"] = "npcmail" if provider_choice == 0 else "gptmail"
             save_config()
-            log_ok(f"邮箱提供商已更新为 {CONFIG['tm_email_provider']}")
-            continue
-        if selected_index == 2:
+            log_ok(f"单卡最大绑定次数已更新为 {CONFIG['card_max_use_count']}")
+        elif selected_index == 2:
             enabled = bool(CONFIG.get("subscribe_retry_new_account_enabled", True))
             toggle_choice = _select_from_menu("subscribe 失败重开号", ["开", "关"], 0 if enabled else 1)
             if toggle_choice == -1:
@@ -1188,19 +1803,147 @@ def prompt_other_config() -> None:
             CONFIG["subscribe_retry_new_account_enabled"] = toggle_choice == 0
             save_config()
             log_ok("subscribe 失败重开号配置已更新")
-            continue
-        if selected_index == 3:
-            value = _prompt_input("请输入 subscribe 失败次数上限: ")
-            if value is None:
+        elif selected_index == 3:
+            raw = _prompt_input(
+                "请输入 subscribe 失败次数上限: ",
+                str(int(CONFIG.get("subscribe_retry_new_account_limit", 50) or 50)),
+            )
+            if raw is None:
                 continue
             try:
-                limit = max(1, int(value))
+                CONFIG["subscribe_retry_new_account_limit"] = _parse_positive_int(raw)
             except ValueError:
                 log_warn("输入无效")
                 continue
-            CONFIG["subscribe_retry_new_account_limit"] = limit
             save_config()
-            log_ok(f"subscribe 失败次数上限已更新为 {limit}")
+            log_ok(f"subscribe 失败次数上限已更新为 {CONFIG['subscribe_retry_new_account_limit']}")
+
+
+def prompt_advanced_settings() -> None:
+    selected_index = 0
+    while True:
+        options = [
+            "编辑任意配置项",
+            "返回",
+        ]
+        selected_index = _select_from_menu("配置中心 / 高级", options, selected_index)
+        if selected_index in {-1, len(options) - 1}:
+            return
+        key = _prompt_input("请输入配置项 key，例如 code_results_file: ")
+        if key is None:
+            continue
+        key = key.strip()
+        if not key:
+            log_warn("key 不能为空")
+            continue
+        current_value = CONFIG.get(key, DEFAULT_CONFIG.get(key, ""))
+        raw_value = _prompt_input(
+            f"请输入 {key} 的值，支持字符串/数字/true/false/null/list/dict，当前为 {current_value!r}: "
+        )
+        if raw_value is None:
+            continue
+        CONFIG[key] = _parse_config_value(raw_value)
+        save_config()
+        log_ok(f"配置项 {key} 已更新")
+
+
+def _render_startup_menu(selected_index: int, dashboard: Dict[str, Any], started_at: datetime, cdkey_added_count: int) -> None:
+    _hide_cursor()
+    _clear_screen()
+    _render_brand_header(
+        "Team 注册机",
+        f"欢迎使用 Team 注册机，现在是 {_fmt_local_dt(started_at)}",
+    )
+    if cdkey_added_count > 0:
+        log_info(f"已从 CDKEY 文件补充 {cdkey_added_count} 个新码到兑换码池")
+    _render_kv_table(
+        "运行前概览",
+        [
+            ("虚拟卡可用次数", str(dashboard["available_card_uses"])),
+            ("AISub 可用次数", str(dashboard["aisub_times"])),
+            ("预计可生成位置", str(dashboard["estimated_positions"])),
+        ],
+    )
+    if RICH_AVAILABLE and CONSOLE and Panel:
+        lines = []
+        for index, label in enumerate(MENU_OPTIONS):
+            prefix = f"{index + 1}. "
+            if index == selected_index:
+                lines.append(f"[bold bright_cyan]▶ {prefix}{label}[/bold bright_cyan]")
+            else:
+                lines.append(f"[dim]  {prefix}{label}[/dim]")
+        CONSOLE.print(Panel("\n".join(lines), title="[bold]主菜单[/bold]", border_style="cyan"))
+        _print_menu_hint("方向键 / J K 选择，数字键快速进入，Enter 确认")
+        return
+    print("=" * 56)
+    for index, label in enumerate(MENU_OPTIONS):
+        prefix = f"{index + 1}. "
+        if index == selected_index:
+            print(f"{ANSI_BOLD}{ANSI_MENU}▶ {prefix}{label}{ANSI_RESET}")
+        else:
+            print(f"{ANSI_DIM}{ANSI_MENU}  {prefix}{label}{ANSI_RESET}")
+    _print_menu_hint("方向键 / J K 选择，数字键快速进入，Enter 确认")
+
+
+def prompt_execution_count() -> None:
+    current_target_type = str(CONFIG.get("target_type") or DEFAULT_CONFIG["target_type"]).strip()
+    current_target_value = int(CONFIG.get("target_value") or DEFAULT_CONFIG["target_value"] or 0)
+    current_display = current_target_value if current_target_type == "register_count" else 0
+    estimated_positions = int(_get_startup_dashboard_data().get("estimated_positions") or 0)
+    max_allowed = max(0, estimated_positions)
+    raw = _prompt_input(
+        f"请输入生成账户数，0 表示不限，当前为 {current_display}，最大不超过 {max_allowed}: "
+    )
+    if raw is None or not raw:
+        return
+    try:
+        target_value = max(0, int(raw))
+    except ValueError:
+        log_warn("输入无效，保持原配置")
+        return
+    if max_allowed > 0 and target_value > max_allowed:
+        log_warn(f"生成账户数不能超过预计可生成位置 {max_allowed}")
+        return
+    CONFIG["target_type"] = "register_count"
+    CONFIG["target_value"] = target_value
+    save_config()
+    log_ok(f"生成账户数已更新为 {target_value}")
+
+
+def prompt_other_config() -> None:
+    selected_index = 0
+    while True:
+        options = [
+            "文件路径",
+            "导入数据",
+            "邮箱注册",
+            "接口与密钥",
+            "运行策略",
+            "高级设置",
+            "返回",
+        ]
+        selected_index = _select_from_menu("其他配置", options, selected_index)
+        if selected_index == -1:
+            return
+        if selected_index == len(options) - 1:
+            return
+        if selected_index == 0:
+            prompt_file_settings()
+            continue
+        if selected_index == 1:
+            prompt_import_settings()
+            continue
+        if selected_index == 2:
+            prompt_email_settings()
+            continue
+        if selected_index == 3:
+            prompt_service_settings()
+            continue
+        if selected_index == 4:
+            prompt_runtime_settings()
+            continue
+        if selected_index == 5:
+            prompt_advanced_settings()
 
 
 def prompt_startup_menu(proxies: Any = None, *, started_at: datetime, cdkey_added_count: int) -> Optional[Dict[str, Any]]:
@@ -1252,7 +1995,7 @@ def prompt_startup_menu(proxies: Any = None, *, started_at: datetime, cdkey_adde
 
 
 def _normalize_use_count(value: Any) -> int:
-    """将历史 use 字段统一转换为 0/1/2 计数。"""
+    """将历史 use 字段统一转换为非负整数计数。"""
     if isinstance(value, bool):
         return 2 if value else 0
     try:
@@ -1262,14 +2005,24 @@ def _normalize_use_count(value: Any) -> int:
     return max(0, count)
 
 
+def get_card_max_use_count() -> int:
+    """获取单张卡允许绑定的最大次数。"""
+    try:
+        count = int(CONFIG.get("card_max_use_count") or DEFAULT_CONFIG["card_max_use_count"])
+    except (TypeError, ValueError):
+        count = int(DEFAULT_CONFIG["card_max_use_count"])
+    return max(1, count)
+
+
 def get_next_unused_code() -> Optional[tuple[str, list[dict[str, Any]], int]]:
-    """获取第一个 use < 2 的 code。"""
+    """获取第一个未达到最大使用次数的 code。"""
     code_array = load_code_array()
+    max_use_count = get_card_max_use_count()
     for index, item in enumerate(code_array):
         code = str(item.get("code") or "").strip()
         use_count = _normalize_use_count(item.get("use"))
         item["use"] = use_count
-        if code and use_count < 2:
+        if code and use_count < max_use_count:
             return code, code_array, index
     log_warn("code 文件中没有可用的 code")
     return None
@@ -1300,6 +2053,8 @@ def validate_redeem_code(code: str, proxies: Any = None) -> Dict[str, Any]:
         else:
             log_info(f"validate 接口结果: {json.dumps(result, ensure_ascii=False)}")
         return result
+    except SkipCurrentCode:
+        raise
     except Exception as e:
         result = {
             "requested_code": code,
@@ -1425,6 +2180,7 @@ def request_redeem_task_status(task_id: str, proxies: Any = None) -> Dict[str, A
 
 def wait_for_redeem_task(task_id: str, proxies: Any = None, retry_interval: int = 3) -> Dict[str, Any]:
     """轮询 task-status，直到拿到卡片。"""
+    last_progress = ""
     while True:
         task_data = request_redeem_task_status(task_id, proxies)
         if has_cards(task_data):
@@ -1435,8 +2191,11 @@ def wait_for_redeem_task(task_id: str, proxies: Any = None, retry_interval: int 
         progress = str((payload or {}).get("progress") or "").strip()
         if status == 2:
             return task_data
-        if progress:
+        if progress and progress != last_progress:
+            last_progress = progress
             log_info(f"开卡进行中: {progress}")
+            if progress == "发卡失败已回滚":
+                raise SkipCurrentCode("开卡进度出现“发卡失败已回滚” 1 次，跳过当前兑换码")
         time.sleep(retry_interval)
 
 
@@ -1454,6 +2213,10 @@ def has_cards(response_data: Any) -> bool:
 def is_exhausted_validate_response(response_data: Any) -> bool:
     """判断兑换码是否已使用完，需要切换下一张卡。"""
     if not isinstance(response_data, dict):
+        return False
+    if has_cards(response_data):
+        # 已经拿到卡数据时，即使服务端同时回了“该兑换码已使用完”，
+        # 这张卡仍然应该进入后续注册流程，不能在这里提前丢弃。
         return False
     data = response_data.get("data")
     if not isinstance(data, dict):
@@ -1547,6 +2310,7 @@ def wait_for_validate_result(code: str, proxies: Any = None, retry_interval: int
 
 def get_validate_context(proxies: Any = None) -> Dict[str, Any]:
     """根据 code.txt 中的 use 计数获取本轮要使用的 validate 结果。"""
+    max_use_count = get_card_max_use_count()
     while True:
         code_value, code_array, code_index = wait_for_next_unused_code()
         item = code_array[code_index]
@@ -1558,27 +2322,39 @@ def get_validate_context(proxies: Any = None) -> Dict[str, Any]:
             if is_ready_validate_result(last_result):
                 validate_result = last_result
             else:
-                validate_result = wait_for_validate_result(code_value, proxies)
+                try:
+                    validate_result = wait_for_validate_result(code_value, proxies)
+                except SkipCurrentCode as e:
+                    item["use"] = max_use_count
+                    save_code_array(code_array)
+                    log_warn(f"当前兑换码 {code_value} 跳过: {e}")
+                    continue
                 save_code_result(code_value, validate_result)
-        elif use_count == 1 and is_ready_validate_result(last_result):
+        elif use_count > 0 and is_ready_validate_result(last_result):
             validate_result = last_result
             formatted_text = str(validate_result.get("formatted_text") or "").strip()
             if formatted_text:
-                log_info(f"第二次复用当前 code 的 validate 结果: {formatted_text}")
+                log_info(f"第 {use_count + 1} 次复用当前 code 的 validate 结果: {formatted_text}")
             else:
-                log_info(f"第二次复用当前 code 的 validate 结果: {json.dumps(validate_result, ensure_ascii=False)}")
-        elif use_count == 1:
+                log_info(f"第 {use_count + 1} 次复用当前 code 的 validate 结果: {json.dumps(validate_result, ensure_ascii=False)}")
+        elif use_count > 0:
             log_warn("当前 code 缺少可复用的 validate 结果，重新请求 validate")
-            validate_result = wait_for_validate_result(code_value, proxies)
+            try:
+                validate_result = wait_for_validate_result(code_value, proxies)
+            except SkipCurrentCode as e:
+                item["use"] = max_use_count
+                save_code_array(code_array)
+                log_warn(f"当前兑换码 {code_value} 跳过: {e}")
+                continue
             save_code_result(code_value, validate_result)
         else:
-            item["use"] = 2
+            item["use"] = max_use_count
             save_code_array(code_array)
             log_info("当前 code 已达到最大使用次数，切换下一条")
             continue
 
         if is_exhausted_validate_response(validate_result.get("response")):
-            item["use"] = 2
+            item["use"] = max_use_count
             save_code_array(code_array)
             log_warn(f"当前兑换码 {code_value} 已使用完，切换下一张卡")
             continue
@@ -1594,7 +2370,7 @@ def get_validate_context(proxies: Any = None) -> Dict[str, Any]:
 
 def mark_code_used(code_array: list[dict[str, Any]], code_index: int, use_count: int) -> None:
     """在 subscribe 成功后递增当前 code 的 use 计数。"""
-    code_array[code_index]["use"] = min(use_count + 1, 2)
+    code_array[code_index]["use"] = min(use_count + 1, get_card_max_use_count())
     save_code_array(code_array)
 
 
@@ -1653,7 +2429,7 @@ def should_stop_for_target(
     target_label = ""
     if target_type == "register_count":
         current_value = registered_accounts
-        target_label = "注册次数"
+        target_label = "生成账户数"
     elif target_type == "child_count":
         current_value = mother_accounts * 5
         target_label = "子号数"
@@ -1674,7 +2450,7 @@ def subscribe_aisub(access_token: str, validate_result: Dict[str, Any], proxies:
         card_payload = json.dumps(validate_result, ensure_ascii=False)
     log_info(f"AISub card 参数: {card_payload}")
 
-    headers = dict(AISUB_HEADERS)
+    headers = dict(_aisub_headers())
     headers["Content-Type"] = "application/json"
 
     try:
@@ -1711,7 +2487,6 @@ def wait_for_subscribe_success(
     access_token: str,
     validate_result: Dict[str, Any],
     proxies: Any = None,
-    retry_interval: int = 10,
 ) -> Dict[str, Any]:
     """阻塞等待 subscribe 成功。"""
     retry_with_new_account_enabled = bool(
@@ -1741,8 +2516,7 @@ def wait_for_subscribe_success(
             raise RetryWithNewAccount(
                 f"subscribe 连续失败 {failed_attempts} 次，放弃当前账号并重新注册，继续复用当前卡"
             )
-        log_warn(f"subscribe 未成功，{retry_interval} 秒后重试")
-        time.sleep(retry_interval)
+        log_warn("subscribe 未成功，立即重试")
 
 
 def _post_form(url: str, data: Dict[str, str], timeout: int = 30) -> Dict[str, Any]:
@@ -1884,7 +2658,6 @@ def run(proxy: Optional[str]) -> Optional[str]:
         trace = trace.text
         loc_re = re.search(r"^loc=(.+)$", trace, re.MULTILINE)
         loc = loc_re.group(1) if loc_re else None
-        print(f"[*] 当前 IP 所在地: {loc}")
         if loc == "CN" or loc == "HK":
             raise RuntimeError("检查代理哦w - 所在地不支持")
     except Exception as e:
@@ -1901,7 +2674,7 @@ def run(proxy: Optional[str]) -> Optional[str]:
         log_error("邮箱创建结果为空")
         return None
     provider_name = "TempMail" if mailbox.get("custom_domain") else str(mailbox.get("email_provider") or "gptmail")
-    log_ok(f"成功获取注册邮箱 [{provider_name}]: {email}")
+    log_ok(f"邮箱就绪 [{provider_name}]: {email}")
 
     oauth = generate_oauth_url()
     url = oauth.auth_url
@@ -1909,7 +2682,9 @@ def run(proxy: Optional[str]) -> Optional[str]:
     try:
         resp = s.get(url, timeout=15)
         did = s.cookies.get("oai-did")
-        print(f"[*] Device ID: {did}")
+        if not did:
+            log_error("未获取到 Device ID")
+            return None
 
         signup_body = f'{{"username":{{"value":"{email}","kind":"email"}},"screen_hint":"signup"}}'
         sen_req_body = f'{{"p":"","id":"{did}","flow":"authorize_continue"}}'
@@ -1944,13 +2719,14 @@ def run(proxy: Optional[str]) -> Optional[str]:
             },
             data=signup_body,
         )
-        log_info(f"提交注册表单状态: {signup_resp.status_code}")
+        if signup_resp.status_code >= 400:
+            log_error(f"注册入口失败: {signup_resp.status_code}")
+            return None
 
         password = str(mailbox.get("password") or "").strip()
         if not password:
             log_error("注册上下文缺少密码")
             return None
-        log_info(f"生成密码: {password}")
 
         # 提交密码和邮箱
         register_body = json.dumps({
@@ -1967,7 +2743,9 @@ def run(proxy: Optional[str]) -> Optional[str]:
             },
             data=register_body,
         )
-        log_info(f"提交密码状态: {pwd_resp.status_code}")
+        if pwd_resp.status_code >= 400:
+            log_error(f"提交注册信息失败: {pwd_resp.status_code}")
+            return None
 
         # 发送邮箱验证码
         otp_resp = s.get(
@@ -1977,7 +2755,9 @@ def run(proxy: Optional[str]) -> Optional[str]:
                 "accept": "application/json",
             },
         )
-        log_info(f"验证码发送状态: {otp_resp.status_code}")
+        if otp_resp.status_code >= 400:
+            log_error(f"发送验证码失败: {otp_resp.status_code}")
+            return None
 
         code = get_oai_code(mailbox, proxies)
         if not code:
@@ -1993,7 +2773,9 @@ def run(proxy: Optional[str]) -> Optional[str]:
             },
             data=code_body,
         )
-        log_info(f"验证码校验状态: {code_resp.status_code}")
+        if code_resp.status_code >= 400:
+            log_error(f"验证码校验失败: {code_resp.status_code}")
+            return None
 
         full_name = f"{mailbox.get('first_name', '')} {mailbox.get('last_name', '')}".strip()
         birthdate = str(mailbox.get("birthdate") or "2000-02-20").strip()
@@ -2008,11 +2790,11 @@ def run(proxy: Optional[str]) -> Optional[str]:
             data=create_account_body,
         )
         create_account_status = create_account_resp.status_code
-        log_info(f"账户创建状态: {create_account_status}")
 
         if create_account_status != 200:
-            print(create_account_resp.text)
+            log_error(f"账户创建失败: {create_account_status}")
             return None
+        log_ok("OpenAI 账号创建完成")
 
         auth_cookie = s.cookies.get("oai-client-auth-session")
         if not auth_cookie:
@@ -2115,8 +2897,7 @@ def main() -> None:
     proxy_value = args.proxy or str(CONFIG.get("default_proxy") or "").strip() or None
     if proxy_value:
         proxies = {"http": proxy_value, "https": proxy_value}
-    output_dir = create_run_output_dir()
-    CURRENT_OUTPUT_DIR = output_dir
+    CURRENT_OUTPUT_DIR = create_run_output_dir()
     teams_file = _teams_file_path()
     registered_accounts = 0
     aisub_uses = 0
@@ -2144,10 +2925,12 @@ def main() -> None:
         proxies = {"http": proxy_value, "https": proxy_value} if proxy_value else None
     try:
         if not sys.stdin.isatty():
-            log_section("Team 注册机")
-            print(STARTUP_BANNER)
-            log_info(f"欢迎使用Team注册机,现在是{_fmt_local_dt(started_at)}")
-            log_info(f"已从 CDKEY 文件补充 {cdkey_added_count} 个新码到 code 文件")
+            _render_brand_header(
+                "Team 注册机",
+                f"欢迎使用 Team 注册机，现在是 {_fmt_local_dt(started_at)}",
+            )
+            if cdkey_added_count > 0:
+                log_info(f"已从 CDKEY 文件补充 {cdkey_added_count} 个新码到兑换码池")
             print_card_inventory_summary()
             aisub_balance_before = get_aisub_balance_snapshot(proxies)
             print_aisub_balance_summary("运行前 AISub 余额", aisub_balance_before)
@@ -2155,6 +2938,8 @@ def main() -> None:
 
         while True:
             count += 1
+            if count == 1:
+                reset_teams_file(teams_file)
             log_section(f"开始第 {count} 次注册流程")
 
             try:
@@ -2168,10 +2953,8 @@ def main() -> None:
                     registered_accounts += 1
                     try:
                         t_data = json.loads(token_json)
-                        fname_email = t_data.get("email", "unknown").replace("@", "_")
                     except Exception:
                         t_data = {}
-                        fname_email = "unknown"
 
                     access_token = str(t_data.get("access_token") or "").strip()
                     if not access_token:
@@ -2191,15 +2974,10 @@ def main() -> None:
                     t_data["validate_result"] = validate_result
                     t_data["subscribe_result"] = subscribe_result
 
-                    file_name = f"token_{fname_email}_{int(time.time())}.json"
-                    file_path = os.path.join(output_dir, file_name)
-
-                    with open(file_path, "w", encoding="utf-8") as f:
-                        json.dump(t_data, f, ensure_ascii=False, indent=2)
                     append_team_entry(teams_file, t_data)
                     mother_accounts += 1
 
-                    log_ok(f"成功! Token 已保存至: {file_path}")
+                    log_ok(f"成功! 账号结果已写入: {teams_file}")
                     if should_stop_for_target(
                         registered_accounts=registered_accounts,
                         mother_accounts=mother_accounts,

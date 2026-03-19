@@ -1,0 +1,89 @@
+{
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiZTRmN3BGQnZvTVNWWll1emJheF83USIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzgwNzY3OCwiZW1haWwiOiIydnBxcHY3Y2F6QGdlbWluaWtleS5lbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE3NzM4MTEyODEsImh0dHBzOi8vYXBpLm9wZW5haS5jb20vYXV0aCI6eyJjaGF0Z3B0X2FjY291bnRfaWQiOiI4MjIyN2Y5Yy1kYTYyLTRiYjQtOWJjZi1kZWFiYmEwMTE3OTUiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfc3RhcnQiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV91bnRpbCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fbGFzdF9jaGVja2VkIjoiMjAyNi0wMy0xOFQwNDoyMToxOC4wNDg0MDcrMDA6MDAiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLVlDYlFoY3AzSDF5eTRwYmRXRVNVODlQYiIsImdyb3VwcyI6W10sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLTlPVXI1VG5PTmtSQkt6SGxVWTUyV1lyNiIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLVlDYlFoY3AzSDF5eTRwYmRXRVNVODlQYiJ9LCJpYXQiOjE3NzM4MDc2ODEsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiZTNlMzNiZGYtYjk4OS00MjQxLWFiNDItYWQ0MDczZjBiMTM5IiwibmFtZSI6Ik9saXZpYSBNaWxsZXIiLCJyYXQiOjE3NzM4MDc2NjgsInNpZCI6ImUyMzhjMzgxLTUwYmQtNGY1YS05ZWMyLTY0MjM3N2Y5MTVjMCIsInN1YiI6ImF1dGgwfHBlQmo0RmR0ZjI3OFMzTEV6bGNEeFdITyJ9.LADCjPRtoi2PlPZCAxmBqWGkOIwSWD_OR2Z8tWMJ-FOdWHdTnAbAjYsXJYYwU1OCjTcxJXjQFZ47HStu2i1wZM7ZvdcEFLUxQeNDZxiFdUmeCyjEqmbMkKF2wbnY5yxoZtERNoFhVvx7xFUVpZMI-8Ewstf6sftzj-NDdnp1i5yUXyOnfaUV-hu9d_ksk0wrY112zTG5UjSpigOMXzBQjibtD92oTjQdU7rXRSnW5tnNbvogxTZR3TcUC9fCwb-IJxK1ZPTK8rZ06hNvnPz9_ukFNyBrKzwOL5wSu9fGlAjYb1RLooE8VuI2KE89QtBEkPyEAd0tbVkov4nHBRqwAmcVyYjzeOSR8twxuN7nhmCtMgYE1aevcPfqz2CIsvUIaWdcZmyIrB3Dv0dYSb3lUv8tqw5FfbtWRu6ksCjCGq6lE6U4oWIKd5QZNss5O8_j5vuLghW8Syduyi9Kdn27n8Js2fR5KkUcVp8ZfiQQ4s0aVH0TXmujhWUjCPin5mwU1f9FPttwUm0LlE47an03V20J_F3qMFLO4CdPLgeOlOaWxUhqSBjWM8FaJ2MZkm3ew7l8S7XPSrFDc5I6tQsesUBFq96fbqBw_ewABiQ5asZvSlCHUEnrhCuvI6akXTfPixiHhW3cwrxqWPnZIcg573NVxkDHgGjQUyT32VFw-vI",
+  "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NjcxNjgyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiODIyMjdmOWMtZGE2Mi00YmI0LTliY2YtZGVhYmJhMDExNzk1IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLVlDYlFoY3AzSDF5eTRwYmRXRVNVODlQYl9fODIyMjdmOWMtZGE2Mi00YmI0LTliY2YtZGVhYmJhMDExNzk1IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLVlDYlFoY3AzSDF5eTRwYmRXRVNVODlQYiIsInVzZXJfaWQiOiJ1c2VyLVlDYlFoY3AzSDF5eTRwYmRXRVNVODlQYiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiIydnBxcHY3Y2F6QGdlbWluaWtleS5lbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzczODA3NjgxLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImQ4NjcyOTFjLTA0NDEtNDlmNy1iYmFkLWIxOTk0YWE2ZjZmMCIsIm5iZiI6MTc3MzgwNzY4MSwicHdkX2F1dGhfdGltZSI6MTc3MzgwNzY3ODA0OCwic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc19UV3Y0YnhWM1N4bWZWUnA1NDJIZjJDZE8iLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8cGVCajRGZHRmMjc4UzNMRXpsY0R4V0hPIn0.5VFmEBOh6LkZsGdreOkK1pqH0aTX3DxuAUuSXfMiCQekNrI7bwHnZrouV5OyDOQyrqq0Z1bXCns8zlluu5eEB_XS5EKPQYnML7_G8FWIKrUTdF5iBfSXe0EZ7ysUMkqoJu74pP3iT4AGXrjh9o7ybMY2TbaOCLGn0ZG7pC0G6B35wXwDlDDkr5E6hKZpRyRh5ogbTSvKwQfifg5eyYBbAaMBT2RraUEH-MK3ySDq-qwXgzkpZA7i4plTxfVEgzG7q_Arzefuhp0GxNIGkr16RcOFa4jJYqq187z1o2WlTduzx5fGeU91o1jmhomBq6g3agWxPIgo_MrrGnU_FcgzCRekzSBZ8YtOL3pai8IRsksEkNaaLzEDTBVrzIMl8bVi722oO7GgS_73tCjxt7mlQkK9hWJKEy-c8G3wCJ7sQCHLUlwa-ZpJwYd-RCgqCxne1iV9HMV-x3mQueP4BSqtzutBKn73gqzCzxiZsFVO2aHp5zLS33Py5plXtqTuCQ6vGOmvGNodjM8QPYJlWg3a2fwP7HH4slBFr_uEi2xthU2aMxKr7X5msL6HyzuFmNKyn8wcEUOLTLoxdWgin38WIt4nt7BeFmdTLsTiT_bK8eW6pvvfMU53ZHsV4dWZ7-PaC7ozM0eCLen-DBiaCZJDL1QeQsM81-3vbzge7Xw6Rj4",
+  "refresh_token": "rt_ksz8o8sPn0ufmGdC_5pfKYN-kDNLK1D1gSTQH3hvxUM.HN9BD03Z-kwJ26HKwWQjwXLqpHU8bY7nB7gTLcYpCwg",
+  "account_id": "82227f9c-da62-4bb4-9bcf-deabba011795",
+  "last_refresh": "2026-03-18T04:21:21Z",
+  "email": "2vpqpv7caz@geminikey.email",
+  "type": "codex",
+  "expired": "2026-03-28T04:21:21Z",
+  "password": "kOiTo5QjrqI1",
+  "first_name": "Olivia",
+  "last_name": "Miller",
+  "birthdate": "1995-09-28",
+  "email_provider": "npcmail",
+  "custom_domain": false,
+  "validate_result": {
+    "requested_code": "95JH-KFN8-4FVE-U2AW",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM20260318122055RWM98U",
+        "cards": [
+          {
+            "id": 207889,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336333962717",
+            "cardPassword": "025",
+            "cardData": "{\"cvv\":\"025\",\"expireTime\":\"2026-03-18T13:20:58.97509473\",\"nickname\":\"95JH-KFN8-4FVE-U2AW\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: dd89ec1a-2281-11f1-87a9-6ff7255a13df | Key: 534933 06",
+            "status": 1,
+            "orderId": 273612,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              18,
+              12,
+              21,
+              1
+            ],
+            "createTime": [
+              2026,
+              3,
+              18,
+              12,
+              21,
+              1
+            ],
+            "updateTime": [
+              2026,
+              3,
+              18,
+              12,
+              21,
+              1
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Cody Stanley\n地址 10094 Southeast Linwood Avenue\n城市 Milwaukie\n州 OR\n邮编 97222\n国家 United States",
+        "progress": "已成功创建1张卡",
+        "cardFormat": "",
+        "taskId": "f075f95ab3494fe69cdc3a65b7bfe5ec",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336333962717 03/32 025 10094 Southeast Linwood Avenue, Milwaukie, OR, 97222, United States"
+  },
+  "subscribe_result": {
+    "status_code": 200,
+    "response": {
+      "success": true,
+      "plan": "team",
+      "steps": [
+        "代理就绪(US)",
+        "获取 checkout session...",
+        "cs_id=cs_live_a1ph6yz2xiE55R7TGfxDAA...",
+        "获取 Stripe 指纹...",
+        "guid=d4397a5e-fbe9-4545-8... muid=86c37e49-80fd-4499-9...",
+        "确认支付...",
+        "confirm [200] status=complete",
+        "支付成功!"
+      ]
+    }
+  }
+}

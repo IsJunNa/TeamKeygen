@@ -1,0 +1,89 @@
+{
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoid19WZFNrenl0Q2VnU0Z6YkZzN19yQSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzgxODg4MiwiZW1haWwiOiJsa2pjYTVkNmJsQGhjY2MuZWR1LmtnIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzgyMjQ4NiwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6IjY4YjBhZmJlLWE5M2QtNDc4MS1hYWFiLWZmNGRkYmU2ZWYzMSIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE4VDA3OjI4OjAyLjEzMjIzOCswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItaWVsUnZkcW5LYnQyWk9CZ3psZnNHZ2ZOIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctczB4Sk1lNHNiaFV6NDR2RzlqYW53emtyIiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItaWVsUnZkcW5LYnQyWk9CZ3psZnNHZ2ZOIn0sImlhdCI6MTc3MzgxODg4NiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJjYjFlNTg5NC0wMmM1LTQ3OGUtOTQ3OC1kMGVhMzNkODE0ZTgiLCJuYW1lIjoiTWFyeSBNYXJ0aW4iLCJyYXQiOjE3NzM4MTg4NzIsInNpZCI6ImZkNjY3YmNmLTU3NTUtNDJjYy04NjRiLWVjZDQzZDUzZTcwYSIsInN1YiI6ImF1dGgwfGdJZUpZRDJZNlVJam10UGNNTG9BNkNLaiJ9.gkIUaLpByRtV3Wjw9t1OaI5VLgYkqgdpEWJN_hC6i7IZ8nQTtGtRFrkzGEO7_H_wXchTFQbFX-sIJLIAUwbg-vL0ZXrhS2IkshbjniFNM_c6anvJs7g2EItCnTHCQ5I6XJ-8R2tyGj1NH_EqzsRK3Jur_wdns0pKcAhfuMWUKQFRqJd_HLpofTaBd1K_n2FCXMbTE7g4fsYYkqVzQHKuUcZbeQRMFBZTAbDWGCvyz6-eSn4CvdESPPlQLt6M-q5A_Szlg3Nu87qOVqVIUvoHS_HwOF2W74GXMQPgmIh6ALgvXLqp6gGQ182xyjPW9fNO-S9Zd2DuyYbVqFnqYkPkJPoToQU0BFqIOpeFG-_FDVnUQI4gib-AXKjVTqIIpRFBe4dJKOlrjL6iri_5pCAWX-L7b_u7rp7IuAShBpnE7mYGcy-m_VgPqBK5I5OWVhnDrhj3LDpM-uzPQWIZTEddJbGgW_WhYYms7h0kOUTVDVN_yXVsL6Ou7e2kQ2NGGIm5ETKaDuFKmZT1XuFd4hQbZoH0wr8PshAxFOtKDXxRGxHpbWpHrc_SxznfJsl_9vGisBbkniw_5qOjXdfuEQ2Y3_1arW_048JDuwJnc8jmQ-k_oOxSkv66nfKjPYgM8iEhuJIRZ22mcU3UAYLKjXrvf49kYLseIpgSffcPzmgv1aU",
+  "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0NjgyODg2LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiNjhiMGFmYmUtYTkzZC00NzgxLWFhYWItZmY0ZGRiZTZlZjMxIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLWllbFJ2ZHFuS2J0MlpPQmd6bGZzR2dmTl9fNjhiMGFmYmUtYTkzZC00NzgxLWFhYWItZmY0ZGRiZTZlZjMxIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWllbFJ2ZHFuS2J0MlpPQmd6bGZzR2dmTiIsInVzZXJfaWQiOiJ1c2VyLWllbFJ2ZHFuS2J0MlpPQmd6bGZzR2dmTiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJsa2pjYTVkNmJsQGhjY2MuZWR1LmtnIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM4MTg4ODYsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiOTU2Y2IzNTAtNWZkMS00ZDdlLThkNTAtNzUzNjkwODNmOTViIiwibmJmIjoxNzczODE4ODg2LCJwd2RfYXV0aF90aW1lIjoxNzczODE4ODgyMTMyLCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX3lEOXg4UXBScTZuQVVmZ1JITHptMWdqViIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxnSWVKWUQyWTZVSWptdFBjTUxvQTZDS2oifQ.Fr5bYhzn-I38DqG7LUwxZlvqOFdeocOEI02rYbIBzQB1aNFV6uRY7S0ARAPo48RNynoUZg-2klYg7pjxM7bNCygVeCgDmszwIQDb5kFqnRUM1MZq1tF2LAyRaqV0iGAshPjLK85UXkQ5238zT0RSMbLcgiaw1M9P7SVRMPpnzgwMD4KOlSUCeYxleDSlYSN7OtAfMRxZ3OiL66aetLuqOoHSA_hK9VDUGBmY8DVn-lb5BDtEns6eV4WDCd5JIpbtr9faFi-6Hr9zIuaVSMa9WxsZRK96Cztfi98CbPBq7LDNwF_mX54p3carMyzkjjSL2ebQulsNOT_foPGAkOypi-0pqzVEfbG0eHCwZtpAds9yqsTRGXFjxwZzvjJD6FbyDGWZ16nu-5g4Y88-5URyD-xAynOJOB0FXOdIr5VHQg9cNSSQqHtJkEf4XlhlJe9RcnBQk8YX0zQGfdwo0D57z6C1CLwJnT6KJ2mlGoaFUtDfvGf-aazV1z9w9tJ8_UfA_0A1Mr0fHli1egwW6mlKvQxv7TUVsaXopxS1dGxlfQJVNwru0Y_4NyJFRN4HRRt_5D_Cp9gwzijpyrxP3qe4p-pAS_9fBsMzxToN_HZ_DYQxUNhmoPRcL-T-pGUyKWFOHqNZ3nsPYtx08JFG0_AebAyP1ERi7nQdwFIlfcYTN8E",
+  "refresh_token": "rt_MVKja9b64e0KNV56w-dAMIRV5Akd_aUkXhwvyeB4hkg.8R4x7tWTlyB7XVPPJGL54ZmyH5AzMdDaLmRWlURQUoE",
+  "account_id": "68b0afbe-a93d-4781-aaab-ff4ddbe6ef31",
+  "last_refresh": "2026-03-18T07:28:06Z",
+  "email": "lkjca5d6bl@hccc.edu.kg",
+  "type": "codex",
+  "expired": "2026-03-28T07:28:05Z",
+  "password": "6ejUeXEJqJth",
+  "first_name": "Mary",
+  "last_name": "Martin",
+  "birthdate": "1984-03-08",
+  "email_provider": "npcmail",
+  "custom_domain": false,
+  "validate_result": {
+    "requested_code": "S2MW-HMUH-58M4-94YG",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM202603181525556K3L4L",
+        "cards": [
+          {
+            "id": 211751,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336334975262",
+            "cardPassword": "834",
+            "cardData": "{\"cvv\":\"834\",\"expireTime\":\"2026-03-18T16:27:45.84153071\",\"nickname\":\"S2MW-HMUH-58M4-94YG\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: f553bd20-229b-11f1-994e-d3c9f8855e7c | Key: 534933 02",
+            "status": 1,
+            "orderId": 277407,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              18,
+              15,
+              27,
+              48
+            ],
+            "createTime": [
+              2026,
+              3,
+              18,
+              15,
+              27,
+              48
+            ],
+            "updateTime": [
+              2026,
+              3,
+              18,
+              15,
+              27,
+              48
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Cody Stanley\n地址 10094 Southeast Linwood Avenue\n城市 Milwaukie\n州 OR\n邮编 97222\n国家 United States",
+        "progress": "已成功创建1张卡",
+        "cardFormat": "",
+        "taskId": "0c535e292110484f918a2abecb84a267",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336334975262 03/32 834 10094 Southeast Linwood Avenue, Milwaukie, OR, 97222, United States"
+  },
+  "subscribe_result": {
+    "status_code": 200,
+    "response": {
+      "success": true,
+      "plan": "team",
+      "steps": [
+        "代理就绪(US)",
+        "获取 checkout session...",
+        "cs_id=cs_live_a1NkmLQXjVS603xdrEjVJU...",
+        "获取 Stripe 指纹...",
+        "guid=c0ac7324-3f7f-402e-8... muid=b21e8bcc-bb89-4af6-a...",
+        "确认支付...",
+        "confirm [200] status=complete",
+        "支付成功!"
+      ]
+    }
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "KH2Q-4YHN-GT8B-AKS5": {
+    "requested_code": "KH2Q-4YHN-GT8B-AKS5",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "remainingQuantity": 0,
+        "quantity": 1,
+        "orderNo": "RDM20260318121301WAC85V",
+        "cards": [
+          {
+            "id": 207817,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336336546632",
+            "cardPassword": "974",
+            "cardData": "{\"cvv\":\"974\",\"expireTime\":\"2026-03-18T13:13:04.715696019\",\"nickname\":\"KH2Q-4YHN-GT8B-AKS5\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: c2d9d6d8-2280-11f1-ba2f-0f38e771abf1 | Key: 534933 06",
+            "status": 1,
+            "orderId": 273479,
+            "cardSequence": 1,
+            "soldTime": "2026-03-18T12:13:07",
+            "createTime": "2026-03-18T12:13:07",
+            "updateTime": "2026-03-18T12:13:07"
+          }
+        ],
+        "cardCount": 1,
+        "orderCount": 2,
+        "redeemTime": "2026-03-18T12:13:01",
+        "cardFormat": "",
+        "message": "该兑换码已使用完",
+        "productName": "534933  0刀",
+        "isUsed": true,
+        "isDelivering": false,
+        "valid": false,
+        "deliveryProgress": "已成功创建1张卡",
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Cody Stanley\n地址 10094 Southeast Linwood Avenue\n城市 Milwaukie\n州 OR\n邮编 97222\n国家 United States",
+        "pendingCardCount": 0,
+        "deliveryStatus": 2
+      }
+    },
+    "formatted_text": "5349336336546632 03/32 974 10094 Southeast Linwood Avenue, Milwaukie, OR, 97222, United States"
+  },
+  "95JH-KFN8-4FVE-U2AW": {
+    "requested_code": "95JH-KFN8-4FVE-U2AW",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM20260318122055RWM98U",
+        "cards": [
+          {
+            "id": 207889,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336333962717",
+            "cardPassword": "025",
+            "cardData": "{\"cvv\":\"025\",\"expireTime\":\"2026-03-18T13:20:58.97509473\",\"nickname\":\"95JH-KFN8-4FVE-U2AW\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: dd89ec1a-2281-11f1-87a9-6ff7255a13df | Key: 534933 06",
+            "status": 1,
+            "orderId": 273612,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              18,
+              12,
+              21,
+              1
+            ],
+            "createTime": [
+              2026,
+              3,
+              18,
+              12,
+              21,
+              1
+            ],
+            "updateTime": [
+              2026,
+              3,
+              18,
+              12,
+              21,
+              1
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Cody Stanley\n地址 10094 Southeast Linwood Avenue\n城市 Milwaukie\n州 OR\n邮编 97222\n国家 United States",
+        "progress": "已成功创建1张卡",
+        "cardFormat": "",
+        "taskId": "f075f95ab3494fe69cdc3a65b7bfe5ec",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336333962717 03/32 025 10094 Southeast Linwood Avenue, Milwaukie, OR, 97222, United States"
+  },
+  "22QT-TLH6-F5QY-PQSU": {
+    "requested_code": "22QT-TLH6-F5QY-PQSU",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM202603181222156V3GMB",
+        "cards": [
+          {
+            "id": 207899,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336305277110",
+            "cardPassword": "962",
+            "cardData": "{\"cvv\":\"962\",\"expireTime\":\"2026-03-18T13:22:18.490415231\",\"nickname\":\"22QT-TLH6-F5QY-PQSU\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: 0ced1ad6-2282-11f1-8716-ffef21c1c901 | Key: 534933 06",
+            "status": 1,
+            "orderId": 273630,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              18,
+              12,
+              22,
+              20
+            ],
+            "createTime": [
+              2026,
+              3,
+              18,
+              12,
+              22,
+              20
+            ],
+            "updateTime": [
+              2026,
+              3,
+              18,
+              12,
+              22,
+              20
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Cody Stanley\n地址 10094 Southeast Linwood Avenue\n城市 Milwaukie\n州 OR\n邮编 97222\n国家 United States",
+        "progress": "已成功创建1张卡",
+        "cardFormat": "",
+        "taskId": "0111713a61334409b4dd358a25aa8303",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336305277110 03/32 962 10094 Southeast Linwood Avenue, Milwaukie, OR, 97222, United States"
+  },
+  "PAU9-RN5Q-6XEP-HAV5": {
+    "requested_code": "PAU9-RN5Q-6XEP-HAV5",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM202603181223055WM2W7",
+        "cards": [
+          {
+            "id": 207909,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336323327491",
+            "cardPassword": "627",
+            "cardData": "{\"cvv\":\"627\",\"expireTime\":\"2026-03-18T13:23:08.959317515\",\"nickname\":\"PAU9-RN5Q-6XEP-HAV5\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: 2b03e158-2282-11f1-b13b-2f96e3590a8e | Key: 534933 06",
+            "status": 1,
+            "orderId": 273641,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              18,
+              12,
+              23,
+              11
+            ],
+            "createTime": [
+              2026,
+              3,
+              18,
+              12,
+              23,
+              11
+            ],
+            "updateTime": [
+              2026,
+              3,
+              18,
+              12,
+              23,
+              11
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Cody Stanley\n地址 10094 Southeast Linwood Avenue\n城市 Milwaukie\n州 OR\n邮编 97222\n国家 United States",
+        "progress": "已成功创建1张卡",
+        "cardFormat": "",
+        "taskId": "b007d1262ed0496cb43c6ffb87107628",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336323327491 03/32 627 10094 Southeast Linwood Avenue, Milwaukie, OR, 97222, United States"
+  }
+}

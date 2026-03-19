@@ -1,0 +1,89 @@
+{
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoib0w1QnR6NDQyZ1NmZG1nRm9LdlhJdyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3MzgyMjkxMywiZW1haWwiOiJzZWxsYTNhNTUzNkBubC5odXNoMnUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3MzgyNjUxNywiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6ImNlNWRjZThiLWU5OGItNGMyNS04ZDEyLTEyNmY1ZmQ5ZDUyNiIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTE4VDA4OjM1OjEzLjQ5MjYxNCswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItQ1N0ZE41QlZkemRDRmY4VWtIVDhXWm1JIiwiZ3JvdXBzIjpbXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctQXFVekxJb0M4elZNZU1QNmY5TWoybGZ2IiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItQ1N0ZE41QlZkemRDRmY4VWtIVDhXWm1JIn0sImlhdCI6MTc3MzgyMjkxNywiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiIyNDEzNDIzNi1hYmY3LTRkOGMtYTIyMy1hMjEyNWExZmQ1ZTYiLCJuYW1lIjoiSmVubmlmZXIgQW5kZXJzb24iLCJyYXQiOjE3NzM4MjI5MDQsInNpZCI6IjAyYjcyMTQyLThlYWItNGFlNC05MWQ1LTgzNGEzMmY4MWQ1NyIsInN1YiI6ImF1dGgwfEZocjBsN2tvNVZCTmdrcVJMemFsVmFiUiJ9.tnLk-rVqU_lh8iyLW8dgqQZQ6PEgV1dnG0t4pvrc98b1zXGPD86H0_-QTumyDHCiC3tpkv4JMyjDZ77km_6PBuiynCMSs_BjqCRBXS3_WZFB4VaqeIvmQDjxhCYpI3oQMqfIGC9YjAZcDI-bDiaQP5G25B1TtsmEtxyfW-ZDpeC6i1-oSamXgnPR7UpY5InTFp3D-qqsuc_uOmiIOiOHf56ms2nMcTNhhju7mxSxdsWwAa1WrX8HScM0OVMJjY8GD3L1zMk__sWs_4oiFXgfjA6NUojIUCGWDIx-rNBSHUDVYHEFDZm9ostVVsvXowhetGRfhclQCSkK_Gj7sTSRrCSh0YknB2CsxnIJLhjv3-cSy1jHIrXxXBsv0VugdFLawFtg3TeG368UJuGotZs0uoalXyc3gRVeL3r7g3nl85TugqFTU7LyFyhAkWu8J24H7fBcGW3ZyWoYLKEmeeTQBRfvIKg2XrtZPtqbSI6HAnRY4oPezIc--gOEEuMz4YXqziNs8h7ygjzDuJTTqZYCyTF404HxlZ80738dwJu_q21NFqJJhjhUPc1yjSEtI1yL3CF_i2HMw_h9G_At0SnN9sMtUi7y3WWQw_mpX2BNnQ8An6hoXZw4m2_lRuUp9atYqf_W1tf4xuT13a43IqTAph3MMUjZci61WUKPhDa5fM8",
+  "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc0Njg2OTE3LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiY2U1ZGNlOGItZTk4Yi00YzI1LThkMTItMTI2ZjVmZDlkNTI2IiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLUNTdGRONUJWZHpkQ0ZmOFVrSFQ4V1ptSV9fY2U1ZGNlOGItZTk4Yi00YzI1LThkMTItMTI2ZjVmZDlkNTI2IiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUNTdGRONUJWZHpkQ0ZmOFVrSFQ4V1ptSSIsInVzZXJfaWQiOiJ1c2VyLUNTdGRONUJWZHpkQ0ZmOFVrSFQ4V1ptSSJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJzZWxsYTNhNTUzNkBubC5odXNoMnUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzM4MjI5MTcsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiYTcyZjI5NTMtMGI0MC00MWE3LWE2NGYtMTc4NThkYzhiNjQ5IiwibmJmIjoxNzczODIyOTE3LCJwd2RfYXV0aF90aW1lIjoxNzczODIyOTEzNDkyLCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX0Myc1dCaGtuV2JHVXk1RnAzakt2V1lWeSIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxGaHIwbDdrbzVWQk5na3FSTHphbFZhYlIifQ.ihls7d6SgmRNsEASH4a1lU6M9pwLkRl688LkSmpZBhZXKj-9TyLB7sbqOzq06Fd_UoO7DCLES-HJos1yQA4vQzqUvFAolwRUFCfUfRITyL3XPGYeXx5pFozxFvvP5sT2kCdUmMwI_fnBmo4WrLMK2T8au1gZoWW6SeEkYhy77hpSVSRzyl_Atusj9-1zpULSydcOxv9c2LhBE3CFdaBYN_17TzMwX6S8Ahi3iIho7bByHYho6CJdrE7fRhvMWMJxtvV0xmBM3DV4_gnlgmm00uqez1yfhHYb8L--UPopyctKwVmdHfEMc6kBPSg6EGbJ37gmH9NNxOtGgDKiOGGvuIj_OpApVE2pHFPrmssUQAhhzJHEXtqs4qQiVuvvNptW02ovR9ERAutAg2ibS6OuIfYiMS-2f0LlSyM1rKsVCX4at89kNZGzr4_kfGUsLDB8oafKbmomTMeiI9mQhv4i2rsl8Ul7ye2jBSm0loMN5OnPM3GF25f1T6JXsmDqAQKg7mGU1qyfprQalc2vuWXYsGuXGYwimBD7ka_SLmMeAj0t-KgRKZxli1Fd2HT0d2vVShor3JLCOMkXBcB3D1jkcp7IyaPDhL8js4mRTqTULiCJB5THsI7e-SrBBrktwsVy53fLr165seoeFsXpU7R8BV6eeLooCc7Wz9WvcB91Dpw",
+  "refresh_token": "rt_Xl0sBCFLGYcMIdjj310jKNKY7Xt-qhtdUsPr-xQadsQ.6gjyUNoWdA91-TXXTd3J2uM-0CRydsJHnxpkx6FMAZw",
+  "account_id": "ce5dce8b-e98b-4c25-8d12-126f5fd9d526",
+  "last_refresh": "2026-03-18T08:35:17Z",
+  "email": "sella3a5536@nl.hush2u.com",
+  "type": "codex",
+  "expired": "2026-03-28T08:35:16Z",
+  "password": "JTVzXAeo8Jx4",
+  "first_name": "Jennifer",
+  "last_name": "Anderson",
+  "birthdate": "1982-08-09",
+  "email_provider": "xiaomajiang",
+  "custom_domain": false,
+  "validate_result": {
+    "requested_code": "4LPX-MZWE-J599-NEMJ",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM202603181631047XGT2N",
+        "cards": [
+          {
+            "id": 212414,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336390908405",
+            "cardPassword": "417",
+            "cardData": "{\"cvv\":\"417\",\"expireTime\":\"2026-03-18T17:33:15.315406191\",\"nickname\":\"4LPX-MZWE-J599-NEMJ\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: 1b7fa1cc-22a5-11f1-ab92-d7efe01419a7 | Key: 534933 06",
+            "status": 1,
+            "orderId": 279109,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              18,
+              16,
+              33,
+              19
+            ],
+            "createTime": [
+              2026,
+              3,
+              18,
+              16,
+              33,
+              19
+            ],
+            "updateTime": [
+              2026,
+              3,
+              18,
+              16,
+              33,
+              19
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Cody Stanley\n地址 10094 Southeast Linwood Avenue\n城市 Milwaukie\n州 OR\n邮编 97222\n国家 United States",
+        "progress": "已成功创建1张卡（状态自动修正）",
+        "cardFormat": "",
+        "taskId": "2e165699a2f146edb6fc0521e6317a2e",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336390908405 03/32 417 10094 Southeast Linwood Avenue, Milwaukie, OR, 97222, United States"
+  },
+  "subscribe_result": {
+    "status_code": 200,
+    "response": {
+      "success": true,
+      "plan": "team",
+      "steps": [
+        "代理就绪(US)",
+        "获取 checkout session...",
+        "cs_id=cs_live_a1Jf5PgDzLYrIytQmQW5gX...",
+        "获取 Stripe 指纹...",
+        "guid=9199577f-22bb-4599-a... muid=7fa2c95d-3a56-430c-9...",
+        "确认支付...",
+        "confirm [200] status=complete",
+        "支付成功!"
+      ]
+    }
+  }
+}
