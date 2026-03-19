@@ -4,7 +4,6 @@ import re
 import sys
 import time
 import ast
-import uuid
 import math
 import random
 import string
@@ -63,9 +62,12 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "tempmail_plus_api": "https://tempmail.plus/api",
     "npcmail_base": "https://dash.xphdfs.me",
     "gptmail_base": "https://mail.chatgpt.org.uk/api",
+    "junmail_base": "https://mail.zhujunpeng.cc.cd",
     "tm_email_provider": "gptmail",
     "tm_npcmail_apikey": "",
     "gptmail_api_key": "gpt-test",
+    "junmail_api_key": "",
+    "register_type": "team",
     "tm_reg_prefix": "",
     "tm_reg_domain": "",
     "tm_local_email_file": "data/local_graph_accounts.txt",
@@ -163,7 +165,7 @@ ANSI_RESET = "\033[0m"
 ANSI_DIM = "\033[2m"
 ANSI_BOLD = "\033[1m"
 ANSI_MENU = "\033[38;5;110m"
-MENU_OPTIONS = ["开始运行", "生成账户数", "配置中心", "退出程序"]
+MENU_OPTIONS = ["开始运行", "注册类型", "生成账户数", "配置中心", "退出程序"]
 CONSOLE = Console() if RICH_AVAILABLE else None
 
 LOG_STYLES = {
@@ -171,6 +173,20 @@ LOG_STYLES = {
     " OK ": "bold green",
     "WARN": "bold yellow",
     "ERR ": "bold red",
+}
+
+EMAIL_PROVIDER_LABELS: Dict[str, str] = {
+    "npcmail": "NPCMail",
+    "gptmail": "GPTMail",
+    "junmail": "JunMail",
+    "xiaomajiang": "临时邮箱(仅可做测试使用,封号严重)",
+    "local_graph": "本地Outlook邮箱",
+    "tempmail": "TempMail",
+}
+
+REGISTER_TYPE_LABELS: Dict[str, str] = {
+    "normal": "普号",
+    "team": "Team",
 }
 
 
@@ -262,6 +278,23 @@ def _request_json(
     return payload
 
 
+def _email_provider_label(provider: Any) -> str:
+    key = str(provider or "").strip().lower()
+    return EMAIL_PROVIDER_LABELS.get(key, str(provider or "").strip() or "未知")
+
+
+def _register_type_key(value: Any = None) -> str:
+    key = str(CONFIG.get("register_type") if value is None else value or "").strip().lower()
+    if key not in REGISTER_TYPE_LABELS:
+        return "team"
+    return key
+
+
+def _register_type_label(value: Any = None) -> str:
+    key = _register_type_key(value)
+    return REGISTER_TYPE_LABELS.get(key, "Team")
+
+
 def _extract_verification_code(content: str) -> str:
     text = str(content or "")
     match = re.search(r"\b(\d{6})\b", text)
@@ -281,6 +314,78 @@ def _strip_html(text: str) -> str:
     cleaned = html.unescape(cleaned)
     cleaned = re.sub(r"\s+", " ", cleaned)
     return cleaned.strip()
+
+
+def _collect_text_fragments(value: Any, depth: int = 0, limit: int = 80) -> list[str]:
+    if value is None or limit <= 0 or depth > 4:
+        return []
+    if isinstance(value, str):
+        text = value.strip()
+        return [text] if text else []
+    if isinstance(value, (int, float, bool)):
+        return [str(value)]
+
+    fragments: list[str] = []
+    if isinstance(value, dict):
+        preferred_keys = (
+            "subject",
+            "from",
+            "sender",
+            "address",
+            "full_address",
+            "text",
+            "plain",
+            "plain_text",
+            "body",
+            "body_text",
+            "body_plain",
+            "bodyPreview",
+            "content",
+            "html",
+            "html_content",
+            "snippet",
+            "intro",
+            "preview",
+            "raw",
+            "source",
+            "data",
+        )
+        visited: set[str] = set()
+        for key in preferred_keys:
+            if key not in value:
+                continue
+            visited.add(key)
+            fragments.extend(_collect_text_fragments(value.get(key), depth + 1, limit - len(fragments)))
+            if len(fragments) >= limit:
+                return fragments[:limit]
+        for key, nested in value.items():
+            if key in visited:
+                continue
+            fragments.extend(_collect_text_fragments(nested, depth + 1, limit - len(fragments)))
+            if len(fragments) >= limit:
+                break
+        return fragments[:limit]
+
+    if isinstance(value, list):
+        for item in value[:20]:
+            fragments.extend(_collect_text_fragments(item, depth + 1, limit - len(fragments)))
+            if len(fragments) >= limit:
+                break
+        return fragments[:limit]
+
+    return []
+
+
+def _stringify_message_payload(payload: Any) -> str:
+    fragments = _collect_text_fragments(payload)
+    if not fragments:
+        return ""
+    return _strip_html(" ".join(fragments))
+
+
+def _looks_like_openai_message(content: str) -> bool:
+    lowered = str(content or "").lower()
+    return "openai" in lowered or "chatgpt" in lowered
 
 
 def _generate_password(length: int = 16) -> str:
@@ -533,6 +638,90 @@ def _gptmail_request(method: str, endpoint: str, *, body: Any = None, proxies: A
     return payload.get("data")
 
 
+def _junmail_headers() -> Dict[str, str]:
+    api_key = str(CONFIG.get("junmail_api_key") or "").strip()
+    if not api_key:
+        raise RuntimeError("请先配置 JunMail API Key")
+    return {
+        "Authorization": f"Bearer {api_key}",
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
+
+
+def _junmail_request(
+    method: str,
+    endpoint: str,
+    *,
+    body: Any = None,
+    params: Optional[Dict[str, Any]] = None,
+    proxies: Any = None,
+) -> Any:
+    base_url = str(CONFIG.get("junmail_base") or DEFAULT_CONFIG["junmail_base"]).strip().rstrip("/")
+    if not base_url:
+        raise RuntimeError("请先配置 JunMail Base URL")
+    return _request_json(
+        method,
+        f"{base_url}{endpoint}",
+        headers=_junmail_headers(),
+        params=params,
+        json_body=body,
+        proxies=proxies,
+    )
+
+
+def _create_junmail_mailbox(address: str = "", domain: str = "", proxies: Any = None) -> Dict[str, str]:
+    body: Dict[str, Any] = {}
+    if address:
+        body["address"] = address
+    if domain:
+        body["domain"] = domain
+    payload = _junmail_request("POST", "/api/mailboxes", body=body, proxies=proxies)
+    mailbox = payload.get("mailbox") if isinstance(payload, dict) else None
+    if not isinstance(mailbox, dict):
+        raise RuntimeError("JunMail 创建邮箱失败")
+    mailbox_id = str(mailbox.get("id") or "").strip()
+    full_address = str(mailbox.get("full_address") or mailbox.get("address") or "").strip()
+    if not mailbox_id or not full_address:
+        raise RuntimeError("JunMail 返回邮箱信息不完整")
+    return {"mailbox_id": mailbox_id, "email": full_address}
+
+
+def _fetch_junmail_code(mailbox_id: str, proxies: Any = None) -> str:
+    if not mailbox_id:
+        return ""
+    payload = _junmail_request(
+        "GET",
+        f"/api/mailboxes/{quote(mailbox_id)}/emails",
+        params={"page": 1, "size": 20},
+        proxies=proxies,
+    )
+    messages = payload.get("data") if isinstance(payload, dict) else payload
+    if not isinstance(messages, list):
+        return ""
+
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        summary_content = _stringify_message_payload(message)
+        code = _extract_verification_code(summary_content)
+        if code and (len(code) == 6 or _looks_like_openai_message(summary_content)):
+            return code
+        email_id = str(message.get("id") or "").strip()
+        if not email_id:
+            continue
+        detail = _junmail_request(
+            "GET",
+            f"/api/mailboxes/{quote(mailbox_id)}/emails/{quote(email_id)}",
+            proxies=proxies,
+        )
+        detail_content = _stringify_message_payload(detail)
+        code = _extract_verification_code(detail_content)
+        if code and (len(code) == 6 or _looks_like_openai_message(detail_content)):
+            return code
+    return ""
+
+
 def _tempmail_plus_request(endpoint: str, *, proxies: Any = None) -> Any:
     return _request_json(
         "GET",
@@ -649,6 +838,18 @@ def create_registration_email_context(proxies: Any = None) -> Dict[str, Any]:
         )
         return context
 
+    if provider == "junmail":
+        mailbox = _create_junmail_mailbox(reg_prefix, reg_domain, proxies)
+        context.update(
+            {
+                "email": mailbox["email"],
+                "email_provider": "junmail",
+                "custom_domain": False,
+                "junmail_mailbox_id": mailbox["mailbox_id"],
+            }
+        )
+        return context
+
     if provider == "local_graph":
         return _create_local_graph_mailbox_context()
 
@@ -748,6 +949,8 @@ def get_oai_code(mailbox: Dict[str, Any], proxies: Any = None) -> str:
                 code = _fetch_npcmail_code(email, proxies)
             elif provider == "xiaomajiang":
                 code = _fetch_tempmail_lol_code(tempmail_lol_token, proxies)
+            elif provider == "junmail":
+                code = _fetch_junmail_code(str(mailbox.get("junmail_mailbox_id") or "").strip(), proxies)
             elif provider == "local_graph":
                 code = _fetch_graph_mail_code(mailbox, proxies)
             else:
@@ -937,23 +1140,54 @@ def _output_root_path() -> str:
 
 
 def load_code_array(quiet: bool = False) -> list[dict[str, Any]]:
-    """读取配置指定的 code 文件，并解析其中的对象数组。"""
-    code_file = _code_file_path()
+    """读取 CDKEY 文件，兼容字符串数组、对象数组和纯文本格式。"""
+    code_file = _cdkey_file_path()
 
     if not os.path.exists(code_file):
-        log_warn(f"未找到 code 文件: {code_file}")
+        log_warn(f"未找到 CDKEY 文件: {code_file}")
         return []
 
     try:
         with open(code_file, "r", encoding="utf-8") as f:
             raw = f.read().strip()
     except Exception as e:
-        log_error(f"读取 code 文件失败: {e}")
+        log_error(f"读取 CDKEY 文件失败: {e}")
         return []
 
     if not raw:
-        log_warn("code 文件为空")
+        log_warn("CDKEY 文件为空")
         return []
+
+    def _normalize_loaded_code_items(data: Any) -> list[dict[str, Any]]:
+        if isinstance(data, dict):
+            for key in ("cdkeys", "codes", "items", "data"):
+                nested = data.get(key)
+                if isinstance(nested, list):
+                    data = nested
+                    break
+        if not isinstance(data, list):
+            return []
+        normalized_items: list[dict[str, Any]] = []
+        seen_codes: set[str] = set()
+        for item in data:
+            if isinstance(item, dict):
+                code = str(item.get("code") or "").strip()
+                use_count = _normalize_use_count(item.get("use"))
+            else:
+                code = str(item or "").strip()
+                use_count = 0
+            if not code or code in seen_codes:
+                continue
+            seen_codes.add(code)
+            normalized_items.append({"code": code, "use": use_count})
+        return normalized_items
+
+    def _looks_like_code_container(data: Any) -> bool:
+        if isinstance(data, list):
+            return True
+        if isinstance(data, dict):
+            return any(isinstance(data.get(key), list) for key in ("cdkeys", "codes", "items", "data"))
+        return False
 
     candidates = [raw]
     normalized = re.sub(r"([{,]\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:", r'\1"\2":', raw)
@@ -965,30 +1199,39 @@ def load_code_array(quiet: bool = False) -> list[dict[str, Any]]:
     for candidate in candidates:
         try:
             data = json.loads(candidate)
-            if isinstance(data, list):
-                if not quiet:
-                    log_info(f"成功读取 code 数组，共 {len(data)} 项")
-                return [item for item in data if isinstance(item, dict)]
         except Exception:
-            pass
+            continue
+        items = _normalize_loaded_code_items(data)
+        if items or _looks_like_code_container(data):
+            if not quiet:
+                log_info(f"成功读取 CDKEY 数组，共 {len(items)} 项")
+            return items
 
     try:
         python_like = raw.replace("false", "False").replace("true", "True").replace("null", "None")
         data = ast.literal_eval(python_like)
-        if isinstance(data, list):
+        items = _normalize_loaded_code_items(data)
+        if items or _looks_like_code_container(data):
             if not quiet:
-                log_info(f"成功读取 code 数组，共 {len(data)} 项")
-            return [item for item in data if isinstance(item, dict)]
+                log_info(f"成功读取 CDKEY 数组，共 {len(items)} 项")
+            return items
     except Exception:
         pass
 
-    log_error("code 文件内容不是可解析的数组格式")
+    plain_codes = _extract_code_lines(raw)
+    if plain_codes:
+        items = [{"code": code, "use": 0} for code in plain_codes]
+        if not quiet:
+            log_info(f"成功读取 CDKEY 文本，共 {len(items)} 项")
+        return items
+
+    log_error("CDKEY 文件内容不是可解析的数组或文本格式")
     return []
 
 
 def save_code_array(code_array: list[dict[str, Any]]) -> None:
-    """将更新后的 code 数组写回 code 文件。"""
-    code_file = _code_file_path()
+    """将更新后的 CDKEY 数组写回 CDKEY 文件。"""
+    code_file = _cdkey_file_path()
     try:
         os.makedirs(os.path.dirname(code_file), exist_ok=True)
         normalized_array = []
@@ -1004,7 +1247,7 @@ def save_code_array(code_array: list[dict[str, Any]]) -> None:
         with open(code_file, "w", encoding="utf-8") as f:
             json.dump(normalized_array, f, ensure_ascii=False, indent=2)
     except Exception as e:
-        log_error(f"写回 code 文件失败: {e}")
+        log_error(f"写回 CDKEY 文件失败: {e}")
 
 
 def _load_plain_codes(file_path: str) -> list[str]:
@@ -1039,25 +1282,71 @@ def _save_plain_codes(file_path: str, codes: list[str]) -> None:
             f.write("")
 
 
-def _append_cdkeys_from_text(raw_text: str) -> int:
-    incoming = _extract_code_lines(raw_text)
+def _extract_nonempty_lines(raw_text: str) -> list[str]:
+    lines: list[str] = []
+    for line in str(raw_text or "").splitlines():
+        text = line.strip()
+        if text:
+            lines.append(text)
+    return lines
+
+
+def _dedupe_local_graph_lines(lines: list[str]) -> list[str]:
+    merged: list[str] = []
+    seen_emails: set[str] = set()
+    for line in lines:
+        parsed = _parse_local_graph_account_line(line)
+        if parsed is None:
+            continue
+        email = str(parsed.get("email") or "").strip().lower()
+        if not email or email in seen_emails:
+            continue
+        seen_emails.add(email)
+        merged.append(line.strip())
+    return merged
+
+
+def _load_local_graph_lines() -> list[str]:
+    file_path = _local_email_file_path()
+    if not file_path or not os.path.exists(file_path):
+        return []
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return _extract_nonempty_lines(f.read())
+    except Exception:
+        return []
+
+
+def _save_local_graph_lines(lines: list[str]) -> None:
+    file_path = _local_email_file_path()
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, "w", encoding="utf-8") as f:
+        if lines:
+            f.write("\n".join(lines) + "\n")
+        else:
+            f.write("")
+
+
+def _append_local_graph_accounts_from_text(raw_text: str) -> int:
+    incoming = _dedupe_local_graph_lines(_extract_nonempty_lines(raw_text))
     if not incoming:
         return 0
-    file_path = _cdkey_file_path()
-    existing = _load_plain_codes(file_path)
-    merged: list[str] = []
-    seen: set[str] = set()
-    for code in existing + incoming:
-        if code in seen:
-            continue
-        seen.add(code)
-        merged.append(code)
-    added = len(merged) - len(existing)
-    _save_plain_codes(file_path, merged)
-    return max(0, added)
+    existing = _load_local_graph_lines()
+    before = len(_dedupe_local_graph_lines(existing))
+    merged = _dedupe_local_graph_lines(existing + incoming)
+    _save_local_graph_lines(merged)
+    return max(0, len(merged) - before)
 
 
-def _append_redeem_codes_from_text(raw_text: str) -> int:
+def _replace_local_graph_accounts_from_text(raw_text: str) -> int:
+    incoming = _dedupe_local_graph_lines(_extract_nonempty_lines(raw_text))
+    _save_local_graph_lines(incoming)
+    CONFIG["tm_local_email_cursor"] = 0
+    save_config()
+    return len(incoming)
+
+
+def _append_cdkeys_from_text(raw_text: str) -> int:
     incoming = _extract_code_lines(raw_text)
     if not incoming:
         return 0
@@ -1067,8 +1356,8 @@ def _append_redeem_codes_from_text(raw_text: str) -> int:
         for item in existing_items
         if isinstance(item, dict) and str(item.get("code") or "").strip()
     }
-    added = 0
     merged = list(existing_items)
+    added = 0
     for code in incoming:
         if code in existing_codes:
             continue
@@ -1080,73 +1369,19 @@ def _append_redeem_codes_from_text(raw_text: str) -> int:
     return added
 
 
+def _append_redeem_codes_from_text(raw_text: str) -> int:
+    """已停用：redeem_codes 机制已取消。"""
+    return 0
+
+
 def sync_code_file_from_cdkeys() -> int:
-    """启动前将 CDKEY 文件中的未使用码补充到 code 文件。"""
-    cdkey_file = _cdkey_file_path()
-    if not cdkey_file or not os.path.exists(cdkey_file):
-        return 0
-
-    try:
-        with open(cdkey_file, "r", encoding="utf-8") as f:
-            lines = f.readlines()
-    except Exception as e:
-        log_error(f"读取 CDKEY 文件失败: {e}")
-        return 0
-
-    codes: list[str] = []
-    seen: set[str] = set()
-    for line in lines:
-        code = str(line or "").strip()
-        if not code or code in seen:
-            continue
-        seen.add(code)
-        codes.append(code)
-
-    if not codes:
-        log_warn("CDKEY 文件为空，跳过同步")
-        return 0
-
-    existing_items = load_code_array(quiet=True)
-    existing_codes = {
-        str(item.get("code") or "").strip()
-        for item in existing_items
-        if isinstance(item, dict) and str(item.get("code") or "").strip()
-    }
-
-    added_count = 0
-    merged_items = list(existing_items)
-    for code in codes:
-        if code in existing_codes:
-            continue
-        merged_items.append({"code": code, "use": 0})
-        existing_codes.add(code)
-        added_count += 1
-
-    if added_count == 0:
-        log_info("CDKEY 文件中的码已全部存在，跳过补充")
-        return 0
-
-    save_code_array(merged_items)
-    log_info(f"已从 CDKEY 文件补充 {added_count} 个新码到 code 文件")
-    return added_count
+    """已停用：CDKEY 现已直接作为唯一卡码源。"""
+    return 0
 
 
 def get_cdkey_count() -> int:
     """读取 CDKEY 文件中的唯一数量。"""
-    cdkey_file = _cdkey_file_path()
-    if not cdkey_file or not os.path.exists(cdkey_file):
-        return 0
-    try:
-        with open(cdkey_file, "r", encoding="utf-8") as f:
-            lines = f.readlines()
-    except Exception:
-        return 0
-    seen: set[str] = set()
-    for line in lines:
-        code = str(line or "").strip()
-        if code:
-            seen.add(code)
-    return len(seen)
+    return len(load_code_array(quiet=True))
 
 
 def print_card_inventory_summary() -> None:
@@ -1155,7 +1390,7 @@ def print_card_inventory_summary() -> None:
     _render_kv_table(
         "运行前卡片信息",
         [
-            ("虚拟卡数量", str(virtual_card_count)),
+            ("CDKEY 数量", str(virtual_card_count)),
         ],
     )
 
@@ -1326,11 +1561,13 @@ def print_aisub_balance_summary(title: str, snapshot: Dict[str, Any]) -> None:
         return
     remaining_times = int(snapshot.get("remaining_times") or 0)
     available_card_uses = get_available_card_use_count()
-    estimated_positions = min(remaining_times, available_card_uses) * 5
+    estimated_accounts = min(remaining_times, available_card_uses)
+    estimated_positions = estimated_accounts * 5
     _render_kv_table(
         title,
         [
             ("AISub 可用次数", str(remaining_times)),
+            ("预计可生成账号", str(estimated_accounts)),
             ("预计可生成位置", str(estimated_positions)),
         ],
     )
@@ -1394,7 +1631,8 @@ def _render_brand_header(title: str, subtitle: str = "") -> None:
 
 def _render_kv_table(title: str, rows: list[tuple[str, str]]) -> None:
     if RICH_AVAILABLE and CONSOLE and Table:
-        table = Table(title=title, show_header=False, expand=True, box=None, pad_edge=False)
+        CONSOLE.print(f"[bold cyan]{title}[/bold cyan]")
+        table = Table(show_header=False, expand=True, box=None, pad_edge=False, padding=(0, 0))
         table.add_column("key", style="bold white", ratio=1)
         table.add_column("value", style="cyan", ratio=1)
         for left, right in rows:
@@ -1412,27 +1650,39 @@ def _print_dashboard_rows(rows: list[tuple[str, str]], gap: int = 6) -> None:
 
 
 def _get_startup_dashboard_data(proxies: Any = None) -> Dict[str, Any]:
+    register_type = _register_type_key()
     available_card_uses = get_available_card_use_count()
     aisub_snapshot = get_aisub_balance_snapshot(proxies)
     aisub_times = int(aisub_snapshot.get("remaining_times") or 0) if int(aisub_snapshot.get("status_code") or 0) == 200 else 0
-    estimated_positions = min(aisub_times, available_card_uses) * 5
+    estimated_accounts = min(aisub_times, available_card_uses)
+    estimated_positions = estimated_accounts * 5
     return {
+        "register_type": register_type,
         "available_card_uses": available_card_uses,
         "aisub_snapshot": aisub_snapshot,
         "aisub_times": aisub_times,
+        "estimated_accounts": estimated_accounts,
         "estimated_positions": estimated_positions,
     }
 
 
 def print_startup_dashboard(proxies: Any = None) -> Dict[str, Any]:
     data = _get_startup_dashboard_data(proxies)
+    rows = [("注册类型", _register_type_label(data.get("register_type")))]
+    if data.get("register_type") == "team":
+        rows.extend(
+            [
+                ("AISub 可用次数", str(data["aisub_times"])),
+                ("虚拟卡可用次数", str(data["available_card_uses"])),
+                ("预计可生成账号", str(data["estimated_accounts"])),
+                ("预计可生成位置", str(data["estimated_positions"])),
+            ]
+        )
+    else:
+        rows.append(("运行模式", "仅注册普号，不绑定 Team"))
     _render_kv_table(
         "运行前卡片信息",
-        [
-            ("AISub 可用次数", str(data["aisub_times"])),
-            ("虚拟卡可用次数", str(data["available_card_uses"])),
-            ("预计可生成位置", str(data["estimated_positions"])),
-        ],
+        rows,
     )
     print("=" * 56)
     print("> 1. 开始注册")
@@ -1606,7 +1856,6 @@ def prompt_file_settings() -> None:
         options = [
             f"本地邮箱文件: {_shorten_path_display(str(CONFIG.get('tm_local_email_file') or DEFAULT_CONFIG['tm_local_email_file']))}",
             f"CDKEY 文件: {_shorten_path_display(str(CONFIG.get('cdkey_file') or DEFAULT_CONFIG['cdkey_file']))}",
-            f"兑换码文件: {_shorten_path_display(str(CONFIG.get('code_file') or DEFAULT_CONFIG['code_file']))}",
             f"成功账号文件: {_shorten_path_display(str(CONFIG.get('teams_file') or DEFAULT_CONFIG['teams_file']))}",
             "返回",
         ]
@@ -1629,13 +1878,6 @@ def prompt_file_settings() -> None:
             )
         elif selected_index == 2:
             _update_config_value(
-                "code_file",
-                "请输入兑换码文件路径，支持相对路径: ",
-                default=CONFIG.get("code_file") or DEFAULT_CONFIG["code_file"],
-                success_text="兑换码文件路径已更新",
-            )
-        elif selected_index == 3:
-            _update_config_value(
                 "teams_file",
                 "请输入成功账号文件路径，支持相对路径: ",
                 default=CONFIG.get("teams_file") or DEFAULT_CONFIG["teams_file"],
@@ -1648,7 +1890,8 @@ def prompt_import_settings() -> None:
     while True:
         options = [
             "粘贴追加 CDKEY",
-            "粘贴追加兑换码",
+            "粘贴追加本地邮箱",
+            "粘贴覆盖本地邮箱",
             "返回",
         ]
         selected_index = _select_from_menu("配置中心 / 导入数据", options, selected_index)
@@ -1659,27 +1902,31 @@ def prompt_import_settings() -> None:
             if raw_text is None:
                 continue
             added = _append_cdkeys_from_text(raw_text)
-            if added <= 0:
-                log_warn("未追加新的 CDKEY")
-                continue
-            synced = sync_code_file_from_cdkeys()
-            log_ok(f"已追加 {added} 个 CDKEY，并同步 {synced} 个新码到兑换码池")
+            log_ok(f"CDKEY 导入完成: {added} 条")
         elif selected_index == 1:
-            raw_text = _prompt_multiline_input("请粘贴兑换码，可多行/空格/逗号分隔")
+            raw_text = _prompt_multiline_input(
+                "请粘贴本地邮箱账号，每行一个，格式：邮箱----邮箱密码----Client ID----Refresh Token"
+            )
             if raw_text is None:
                 continue
-            added = _append_redeem_codes_from_text(raw_text)
-            if added <= 0:
-                log_warn("未追加新的兑换码")
+            added = _append_local_graph_accounts_from_text(raw_text)
+            log_ok(f"本地邮箱导入完成: {added} 条")
+        elif selected_index == 2:
+            raw_text = _prompt_multiline_input(
+                "请粘贴本地邮箱账号，每行一个，格式：邮箱----邮箱密码----Client ID----Refresh Token"
+            )
+            if raw_text is None:
                 continue
-            log_ok(f"已追加 {added} 个兑换码")
+            count = _replace_local_graph_accounts_from_text(raw_text)
+            log_ok(f"本地邮箱覆盖完成: {count} 条")
 
 
 def prompt_email_settings() -> None:
     selected_index = 0
     while True:
+        current_provider = str(CONFIG.get("tm_email_provider") or "npcmail").strip().lower()
         options = [
-            f"邮箱提供商: {str(CONFIG.get('tm_email_provider') or 'npcmail').strip()}",
+            f"邮箱提供商: {_email_provider_label(current_provider)}",
             f"注册邮箱前缀: {str(CONFIG.get('tm_reg_prefix') or '').strip() or '未设置'}",
             f"注册邮箱域名: {str(CONFIG.get('tm_reg_domain') or '').strip() or '未设置'}",
             "返回",
@@ -1688,15 +1935,25 @@ def prompt_email_settings() -> None:
         if selected_index in {-1, len(options) - 1}:
             return
         if selected_index == 0:
-            provider_options = ["npcmail", "gptmail", "xiaomajiang", "local_graph"]
-            current_provider = str(CONFIG.get("tm_email_provider") or "npcmail").strip().lower()
-            provider_index = provider_options.index(current_provider) if current_provider in provider_options else 0
-            provider_choice = _select_from_menu("邮箱提供商", provider_options, provider_index)
+            provider_options = [
+                ("npcmail", "NPCMail"),
+                ("gptmail", "GPTMail"),
+                ("junmail", "JunMail"),
+                ("xiaomajiang", "临时邮箱(仅可做测试使用,封号严重)"),
+                ("local_graph", "本地Outlook邮箱"),
+            ]
+            provider_labels = [label for _, label in provider_options]
+            provider_index = next(
+                (index for index, (provider_key, _) in enumerate(provider_options) if provider_key == current_provider),
+                0,
+            )
+            provider_choice = _select_from_menu("邮箱提供商", provider_labels, provider_index)
             if provider_choice == -1:
                 continue
-            CONFIG["tm_email_provider"] = provider_options[provider_choice]
+            provider_key, provider_label = provider_options[provider_choice]
+            CONFIG["tm_email_provider"] = provider_key
             save_config()
-            log_ok(f"邮箱提供商已更新为 {CONFIG['tm_email_provider']}")
+            log_ok(f"邮箱提供商已更新为 {provider_label}")
         elif selected_index == 1:
             _update_config_value(
                 "tm_reg_prefix",
@@ -1719,6 +1976,8 @@ def prompt_service_settings() -> None:
         options = [
             f"NPCMail API Key: {_mask_secret(str(CONFIG.get('tm_npcmail_apikey') or ''))}",
             f"GPTMail API Key: {_mask_secret(str(CONFIG.get('gptmail_api_key') or ''))}",
+            f"JunMail API Key: {_mask_secret(str(CONFIG.get('junmail_api_key') or ''))}",
+            f"JunMail Base URL: {_shorten_path_display(str(CONFIG.get('junmail_base') or DEFAULT_CONFIG['junmail_base']), 50)}",
             f"AISub API Key: {_mask_secret(str(CONFIG.get('aisub_api_key') or ''))}",
             f"Redeem Base URL: {_shorten_path_display(str(CONFIG.get('redeem_base_url') or DEFAULT_CONFIG['redeem_base_url']), 50)}",
             f"AISub Base URL: {_shorten_path_display(str(CONFIG.get('aisub_base_url') or DEFAULT_CONFIG['aisub_base_url']), 50)}",
@@ -1743,19 +2002,33 @@ def prompt_service_settings() -> None:
             )
         elif selected_index == 2:
             _update_config_value(
+                "junmail_api_key",
+                "请输入 JunMail API Key，留空则清除: ",
+                default=CONFIG.get("junmail_api_key") or "",
+                success_text="JunMail API Key 已更新",
+            )
+        elif selected_index == 3:
+            _update_config_value(
+                "junmail_base",
+                "请输入 JunMail Base URL: ",
+                default=CONFIG.get("junmail_base") or DEFAULT_CONFIG["junmail_base"],
+                success_text="JunMail Base URL 已更新",
+            )
+        elif selected_index == 4:
+            _update_config_value(
                 "aisub_api_key",
                 "请输入 AISub API Key，留空则清除: ",
                 default=CONFIG.get("aisub_api_key") or "",
                 success_text="AISub API Key 已更新",
             )
-        elif selected_index == 3:
+        elif selected_index == 5:
             _update_config_value(
                 "redeem_base_url",
                 "请输入 Redeem Base URL: ",
                 default=CONFIG.get("redeem_base_url") or DEFAULT_CONFIG["redeem_base_url"],
                 success_text="Redeem Base URL 已更新",
             )
-        elif selected_index == 4:
+        elif selected_index == 6:
             _update_config_value(
                 "aisub_base_url",
                 "请输入 AISub Base URL: ",
@@ -1768,6 +2041,7 @@ def prompt_runtime_settings() -> None:
     selected_index = 0
     while True:
         options = [
+            f"注册类型: {_register_type_label()}",
             f"默认代理: {str(CONFIG.get('default_proxy') or '').strip() or '未设置'}",
             f"单卡最大绑定次数: {get_card_max_use_count()}",
             f"subscribe 失败重开号: {'开' if bool(CONFIG.get('subscribe_retry_new_account_enabled', True)) else '关'}",
@@ -1778,13 +2052,15 @@ def prompt_runtime_settings() -> None:
         if selected_index in {-1, len(options) - 1}:
             return
         if selected_index == 0:
+            prompt_register_type_setting()
+        elif selected_index == 1:
             _update_config_value(
                 "default_proxy",
                 "请输入默认代理，留空则清除: ",
                 default=CONFIG.get("default_proxy") or "",
                 success_text="默认代理已更新",
             )
-        elif selected_index == 1:
+        elif selected_index == 2:
             raw = _prompt_input("请输入单卡最大绑定次数: ", str(get_card_max_use_count()))
             if raw is None:
                 continue
@@ -1795,7 +2071,7 @@ def prompt_runtime_settings() -> None:
                 continue
             save_config()
             log_ok(f"单卡最大绑定次数已更新为 {CONFIG['card_max_use_count']}")
-        elif selected_index == 2:
+        elif selected_index == 3:
             enabled = bool(CONFIG.get("subscribe_retry_new_account_enabled", True))
             toggle_choice = _select_from_menu("subscribe 失败重开号", ["开", "关"], 0 if enabled else 1)
             if toggle_choice == -1:
@@ -1803,7 +2079,7 @@ def prompt_runtime_settings() -> None:
             CONFIG["subscribe_retry_new_account_enabled"] = toggle_choice == 0
             save_config()
             log_ok("subscribe 失败重开号配置已更新")
-        elif selected_index == 3:
+        elif selected_index == 4:
             raw = _prompt_input(
                 "请输入 subscribe 失败次数上限: ",
                 str(int(CONFIG.get("subscribe_retry_new_account_limit", 50) or 50)),
@@ -1817,6 +2093,26 @@ def prompt_runtime_settings() -> None:
                 continue
             save_config()
             log_ok(f"subscribe 失败次数上限已更新为 {CONFIG['subscribe_retry_new_account_limit']}")
+
+
+def prompt_register_type_setting() -> None:
+    register_type_options = [("normal", "普号"), ("team", "Team")]
+    current_type = _register_type_key()
+    register_type_index = next(
+        (index for index, (register_type_key, _) in enumerate(register_type_options) if register_type_key == current_type),
+        1,
+    )
+    choice = _select_from_menu(
+        "注册类型",
+        [label for _, label in register_type_options],
+        register_type_index,
+    )
+    if choice == -1:
+        return
+    register_type_key, register_type_label = register_type_options[choice]
+    CONFIG["register_type"] = register_type_key
+    save_config()
+    log_ok(f"注册类型已更新为 {register_type_label}")
 
 
 def prompt_advanced_settings() -> None:
@@ -1854,15 +2150,19 @@ def _render_startup_menu(selected_index: int, dashboard: Dict[str, Any], started
         "Team 注册机",
         f"欢迎使用 Team 注册机，现在是 {_fmt_local_dt(started_at)}",
     )
-    if cdkey_added_count > 0:
-        log_info(f"已从 CDKEY 文件补充 {cdkey_added_count} 个新码到兑换码池")
     _render_kv_table(
         "运行前概览",
-        [
-            ("虚拟卡可用次数", str(dashboard["available_card_uses"])),
-            ("AISub 可用次数", str(dashboard["aisub_times"])),
-            ("预计可生成位置", str(dashboard["estimated_positions"])),
-        ],
+        [("注册类型", _register_type_label(dashboard.get("register_type")))]
+        + (
+            [
+                ("虚拟卡可用次数", str(dashboard["available_card_uses"])),
+                ("AISub 可用次数", str(dashboard["aisub_times"])),
+                ("预计可生成账号", str(dashboard["estimated_accounts"])),
+                ("预计可生成位置", str(dashboard["estimated_positions"])),
+            ]
+            if dashboard.get("register_type") == "team"
+            else [("运行模式", "仅注册普号，不绑定 Team")]
+        ),
     )
     if RICH_AVAILABLE and CONSOLE and Panel:
         lines = []
@@ -1889,11 +2189,17 @@ def prompt_execution_count() -> None:
     current_target_type = str(CONFIG.get("target_type") or DEFAULT_CONFIG["target_type"]).strip()
     current_target_value = int(CONFIG.get("target_value") or DEFAULT_CONFIG["target_value"] or 0)
     current_display = current_target_value if current_target_type == "register_count" else 0
-    estimated_positions = int(_get_startup_dashboard_data().get("estimated_positions") or 0)
-    max_allowed = max(0, estimated_positions)
-    raw = _prompt_input(
-        f"请输入生成账户数，0 表示不限，当前为 {current_display}，最大不超过 {max_allowed}: "
-    )
+    dashboard = _get_startup_dashboard_data()
+    register_type = str(dashboard.get("register_type") or "team")
+    estimated_accounts = int(dashboard.get("estimated_accounts") or 0)
+    estimated_positions = int(dashboard.get("estimated_positions") or 0)
+    max_allowed = max(0, estimated_accounts) if register_type == "team" else 0
+    prompt = f"请输入生成账户数，0 表示不限，当前为 {current_display}"
+    if register_type == "team":
+        prompt += f"，最大不超过 {max_allowed}（对应约 {estimated_positions} 个位置）"
+    else:
+        prompt += "，普号模式下不受 AISub / 卡池限制"
+    raw = _prompt_input(f"{prompt}: ")
     if raw is None or not raw:
         return
     try:
@@ -1902,7 +2208,7 @@ def prompt_execution_count() -> None:
         log_warn("输入无效，保持原配置")
         return
     if max_allowed > 0 and target_value > max_allowed:
-        log_warn(f"生成账户数不能超过预计可生成位置 {max_allowed}")
+        log_warn(f"生成账户数不能超过预计可生成账号数 {max_allowed}")
         return
     CONFIG["target_type"] = "register_count"
     CONFIG["target_value"] = target_value
@@ -1948,7 +2254,7 @@ def prompt_other_config() -> None:
 
 def prompt_startup_menu(proxies: Any = None, *, started_at: datetime, cdkey_added_count: int) -> Optional[Dict[str, Any]]:
     selected_index = 0
-    options = ("start", "count", "config", "exit")
+    options = ("start", "type", "count", "config", "exit")
     menu_proxies = proxies
     dashboard = _get_startup_dashboard_data(menu_proxies)
     try:
@@ -1961,7 +2267,7 @@ def prompt_startup_menu(proxies: Any = None, *, started_at: datetime, cdkey_adde
             if key == "down":
                 selected_index = (selected_index + 1) % len(options)
                 continue
-            if key in {"1", "2", "3", "4"}:
+            if key.isdigit() and 1 <= int(key) <= len(options):
                 selected_index = int(key) - 1
                 key = "enter"
             if key == "escape":
@@ -1973,6 +2279,12 @@ def prompt_startup_menu(proxies: Any = None, *, started_at: datetime, cdkey_adde
             if selected == "start":
                 _clear_screen()
                 return dashboard["aisub_snapshot"]
+            if selected == "type":
+                _show_cursor()
+                _clear_screen()
+                prompt_register_type_setting()
+                dashboard = _get_startup_dashboard_data(menu_proxies)
+                continue
             if selected == "count":
                 _show_cursor()
                 _clear_screen()
@@ -2015,7 +2327,7 @@ def get_card_max_use_count() -> int:
 
 
 def get_next_unused_code() -> Optional[tuple[str, list[dict[str, Any]], int]]:
-    """获取第一个未达到最大使用次数的 code。"""
+    """获取第一个未达到最大使用次数的 CDKEY。"""
     code_array = load_code_array()
     max_use_count = get_card_max_use_count()
     for index, item in enumerate(code_array):
@@ -2024,16 +2336,27 @@ def get_next_unused_code() -> Optional[tuple[str, list[dict[str, Any]], int]]:
         item["use"] = use_count
         if code and use_count < max_use_count:
             return code, code_array, index
-    log_warn("code 文件中没有可用的 code")
+    log_warn("CDKEY 文件中没有可用的码")
     return None
 
 
 def wait_for_next_unused_code() -> tuple[str, list[dict[str, Any]], int]:
-    """获取可用 code；全部用完时停止脚本。"""
+    """获取可用 CDKEY；全部用完时停止脚本。"""
     next_code_info = get_next_unused_code()
     if next_code_info:
         return next_code_info
-    raise StopScript("code 已全部用完，脚本停止")
+    raise StopScript("CDKEY 已全部用完，脚本停止")
+
+
+def _drop_code_entry(code_array: list[dict[str, Any]], code_index: int, *, reason: str = "") -> None:
+    if code_index < 0 or code_index >= len(code_array):
+        return
+    code_value = str((code_array[code_index] or {}).get("code") or "").strip()
+    del code_array[code_index]
+    save_code_array(code_array)
+    if code_value:
+        detail = f"，原因: {reason}" if reason else ""
+        log_info(f"CDKEY {code_value} 已从源文件移除{detail}")
 
 
 def validate_redeem_code(code: str, proxies: Any = None) -> Dict[str, Any]:
@@ -2236,6 +2559,133 @@ def is_exhausted_validate_response(response_data: Any) -> bool:
     return False
 
 
+def _normalize_address_component(value: Any) -> str:
+    text = str(value or "").replace("，", ",").replace("：", ":").strip()
+    if not text:
+        return ""
+    text = re.sub(r"\s+", " ", text)
+    text = re.sub(r"\s*,\s*", ", ", text)
+    text = re.sub(r"(,\s*){2,}", ", ", text)
+    return text.strip(" ,")
+
+
+def _extract_template_field(line: str, labels: tuple[str, ...]) -> str:
+    raw = str(line or "").strip()
+    if not raw:
+        return ""
+    for label in labels:
+        match = re.match(
+            rf"^{re.escape(label)}(?:\s*[:：]?\s*)(.+?)\s*$",
+            raw,
+            flags=re.IGNORECASE,
+        )
+        if not match:
+            continue
+        value = _normalize_address_component(match.group(1))
+        if value:
+            return value
+    return ""
+
+
+def _looks_like_street_address(line: str) -> bool:
+    text = _normalize_address_component(line)
+    if not text:
+        return False
+    lower = text.lower()
+    if "{$" in text or "mmyy" in lower or "cvc" in lower:
+        return False
+    if re.fullmatch(r"[A-Z]{2}", text):
+        return False
+    if re.fullmatch(r"\d{5}(?:-\d{4})?", text):
+        return False
+    if lower in {"united states", "usa", "us"}:
+        return False
+    ignored_prefixes = (
+        "卡号",
+        "地区",
+        "姓名",
+        "持卡人",
+        "国家",
+        "城市",
+        "州",
+        "省",
+        "邮编",
+        "邮政编码",
+        "name",
+        "holder",
+        "cardholder",
+        "country",
+        "city",
+        "state",
+        "province",
+        "zip",
+        "postal",
+        "postcode",
+        "region",
+    )
+    if lower.startswith(ignored_prefixes):
+        return False
+    if re.search(
+        r"\b(street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|"
+        r"way|circle|cir|terrace|ter|highway|hwy|parkway|pkwy|trail|trl|place|pl|"
+        r"suite|ste|unit|apt|apartment|box)\b",
+        lower,
+    ):
+        return True
+    return bool(re.search(r"\d", text) and re.search(r"[a-zA-Z\u4e00-\u9fff]", text))
+
+
+def _extract_address_from_template(template: str) -> str:
+    fields = {
+        "address": "",
+        "city": "",
+        "state": "",
+        "zipcode": "",
+        "country": "",
+    }
+    field_labels = {
+        "address": (
+            "Street Address",
+            "Address Line 1",
+            "Address1",
+            "Street",
+            "Address",
+            "地址",
+            "街道",
+        ),
+        "city": ("City", "城市"),
+        "state": ("Province", "State", "Region", "州", "省"),
+        "zipcode": ("Postal Code", "ZIP Code", "Postcode", "Zip", "ZIP", "邮政编码", "邮编"),
+        "country": ("Country", "国家"),
+    }
+    fallback_address_lines: list[str] = []
+    lines = [line.strip() for line in str(template or "").splitlines() if line.strip()]
+    for line in lines:
+        matched = False
+        for field_name, labels in field_labels.items():
+            value = _extract_template_field(line, labels)
+            if not value:
+                continue
+            fields[field_name] = value
+            matched = True
+            break
+        if not matched and _looks_like_street_address(line):
+            fallback_address_lines.append(line)
+
+    if not fields["address"] and fallback_address_lines:
+        fields["address"] = _normalize_address_component(fallback_address_lines[0])
+
+    address_parts = [
+        _normalize_address_component(fields["address"]),
+        _normalize_address_component(fields["city"]),
+        _normalize_address_component(fields["state"]),
+        _normalize_address_component(fields["zipcode"]),
+        _normalize_address_component(fields["country"]),
+    ]
+    address_parts = [part for part in address_parts if part]
+    return ", ".join(address_parts)
+
+
 def format_validate_response(response_data: Any) -> str:
     """将 validate 接口返回格式化为单行卡片信息。"""
     if not isinstance(response_data, dict):
@@ -2272,27 +2722,7 @@ def format_validate_response(response_data: Any) -> str:
         expiry_display = f"{expiry[:2]}/{expiry[2:]}"
 
     template = str(data.get("cardTemplate") or "").strip()
-    address_text = ""
-    if template:
-        lines = [line.strip() for line in template.splitlines() if line.strip()]
-        address = ""
-        city = ""
-        state = ""
-        zipcode = ""
-        country = ""
-        for line in lines:
-            if line.startswith("地址 "):
-                address = line.replace("地址 ", "", 1).replace(",", ", ")
-            elif line.startswith("城市 "):
-                city = line.replace("城市 ", "", 1)
-            elif line.startswith("州 "):
-                state = line.replace("州 ", "", 1)
-            elif line.startswith("邮编 "):
-                zipcode = line.replace("邮编 ", "", 1)
-            elif line.startswith("国家 "):
-                country = line.replace("国家 ", "", 1)
-        address_parts = [part for part in [address, city, state, zipcode, country] if part]
-        address_text = ", ".join(address_parts)
+    address_text = _extract_address_from_template(template) if template else ""
 
     parts = [part for part in [card_number, expiry_display, card_password, address_text] if part]
     return " ".join(parts)
@@ -2309,53 +2739,22 @@ def wait_for_validate_result(code: str, proxies: Any = None, retry_interval: int
 
 
 def get_validate_context(proxies: Any = None) -> Dict[str, Any]:
-    """根据 code.txt 中的 use 计数获取本轮要使用的 validate 结果。"""
-    max_use_count = get_card_max_use_count()
+    """每次直接从 CDKEY 现场 validate / redeem，直到拿到可用卡片。"""
     while True:
         code_value, code_array, code_index = wait_for_next_unused_code()
         item = code_array[code_index]
         use_count = _normalize_use_count(item.get("use"))
-        result_map = load_code_result_map()
-        last_result = result_map.get(code_value)
-
-        if use_count == 0:
-            if is_ready_validate_result(last_result):
-                validate_result = last_result
-            else:
-                try:
-                    validate_result = wait_for_validate_result(code_value, proxies)
-                except SkipCurrentCode as e:
-                    item["use"] = max_use_count
-                    save_code_array(code_array)
-                    log_warn(f"当前兑换码 {code_value} 跳过: {e}")
-                    continue
-                save_code_result(code_value, validate_result)
-        elif use_count > 0 and is_ready_validate_result(last_result):
-            validate_result = last_result
-            formatted_text = str(validate_result.get("formatted_text") or "").strip()
-            if formatted_text:
-                log_info(f"第 {use_count + 1} 次复用当前 code 的 validate 结果: {formatted_text}")
-            else:
-                log_info(f"第 {use_count + 1} 次复用当前 code 的 validate 结果: {json.dumps(validate_result, ensure_ascii=False)}")
-        elif use_count > 0:
-            log_warn("当前 code 缺少可复用的 validate 结果，重新请求 validate")
-            try:
-                validate_result = wait_for_validate_result(code_value, proxies)
-            except SkipCurrentCode as e:
-                item["use"] = max_use_count
-                save_code_array(code_array)
-                log_warn(f"当前兑换码 {code_value} 跳过: {e}")
-                continue
-            save_code_result(code_value, validate_result)
-        else:
-            item["use"] = max_use_count
-            save_code_array(code_array)
-            log_info("当前 code 已达到最大使用次数，切换下一条")
+        if use_count > 0:
+            log_info(f"第 {use_count + 1} 次使用当前 CDKEY，现场校验并开卡")
+        try:
+            validate_result = wait_for_validate_result(code_value, proxies)
+        except SkipCurrentCode as e:
+            _drop_code_entry(code_array, code_index, reason=str(e))
+            log_warn(f"当前兑换码 {code_value} 跳过: {e}")
             continue
 
         if is_exhausted_validate_response(validate_result.get("response")):
-            item["use"] = max_use_count
-            save_code_array(code_array)
+            _drop_code_entry(code_array, code_index, reason="达到服务端使用上限")
             log_warn(f"当前兑换码 {code_value} 已使用完，切换下一张卡")
             continue
 
@@ -2369,13 +2768,20 @@ def get_validate_context(proxies: Any = None) -> Dict[str, Any]:
 
 
 def mark_code_used(code_array: list[dict[str, Any]], code_index: int, use_count: int) -> None:
-    """在 subscribe 成功后递增当前 code 的 use 计数。"""
-    code_array[code_index]["use"] = min(use_count + 1, get_card_max_use_count())
+    """在 subscribe 成功后递增当前 CDKEY 的 use 计数，达到上限后移除。"""
+    next_use_count = min(use_count + 1, get_card_max_use_count())
+    if code_index < 0 or code_index >= len(code_array):
+        return
+    if next_use_count >= get_card_max_use_count():
+        _drop_code_entry(code_array, code_index, reason="达到配置的最大使用次数")
+        return
+    code_array[code_index]["use"] = next_use_count
     save_code_array(code_array)
 
 
 def print_run_summary(
     *,
+    register_type: str,
     registered_accounts: int,
     aisub_uses: int,
     cards_used: int,
@@ -2386,14 +2792,19 @@ def print_run_summary(
     aisub_balance_after: Optional[Dict[str, Any]] = None,
 ) -> None:
     """打印本次运行汇总。"""
-    aisub_points = aisub_uses * 30
     child_accounts = mother_accounts * 5
+    register_type_key = _register_type_key(register_type)
     log_section("本次运行汇总")
-    log_ok(f"注册了 {registered_accounts} 个号")
-    log_ok(f"使用了 AISub {aisub_uses} 次")
-    log_ok(f"使用了 {cards_used} 张卡")
-    log_ok(f"绑定 {mother_accounts} 个Team")
-    log_ok(f"生成了 {child_accounts} 个位置")
+    log_ok(f"注册类型: {_register_type_label(register_type_key)}")
+    if register_type_key == "team":
+        log_ok(f"注册了 {registered_accounts} 个号")
+        log_ok(f"使用了 AISub {aisub_uses} 次")
+        log_ok(f"使用了 {cards_used} 张卡")
+        log_ok(f"绑定 {mother_accounts} 个Team")
+        log_ok(f"生成了 {child_accounts} 个位置")
+    else:
+        log_ok(f"生成了 {registered_accounts} 个普号")
+        log_ok(f"生成了 {registered_accounts} 个位置")
     if started_at and ended_at:
         total_seconds = (ended_at - started_at).total_seconds()
         log_ok(f"开始时间: {_fmt_local_dt(started_at)}")
@@ -2401,7 +2812,7 @@ def print_run_summary(
         log_ok(f"总耗时: {_fmt_duration(total_seconds)}")
         if registered_accounts > 0:
             log_ok(f"平均每个号耗时: {_fmt_duration(total_seconds / registered_accounts)}")
-    if aisub_balance_before and aisub_balance_after:
+    if register_type_key == "team" and aisub_balance_before and aisub_balance_after:
         before_status = int(aisub_balance_before.get("status_code") or 0)
         after_status = int(aisub_balance_after.get("status_code") or 0)
         if before_status == 200 and after_status == 200:
@@ -2423,6 +2834,12 @@ def should_stop_for_target(
         target_value = 0
 
     if target_value <= 0:
+        return False
+
+    if _register_type_key() != "team":
+        if registered_accounts >= target_value:
+            log_info(f"已达到目标生成账户数 {target_value}，脚本停止")
+            return True
         return False
 
     current_value = 0
@@ -2472,15 +2889,72 @@ def subscribe_aisub(access_token: str, validate_result: Dict[str, Any], proxies:
             "status_code": resp.status_code,
             "response": data,
         }
-        log_info(f"AISub subscribe 返回: {json.dumps(result, ensure_ascii=False)}")
         return result
     except Exception as e:
         result = {
             "status_code": 0,
             "response": {"success": False, "error": str(e)},
         }
-        log_error(f"AISub subscribe 请求失败: {json.dumps(result, ensure_ascii=False)}")
         return result
+
+
+def _extract_subscribe_failure_info(response_data: Any) -> tuple[str, str]:
+    full_text = ""
+    concise_reason = ""
+    if not isinstance(response_data, dict):
+        return full_text, concise_reason
+
+    error_text = str(response_data.get("error") or "").strip()
+    steps = response_data.get("steps")
+    step_texts: list[str] = []
+    if isinstance(steps, list):
+        step_texts = [str(step).strip() for step in steps if str(step).strip()]
+
+    parts = [part for part in [error_text, *step_texts] if part]
+    full_text = " | ".join(parts)
+
+    diagnostic_step = ""
+    for step in reversed(step_texts):
+        lowered = step.lower()
+        if (
+            "hcaptcha" in lowered
+            or "3ds" in lowered
+            or "confirm error:" in lowered
+            or "declined" in lowered
+            or "postal" in lowered
+            or "zip" in lowered
+            or "验证码" in step
+            or "邮编" in step
+            or "地址" in step
+            or "error" in lowered
+        ):
+            diagnostic_step = step
+            break
+
+    generic_errors = {
+        "",
+        "操作失败",
+        "操作失败，请重试",
+        "请重试",
+    }
+    is_generic_error = error_text in generic_errors
+
+    if any("需要 hCaptcha challenge" in step for step in step_texts):
+        concise_reason = "需要 hCaptcha challenge"
+    elif any("3DS" in step or "额外验证" in step for step in step_texts):
+        concise_reason = "该账号需要额外验证（3DS）"
+    elif error_text and not is_generic_error:
+        concise_reason = error_text
+    elif error_text and diagnostic_step:
+        concise_reason = f"{error_text} | {diagnostic_step}"
+    elif error_text:
+        concise_reason = error_text
+    elif diagnostic_step:
+        concise_reason = diagnostic_step
+    elif step_texts:
+        concise_reason = step_texts[-1]
+
+    return full_text, concise_reason
 
 
 def wait_for_subscribe_success(
@@ -2504,19 +2978,22 @@ def wait_for_subscribe_success(
     while True:
         subscribe_result = subscribe_aisub(access_token, validate_result, proxies)
         response_data = subscribe_result.get("response") or {}
-        error_message = ""
-        if isinstance(response_data, dict):
-            error_message = str(response_data.get("error") or "").strip()
+        failure_text, failure_reason = _extract_subscribe_failure_info(response_data)
         if subscribe_result.get("status_code") == 200 and isinstance(response_data, dict) and response_data.get("success") is True:
             return subscribe_result
-        if "该账号需要额外验证（3DS）" in error_message:
-            raise RetryWithNewAccount("该账号需要额外验证（3DS），切换下一个账号继续复用当前卡")
+        if "该账号需要额外验证（3DS）" in failure_text:
+            detail = f"，原因: {failure_reason}" if failure_reason else ""
+            raise RetryWithNewAccount(f"该账号需要额外验证（3DS），切换下一个账号继续复用当前卡{detail}")
+        if "需要 hCaptcha challenge" in failure_text:
+            detail = f"，原因: {failure_reason}" if failure_reason else ""
+            raise RetryWithNewAccount(f"该账号触发 hCaptcha challenge，切换下一个账号继续复用当前卡{detail}")
         failed_attempts += 1
         if retry_with_new_account_enabled and failed_attempts >= retry_with_new_account_limit:
             raise RetryWithNewAccount(
                 f"subscribe 连续失败 {failed_attempts} 次，放弃当前账号并重新注册，继续复用当前卡"
             )
-        log_warn("subscribe 未成功，立即重试")
+        detail = f"，原因: {failure_reason}" if failure_reason else ""
+        log_warn(f"subscribe 第 {failed_attempts} 次失败，立即重试{detail}")
 
 
 def _post_form(url: str, data: Dict[str, str], timeout: int = 30) -> Dict[str, Any]:
@@ -2646,12 +3123,45 @@ def submit_callback_url(
 # ==========================================
 
 
+def _ensure_openai_device_id(session: Any, initial_response: Any = None) -> str:
+    def _response_cookie_value(response: Any) -> str:
+        if response is None:
+            return ""
+        cookie_value = str(response.cookies.get("oai-did") or "").strip()
+        if cookie_value:
+            return cookie_value
+        raw_set_cookie = str(response.headers.get("set-cookie") or response.headers.get("Set-Cookie") or "")
+        match = re.search(r"oai-did=([^;,\s]+)", raw_set_cookie)
+        return str(match.group(1) if match else "").strip()
+
+    did = str(session.cookies.get("oai-did") or "").strip()
+    if not did and initial_response is not None:
+        did = _response_cookie_value(initial_response)
+    if did:
+        return did
+
+    for fallback_url in (
+        "https://auth.openai.com/create-account",
+        "https://auth.openai.com/u/login/identifier",
+    ):
+        try:
+            resp = session.get(fallback_url, timeout=15)
+        except Exception:
+            continue
+        did = str(session.cookies.get("oai-did") or _response_cookie_value(resp) or "").strip()
+        if did:
+            return did
+
+    return ""
+
+
 def run(proxy: Optional[str]) -> Optional[str]:
     proxies: Any = None
     if proxy:
         proxies = {"http": proxy, "https": proxy}
 
     s = requests.Session(proxies=proxies, impersonate="chrome")
+    mailbox: Optional[Dict[str, Any]] = None
 
     try:
         trace = s.get("https://cloudflare.com/cdn-cgi/trace", timeout=10)
@@ -2673,7 +3183,7 @@ def run(proxy: Optional[str]) -> Optional[str]:
     if not email:
         log_error("邮箱创建结果为空")
         return None
-    provider_name = "TempMail" if mailbox.get("custom_domain") else str(mailbox.get("email_provider") or "gptmail")
+    provider_name = "TempMail" if mailbox.get("custom_domain") else _email_provider_label(mailbox.get("email_provider"))
     log_ok(f"邮箱就绪 [{provider_name}]: {email}")
 
     oauth = generate_oauth_url()
@@ -2681,9 +3191,9 @@ def run(proxy: Optional[str]) -> Optional[str]:
 
     try:
         resp = s.get(url, timeout=15)
-        did = s.cookies.get("oai-did")
+        did = _ensure_openai_device_id(s, resp)
         if not did:
-            log_error("未获取到 Device ID")
+            log_error("未获取到 OpenAI 下发的 Device ID（oai-did Cookie），当前代理/网络无法通过 auth.openai.com 前置校验")
             return None
 
         signup_body = f'{{"username":{{"value":"{email}","kind":"email"}},"screen_hint":"signup"}}'
@@ -2859,6 +3369,8 @@ def run(proxy: Optional[str]) -> Optional[str]:
                 token_data["birthdate"] = birthdate
                 token_data["email_provider"] = str(mailbox.get("email_provider") or "")
                 token_data["custom_domain"] = bool(mailbox.get("custom_domain"))
+                if mailbox.get("junmail_mailbox_id"):
+                    token_data["junmail_mailbox_id"] = str(mailbox.get("junmail_mailbox_id") or "")
                 return json.dumps(token_data, ensure_ascii=False, separators=(",", ":"))
             current_url = next_url
 
@@ -2899,11 +3411,13 @@ def main() -> None:
         proxies = {"http": proxy_value, "https": proxy_value}
     CURRENT_OUTPUT_DIR = create_run_output_dir()
     teams_file = _teams_file_path()
+    register_type = _register_type_key()
     registered_accounts = 0
     aisub_uses = 0
     cards_used = 0
     mother_accounts = 0
-    started_at = datetime.now()
+    ui_started_at = datetime.now()
+    started_at = ui_started_at
     ended_at = started_at
     aisub_balance_before: Dict[str, Any] = {}
     aisub_balance_after: Dict[str, Any] = {}
@@ -2914,7 +3428,7 @@ def main() -> None:
     if sys.stdin.isatty():
         menu_result = prompt_startup_menu(
             proxies,
-            started_at=started_at,
+            started_at=ui_started_at,
             cdkey_added_count=cdkey_added_count,
         )
         if menu_result is None:
@@ -2923,19 +3437,22 @@ def main() -> None:
         aisub_balance_before = menu_result
         proxy_value = args.proxy or str(CONFIG.get("default_proxy") or "").strip() or None
         proxies = {"http": proxy_value, "https": proxy_value} if proxy_value else None
+        register_type = _register_type_key()
     try:
         if not sys.stdin.isatty():
             _render_brand_header(
                 "Team 注册机",
-                f"欢迎使用 Team 注册机，现在是 {_fmt_local_dt(started_at)}",
+                f"欢迎使用 Team 注册机，现在是 {_fmt_local_dt(ui_started_at)}",
             )
-            if cdkey_added_count > 0:
-                log_info(f"已从 CDKEY 文件补充 {cdkey_added_count} 个新码到兑换码池")
-            print_card_inventory_summary()
-            aisub_balance_before = get_aisub_balance_snapshot(proxies)
-            print_aisub_balance_summary("运行前 AISub 余额", aisub_balance_before)
-        ensure_aisub_balance(proxies)
+            _render_kv_table("运行前概览", [("注册类型", _register_type_label(register_type))])
+            if register_type == "team":
+                print_card_inventory_summary()
+                aisub_balance_before = get_aisub_balance_snapshot(proxies)
+                print_aisub_balance_summary("运行前 AISub 余额", aisub_balance_before)
+        if register_type == "team":
+            ensure_aisub_balance(proxies)
 
+        started_at = datetime.now()
         while True:
             count += 1
             if count == 1:
@@ -2943,9 +3460,12 @@ def main() -> None:
             log_section(f"开始第 {count} 次注册流程")
 
             try:
-                ensure_aisub_balance(proxies)
-                validate_context = get_validate_context(proxies)
-                validate_result = validate_context["validate_result"]
+                validate_context: Optional[Dict[str, Any]] = None
+                validate_result: Dict[str, Any] = {}
+                if register_type == "team":
+                    ensure_aisub_balance(proxies)
+                    validate_context = get_validate_context(proxies)
+                    validate_result = validate_context["validate_result"]
 
                 token_json = run(proxy_value)
 
@@ -2956,28 +3476,29 @@ def main() -> None:
                     except Exception:
                         t_data = {}
 
-                    access_token = str(t_data.get("access_token") or "").strip()
-                    if not access_token:
-                        raise RuntimeError("token_json 中缺少 access_token")
+                    t_data["register_type"] = register_type
+                    if register_type == "team":
+                        access_token = str(t_data.get("access_token") or "").strip()
+                        if not access_token:
+                            raise RuntimeError("token_json 中缺少 access_token")
+                        if not validate_context:
+                            raise RuntimeError("缺少 Team 绑定上下文")
 
-                    subscribe_result = wait_for_subscribe_success(access_token, validate_result, proxies)
-                    current_use_count = int(validate_context["use_count"])
-                    mark_code_used(
-                        validate_context["code_array"],
-                        int(validate_context["code_index"]),
-                        current_use_count,
-                    )
-                    aisub_uses += 1
-                    if current_use_count == 0:
-                        cards_used += 1
+                        subscribe_result = wait_for_subscribe_success(access_token, validate_result, proxies)
+                        current_use_count = int(validate_context["use_count"])
+                        mark_code_used(
+                            validate_context["code_array"],
+                            int(validate_context["code_index"]),
+                            current_use_count,
+                        )
+                        aisub_uses += 1
+                        if current_use_count == 0:
+                            cards_used += 1
 
-                    t_data["validate_result"] = validate_result
-                    t_data["subscribe_result"] = subscribe_result
-
+                        t_data["validate_result"] = validate_result
+                        t_data["subscribe_result"] = subscribe_result
+                        mother_accounts += 1
                     append_team_entry(teams_file, t_data)
-                    mother_accounts += 1
-
-                    log_ok(f"成功! 账号结果已写入: {teams_file}")
                     if should_stop_for_target(
                         registered_accounts=registered_accounts,
                         mother_accounts=mother_accounts,
@@ -3002,9 +3523,11 @@ def main() -> None:
             time.sleep(wait_time)
     finally:
         ended_at = datetime.now()
-        aisub_balance_after = get_aisub_balance_snapshot(proxies)
-        print_aisub_balance_summary("运行后 AISub 余额", aisub_balance_after)
+        if register_type == "team":
+            aisub_balance_after = get_aisub_balance_snapshot(proxies)
+            print_aisub_balance_summary("运行后 AISub 余额", aisub_balance_after)
         print_run_summary(
+            register_type=register_type,
             registered_accounts=registered_accounts,
             aisub_uses=aisub_uses,
             cards_used=cards_used,

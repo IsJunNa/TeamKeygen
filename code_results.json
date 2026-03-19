@@ -1,0 +1,214 @@
+{
+  "XG3V-VDUZ-FHP8-FJN5": {
+    "requested_code": "XG3V-VDUZ-FHP8-FJN5",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "remainingQuantity": 0,
+        "quantity": 1,
+        "orderNo": "RDM20260318171919RCYQKA",
+        "cards": [
+          {
+            "id": 212847,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336338859371",
+            "cardPassword": "817",
+            "cardData": "{\"cvv\":\"817\",\"expireTime\":\"2026-03-18T18:19:25.74237622\",\"nickname\":\"XG3V-VDUZ-FHP8-FJN5\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: 8ec7c668-22ab-11f1-a407-cf69b8174fb6 | Key: 534933 03",
+            "status": 1,
+            "orderId": 280587,
+            "cardSequence": 1,
+            "soldTime": "2026-03-18T17:19:29",
+            "createTime": "2026-03-18T17:19:29",
+            "updateTime": "2026-03-18T17:19:29"
+          }
+        ],
+        "cardCount": 1,
+        "orderCount": 2,
+        "redeemTime": "2026-03-18T17:19:20",
+        "cardFormat": "",
+        "message": "该兑换码已使用完",
+        "productName": "534933  0刀",
+        "isUsed": true,
+        "isDelivering": false,
+        "valid": false,
+        "deliveryProgress": "已成功创建1张卡",
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Cody Stanley\n地址 10094 Southeast Linwood Avenue\n城市 Milwaukie\n州 OR\n邮编 97222\n国家 United States",
+        "pendingCardCount": 0,
+        "deliveryStatus": 2
+      }
+    },
+    "formatted_text": "5349336338859371 03/32 817 10094 Southeast Linwood Avenue, Milwaukie, OR, 97222, United States"
+  },
+  "TSCY-UECQ-QXPB-76LW": {
+    "requested_code": "TSCY-UECQ-QXPB-76LW",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM20260319122217PECQTA",
+        "cards": [
+          {
+            "id": 223108,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336397254720",
+            "cardPassword": "506",
+            "cardData": "{\"cvv\":\"506\",\"expireTime\":\"2026-03-19T13:22:20.249506314\",\"nickname\":\"TSCY-UECQ-QXPB-76LW\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: 3868d136-234b-11f1-a2f7-2b9ddd6c7e6d | Key: 534933 新台03",
+            "status": 1,
+            "orderId": 290441,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              19,
+              12,
+              22,
+              22
+            ],
+            "createTime": [
+              2026,
+              3,
+              19,
+              12,
+              22,
+              22
+            ],
+            "updateTime": [
+              2026,
+              3,
+              19,
+              12,
+              22,
+              22
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Austin Losey\n地址 505 West Maumee Street, 4,\n城市 Adrian\n州 MI\n邮编 49221\n国家 United States",
+        "progress": "已成功创建1张卡",
+        "cardFormat": "",
+        "taskId": "b6ad132ad7cd4b5b9943df1b3113d470",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336397254720 03/32 506 505 West Maumee Street,  4, , Adrian, MI, 49221, United States"
+  },
+  "DHZW-SCCS-QBA6-VGVK": {
+    "requested_code": "DHZW-SCCS-QBA6-VGVK",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM2026031912354629LYZM",
+        "cards": [
+          {
+            "id": 223235,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336370462738",
+            "cardPassword": "412",
+            "cardData": "{\"cvv\":\"412\",\"expireTime\":\"2026-03-19T13:35:49.49654\",\"nickname\":\"DHZW-SCCS-QBA6-VGVK\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: 1abfc5f2-234d-11f1-b531-836bdd52781f | Key: 534933 新台01",
+            "status": 1,
+            "orderId": 290597,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              19,
+              12,
+              35,
+              52
+            ],
+            "createTime": [
+              2026,
+              3,
+              19,
+              12,
+              35,
+              52
+            ],
+            "updateTime": [
+              2026,
+              3,
+              19,
+              12,
+              35,
+              52
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Austin Losey\n地址 505 West Maumee Street, 4,\n城市 Adrian\n州 MI\n邮编 49221\n国家 United States",
+        "progress": "已成功创建1张卡",
+        "cardFormat": "",
+        "taskId": "6780fcd87849460eadfc8d112dfcb5b4",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336370462738 03/32 412 505 West Maumee Street,  4, , Adrian, MI, 49221, United States"
+  },
+  "4GSY-SHBB-ANFB-BNX6": {
+    "requested_code": "4GSY-SHBB-ANFB-BNX6",
+    "status_code": 200,
+    "response": {
+      "code": 200,
+      "message": "操作成功",
+      "data": {
+        "orderNo": "RDM2026031915041448QYEJ",
+        "cards": [
+          {
+            "id": 224664,
+            "userId": 13,
+            "productId": 18,
+            "cardNumber": "5349336364426434",
+            "cardPassword": "458",
+            "cardData": "{\"cvv\":\"458\",\"expireTime\":\"2026-03-19T16:04:17.3746813\",\"nickname\":\"4GSY-SHBB-ANFB-BNX6\",\"limit\":0,\"expiry\":\"0332\"}",
+            "remark": "API Card ID: d840b69a-2361-11f1-82d6-b32cb946aa75 | Key: 534933 新台01",
+            "status": 1,
+            "orderId": 292278,
+            "cardSequence": 1,
+            "soldTime": [
+              2026,
+              3,
+              19,
+              15,
+              4,
+              20
+            ],
+            "createTime": [
+              2026,
+              3,
+              19,
+              15,
+              4,
+              20
+            ],
+            "updateTime": [
+              2026,
+              3,
+              19,
+              15,
+              4,
+              20
+            ],
+            "expiry": "0332"
+          }
+        ],
+        "cardTemplate": "卡号              MMYY   CVC\n{$卡密信息} \n地区美国\n姓名 Austin Losey\n地址 505 West Maumee Street, 4,\n城市 Adrian\n州 MI\n邮编 49221\n国家 United States",
+        "progress": "已成功创建1张卡",
+        "cardFormat": "",
+        "taskId": "4f640dc291b54d6086276a2052e3df3c",
+        "status": 2
+      }
+    },
+    "formatted_text": "5349336364426434 03/32 458 505 West Maumee Street,  4, , Adrian, MI, 49221, United States"
+  }
+}

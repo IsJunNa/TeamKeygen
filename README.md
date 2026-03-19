@@ -4,7 +4,7 @@
 
 它当前负责的事情主要有：
 
-- 管理 `CDKEY` 和兑换码池
+- 管理 `CDKEY`
 - 自动校验兑换码、开卡、轮询开卡结果
 - 申请注册邮箱并收取验证码
 - 创建 OpenAI 账号并执行后续订阅流程
@@ -26,8 +26,7 @@ TeamKeygen/
 ├── README.md                        # 项目说明
 ├── config/
 │   ├── config.py                    # 当前生效配置
-│   ├── cdkeys.json                  # 原始 CDKEY 列表
-│   └── redeem_codes.json            # 可消费兑换码池
+│   └── cdkeys.json                  # CDKEY 源文件（记录 code / use）
 ├── data/
 │   ├── local_graph_accounts.txt     # 本地 Outlook / Graph 邮箱账号池
 │   └── team_accounts.json           # 成功账号汇总
@@ -77,12 +76,11 @@ demo@outlook.com----password123----xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx----refre
 
 ### 2. 准备卡码
 
-你有两种数据文件：
+卡码只看一个文件：
 
-- [config/cdkeys.json](/Applications/Project/TeamKeygen/config/cdkeys.json)：原始 `CDKEY`
-- [config/redeem_codes.json](/Applications/Project/TeamKeygen/config/redeem_codes.json)：运行时真正消费的兑换码池
+- [config/cdkeys.json](/Applications/Project/TeamKeygen/config/cdkeys.json)
 
-如果你不想手改文件，可以直接在程序里粘贴导入。
+程序会直接从这里读取 `CDKEY`，每次现场 `validate / redeem`；达到最大使用次数后，会把对应项从这个文件里移除。
 
 ### 3. 启动程序
 
@@ -93,6 +91,7 @@ python3 team.py
 启动后主菜单里常用的是：
 
 - `开始运行`
+- `注册类型`
 - `生成账户数`
 - `配置中心`
 
@@ -106,7 +105,6 @@ python3 team.py
 
 - 本地邮箱文件
 - CDKEY 文件
-- 兑换码文件
 - 成功账号文件
 
 ### 导入数据
@@ -114,7 +112,6 @@ python3 team.py
 适合直接在终端里粘贴数据。
 
 - `粘贴追加 CDKEY`
-- `粘贴追加兑换码`
 
 支持：
 
@@ -138,12 +135,14 @@ python3 team.py
 
 当前支持的邮箱来源：
 
-- `npcmail`
-- `gptmail`
-- `xiaomajiang`
-- `local_graph`
+- `NPCMail`
+- `GPTMail`
+- `JunMail`
+- `临时邮箱(仅可做测试使用,封号严重)` (`xiaomajiang`)
+- `本地Outlook邮箱` (`local_graph`)
 
-如果你用的是 [data/local_graph_accounts.txt](/Applications/Project/TeamKeygen/data/local_graph_accounts.txt)，通常把提供商设成 `local_graph`。
+如果你用的是 [data/local_graph_accounts.txt](/Applications/Project/TeamKeygen/data/local_graph_accounts.txt)，通常把邮箱提供商设成 `本地Outlook邮箱`。
+如果你要接入 `JunMail`，把邮箱提供商设成 `JunMail`，并在 `接口与密钥` 里配置 `JunMail API Key` 和 `JunMail Base URL`。
 
 ### 接口与密钥
 
@@ -151,6 +150,8 @@ python3 team.py
 
 - `NPCMail API Key`
 - `GPTMail API Key`
+- `JunMail API Key`
+- `JunMail Base URL`
 - `AISub API Key`
 - `Redeem Base URL`
 - `AISub Base URL`
@@ -159,6 +160,7 @@ python3 team.py
 
 用于设置：
 
+- 注册类型 (`普号` / `Team`)
 - 默认代理
 - 单卡最大绑定次数
 - `subscribe` 失败后是否重开号
@@ -197,13 +199,7 @@ python3 team.py
 
 ### [config/cdkeys.json](/Applications/Project/TeamKeygen/config/cdkeys.json)
 
-原始 `CDKEY` 仓库。
-
-适合长期保存你收集到的源卡码。
-
-### [config/redeem_codes.json](/Applications/Project/TeamKeygen/config/redeem_codes.json)
-
-程序实际消费的兑换码池。
+程序唯一消费的 `CDKEY` 源文件。
 
 格式大致是：
 
@@ -215,6 +211,8 @@ python3 team.py
   }
 ]
 ```
+
+也兼容纯文本历史格式；程序在写回时会统一保存成上面的对象数组。
 
 ### [data/local_graph_accounts.txt](/Applications/Project/TeamKeygen/data/local_graph_accounts.txt)
 
@@ -243,7 +241,7 @@ python3 team.py
 1. 运行 `python3 team.py`
 2. 进入 `配置中心`
 3. 进入 `导入数据`
-4. 选择 `粘贴追加 CDKEY` 或 `粘贴追加兑换码`
+4. 选择 `粘贴追加 CDKEY`
 5. 直接在终端粘贴
 
 ### 只想改接口地址或 Key
