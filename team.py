@@ -76,15 +76,25 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "tm_custom_domains": [],
     "tm_tm_addr": "",
     "tm_tm_epin": "",
+    "card_provider": "ncet",
     "redeem_base_url": "https://yyl.ncet.top",
+    "efuncard_base_url": "https://card.efuncard.com",
+    "efuncard_csrf_token": "",
+    "efuncard_address_cities_url": "https://usaddressgen.com/data/cities/us-cities.70518e158991aef99b470662cb3b5a408c6e0b189f77fb7c64da1ab6a95ff737.json",
+    "efuncard_card_max_use_count": 1,
     "aisub_base_url": "https://sub.zenscaleai.com",
     "aisub_api_key": "sk_c1561e264e8b0b164d737603e696cba53e0040cc64fec55c",
     "subscribe_plan": "team",
     "card_max_use_count": 2,
+    "verbose_info_logs_enabled": False,
     "subscribe_retry_new_account_enabled": True,
+    "subscribe_switch_account_on_3ds_enabled": True,
     "subscribe_retry_new_account_limit": 50,
+    "oauth_client_id": "app_EMoamEEZ73f0CkXaXp7hrann",
+    "oauth_originator": "codex_vscode",
     "oauth_redirect_uri": "http://localhost:1455/auth/callback",
     "oauth_scope": "openid email profile offline_access",
+    "openai_pow_value": "",
     "default_proxy": "",
     "default_sleep_min": 5,
     "default_sleep_max": 30
@@ -98,6 +108,18 @@ def _resolve_config_path(path_value: str) -> str:
     if os.path.isabs(raw):
         return raw
     return os.path.normpath(os.path.join(BASE_DIR, raw))
+
+
+def _get_openai_pow_value() -> str:
+    return str(CONFIG.get("openai_pow_value") or DEFAULT_CONFIG["openai_pow_value"]).strip()
+
+
+def _get_openai_client_id() -> str:
+    return str(CONFIG.get("oauth_client_id") or DEFAULT_CONFIG["oauth_client_id"]).strip()
+
+
+def _get_openai_originator() -> str:
+    return str(CONFIG.get("oauth_originator") or DEFAULT_CONFIG["oauth_originator"]).strip()
 
 
 def load_config() -> Dict[str, Any]:
@@ -141,6 +163,8 @@ TEMPMAIL_PLUS_API = str(CONFIG.get("tempmail_plus_api") or DEFAULT_CONFIG["tempm
 NPCMAIL_BASE = str(CONFIG.get("npcmail_base") or DEFAULT_CONFIG["npcmail_base"]).strip().rstrip("/")
 GPTMAIL_BASE = str(CONFIG.get("gptmail_base") or DEFAULT_CONFIG["gptmail_base"]).strip().rstrip("/")
 CURRENT_OUTPUT_DIR = ""
+EFUNCARD_CITY_DATA_CACHE: Optional[Dict[str, Any]] = None
+LAST_RUN_FAILURE_REASON = ""
 
 FIRST_NAMES = [
     "James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph",
@@ -184,6 +208,11 @@ EMAIL_PROVIDER_LABELS: Dict[str, str] = {
     "tempmail": "TempMail",
 }
 
+CARD_PROVIDER_LABELS: Dict[str, str] = {
+    "ncet": "NCET",
+    "efuncard": "EFunCard",
+}
+
 REGISTER_TYPE_LABELS: Dict[str, str] = {
     "normal": "普号",
     "team": "Team",
@@ -223,6 +252,11 @@ def log_info(message: str) -> None:
     log_line("INFO", message)
 
 
+def log_verbose(message: str) -> None:
+    if bool(CONFIG.get("verbose_info_logs_enabled", DEFAULT_CONFIG["verbose_info_logs_enabled"])):
+        log_line("INFO", message)
+
+
 def log_ok(message: str) -> None:
     log_line(" OK ", message)
 
@@ -233,6 +267,22 @@ def log_warn(message: str) -> None:
 
 def log_error(message: str) -> None:
     log_line("ERR ", message)
+
+
+def _record_last_run_failure(reason: str) -> None:
+    global LAST_RUN_FAILURE_REASON
+    LAST_RUN_FAILURE_REASON = str(reason or "").strip()
+
+
+def _peek_last_run_failure() -> str:
+    return LAST_RUN_FAILURE_REASON
+
+
+def _take_last_run_failure() -> str:
+    global LAST_RUN_FAILURE_REASON
+    reason = LAST_RUN_FAILURE_REASON
+    LAST_RUN_FAILURE_REASON = ""
+    return reason
 
 
 def log_section(title: str) -> None:
@@ -293,6 +343,20 @@ def _register_type_key(value: Any = None) -> str:
 def _register_type_label(value: Any = None) -> str:
     key = _register_type_key(value)
     return REGISTER_TYPE_LABELS.get(key, "Team")
+
+
+def _card_provider_key(value: Any = None) -> str:
+    key = str(CONFIG.get("card_provider") if value is None else value or "").strip().lower()
+    if key == "default":
+        return "ncet"
+    if key not in CARD_PROVIDER_LABELS:
+        return "ncet"
+    return key
+
+
+def _card_provider_label(value: Any = None) -> str:
+    key = _card_provider_key(value)
+    return CARD_PROVIDER_LABELS.get(key, "NCET")
 
 
 def _extract_verification_code(content: str) -> str:
@@ -940,7 +1004,6 @@ def get_oai_code(mailbox: Dict[str, Any], proxies: Any = None) -> str:
     receiver_epin = str(mailbox.get("tm_epin") or "").strip()
     tempmail_lol_token = str(mailbox.get("tm_token") or "").strip()
 
-    log_info(f"等待验证码: {email}")
     for attempt in range(60):
         try:
             if mailbox.get("custom_domain") and receiver_addr:
@@ -972,8 +1035,6 @@ def get_oai_code(mailbox: Dict[str, Any], proxies: Any = None) -> str:
 
 AUTH_URL = "https://auth.openai.com/oauth/authorize"
 TOKEN_URL = "https://auth.openai.com/oauth/token"
-CLIENT_ID = "app_EMoamEEZ73f0CkXaXp7hrann"
-
 DEFAULT_REDIRECT_URI = str(CONFIG.get("oauth_redirect_uri") or DEFAULT_CONFIG["oauth_redirect_uri"])
 DEFAULT_SCOPE = str(CONFIG.get("oauth_scope") or DEFAULT_CONFIG["oauth_scope"])
 
@@ -1204,7 +1265,7 @@ def load_code_array(quiet: bool = False) -> list[dict[str, Any]]:
         items = _normalize_loaded_code_items(data)
         if items or _looks_like_code_container(data):
             if not quiet:
-                log_info(f"成功读取 CDKEY 数组，共 {len(items)} 项")
+                log_verbose(f"成功读取 CDKEY 数组，共 {len(items)} 项")
             return items
 
     try:
@@ -1213,7 +1274,7 @@ def load_code_array(quiet: bool = False) -> list[dict[str, Any]]:
         items = _normalize_loaded_code_items(data)
         if items or _looks_like_code_container(data):
             if not quiet:
-                log_info(f"成功读取 CDKEY 数组，共 {len(items)} 项")
+                log_verbose(f"成功读取 CDKEY 数组，共 {len(items)} 项")
             return items
     except Exception:
         pass
@@ -1221,8 +1282,6 @@ def load_code_array(quiet: bool = False) -> list[dict[str, Any]]:
     plain_codes = _extract_code_lines(raw)
     if plain_codes:
         items = [{"code": code, "use": 0} for code in plain_codes]
-        if not quiet:
-            log_info(f"成功读取 CDKEY 文本，共 {len(items)} 项")
         return items
 
     log_error("CDKEY 文件内容不是可解析的数组或文本格式")
@@ -1367,6 +1426,13 @@ def _append_cdkeys_from_text(raw_text: str) -> int:
     if added > 0:
         save_code_array(merged)
     return added
+
+
+def _replace_cdkeys_from_text(raw_text: str) -> int:
+    incoming = _extract_code_lines(raw_text)
+    replaced = [{"code": code, "use": 0} for code in incoming]
+    save_code_array(replaced)
+    return len(replaced)
 
 
 def _append_redeem_codes_from_text(raw_text: str) -> int:
@@ -1524,7 +1590,6 @@ def ensure_aisub_balance(proxies: Any = None) -> int:
 
     remaining_times = balance // 30
     if balance_result.get("status_code") == 200 and remaining_times > 0:
-        log_ok(f"AISub剩余次数 {remaining_times} 次")
         return remaining_times
 
     raise StopScript("AISub余额不足，请充值后再试")
@@ -1890,6 +1955,7 @@ def prompt_import_settings() -> None:
     while True:
         options = [
             "粘贴追加 CDKEY",
+            "粘贴覆盖 CDKEY",
             "粘贴追加本地邮箱",
             "粘贴覆盖本地邮箱",
             "返回",
@@ -1904,6 +1970,12 @@ def prompt_import_settings() -> None:
             added = _append_cdkeys_from_text(raw_text)
             log_ok(f"CDKEY 导入完成: {added} 条")
         elif selected_index == 1:
+            raw_text = _prompt_multiline_input("请粘贴 CDKEY，可多行/空格/逗号分隔")
+            if raw_text is None:
+                continue
+            count = _replace_cdkeys_from_text(raw_text)
+            log_ok(f"CDKEY 覆盖完成: {count} 条")
+        elif selected_index == 2:
             raw_text = _prompt_multiline_input(
                 "请粘贴本地邮箱账号，每行一个，格式：邮箱----邮箱密码----Client ID----Refresh Token"
             )
@@ -1911,7 +1983,7 @@ def prompt_import_settings() -> None:
                 continue
             added = _append_local_graph_accounts_from_text(raw_text)
             log_ok(f"本地邮箱导入完成: {added} 条")
-        elif selected_index == 2:
+        elif selected_index == 3:
             raw_text = _prompt_multiline_input(
                 "请粘贴本地邮箱账号，每行一个，格式：邮箱----邮箱密码----Client ID----Refresh Token"
             )
@@ -1971,80 +2043,156 @@ def prompt_email_settings() -> None:
 
 
 def prompt_service_settings() -> None:
+    global EFUNCARD_CITY_DATA_CACHE
     selected_index = 0
     while True:
+        current_card_provider = _card_provider_key()
         options = [
+            f"卡商: {_card_provider_label(current_card_provider)}",
             f"NPCMail API Key: {_mask_secret(str(CONFIG.get('tm_npcmail_apikey') or ''))}",
             f"GPTMail API Key: {_mask_secret(str(CONFIG.get('gptmail_api_key') or ''))}",
             f"JunMail API Key: {_mask_secret(str(CONFIG.get('junmail_api_key') or ''))}",
             f"JunMail Base URL: {_shorten_path_display(str(CONFIG.get('junmail_base') or DEFAULT_CONFIG['junmail_base']), 50)}",
             f"AISub API Key: {_mask_secret(str(CONFIG.get('aisub_api_key') or ''))}",
-            f"Redeem Base URL: {_shorten_path_display(str(CONFIG.get('redeem_base_url') or DEFAULT_CONFIG['redeem_base_url']), 50)}",
+            f"NCET Base URL: {_shorten_path_display(str(CONFIG.get('redeem_base_url') or DEFAULT_CONFIG['redeem_base_url']), 50)}",
+            f"EFunCard Base URL: {_shorten_path_display(str(CONFIG.get('efuncard_base_url') or DEFAULT_CONFIG['efuncard_base_url']), 50)}",
+            f"EFunCard CSRF Token: {_mask_secret(str(CONFIG.get('efuncard_csrf_token') or ''))}",
+            f"EFunCard 城市库 URL: {_shorten_path_display(str(CONFIG.get('efuncard_address_cities_url') or DEFAULT_CONFIG['efuncard_address_cities_url']), 50)}",
             f"AISub Base URL: {_shorten_path_display(str(CONFIG.get('aisub_base_url') or DEFAULT_CONFIG['aisub_base_url']), 50)}",
+            f"OpenAI Client ID: {_shorten_path_display(_get_openai_client_id() or '未设置', 50)}",
+            f"OpenAI Originator: {_shorten_path_display(_get_openai_originator() or '未设置', 50)}",
+            f"OpenAI POW 参数: {(_get_openai_pow_value() or '未设置')}",
             "返回",
         ]
         selected_index = _select_from_menu("配置中心 / 接口与密钥", options, selected_index)
         if selected_index in {-1, len(options) - 1}:
             return
         if selected_index == 0:
+            provider_options = [
+                ("ncet", "NCET"),
+                ("efuncard", "EFunCard"),
+            ]
+            provider_labels = [label for _, label in provider_options]
+            provider_index = next(
+                (index for index, (provider_key, _) in enumerate(provider_options) if provider_key == current_card_provider),
+                0,
+            )
+            provider_choice = _select_from_menu("卡商", provider_labels, provider_index)
+            if provider_choice == -1:
+                continue
+            provider_key, provider_label = provider_options[provider_choice]
+            CONFIG["card_provider"] = provider_key
+            save_config()
+            log_ok(f"卡商已更新为 {provider_label}")
+        elif selected_index == 1:
             _update_config_value(
                 "tm_npcmail_apikey",
                 "请输入 NPCMail API Key，留空则清除: ",
                 default=CONFIG.get("tm_npcmail_apikey") or "",
                 success_text="NPCMail API Key 已更新",
             )
-        elif selected_index == 1:
+        elif selected_index == 2:
             _update_config_value(
                 "gptmail_api_key",
                 "请输入 GPTMail API Key，留空则清除: ",
                 default=CONFIG.get("gptmail_api_key") or "",
                 success_text="GPTMail API Key 已更新",
             )
-        elif selected_index == 2:
+        elif selected_index == 3:
             _update_config_value(
                 "junmail_api_key",
                 "请输入 JunMail API Key，留空则清除: ",
                 default=CONFIG.get("junmail_api_key") or "",
                 success_text="JunMail API Key 已更新",
             )
-        elif selected_index == 3:
+        elif selected_index == 4:
             _update_config_value(
                 "junmail_base",
                 "请输入 JunMail Base URL: ",
                 default=CONFIG.get("junmail_base") or DEFAULT_CONFIG["junmail_base"],
                 success_text="JunMail Base URL 已更新",
             )
-        elif selected_index == 4:
+        elif selected_index == 5:
             _update_config_value(
                 "aisub_api_key",
                 "请输入 AISub API Key，留空则清除: ",
                 default=CONFIG.get("aisub_api_key") or "",
                 success_text="AISub API Key 已更新",
             )
-        elif selected_index == 5:
+        elif selected_index == 6:
             _update_config_value(
                 "redeem_base_url",
-                "请输入 Redeem Base URL: ",
+                "请输入 NCET Base URL: ",
                 default=CONFIG.get("redeem_base_url") or DEFAULT_CONFIG["redeem_base_url"],
-                success_text="Redeem Base URL 已更新",
+                success_text="NCET Base URL 已更新",
             )
-        elif selected_index == 6:
+        elif selected_index == 7:
+            _update_config_value(
+                "efuncard_base_url",
+                "请输入 EFunCard Base URL: ",
+                default=CONFIG.get("efuncard_base_url") or DEFAULT_CONFIG["efuncard_base_url"],
+                success_text="EFunCard Base URL 已更新",
+            )
+        elif selected_index == 8:
+            _update_config_value(
+                "efuncard_csrf_token",
+                "请输入 EFunCard CSRF Token，留空则清除: ",
+                default=CONFIG.get("efuncard_csrf_token") or "",
+                success_text="EFunCard CSRF Token 已更新",
+            )
+        elif selected_index == 9:
+            value = _prompt_input(
+                "请输入 EFunCard 城市库 URL: ",
+                str(CONFIG.get("efuncard_address_cities_url") or DEFAULT_CONFIG["efuncard_address_cities_url"]),
+            )
+            if value is None:
+                continue
+            CONFIG["efuncard_address_cities_url"] = value.strip()
+            EFUNCARD_CITY_DATA_CACHE = None
+            save_config()
+            log_ok("EFunCard 城市库 URL 已更新")
+        elif selected_index == 10:
             _update_config_value(
                 "aisub_base_url",
                 "请输入 AISub Base URL: ",
                 default=CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"],
                 success_text="AISub Base URL 已更新",
             )
+        elif selected_index == 11:
+            _update_config_value(
+                "oauth_client_id",
+                "请输入 OpenAI Client ID，留空则恢复默认: ",
+                default=_get_openai_client_id(),
+                success_text="OpenAI Client ID 已更新",
+            )
+        elif selected_index == 12:
+            _update_config_value(
+                "oauth_originator",
+                "请输入 OpenAI Originator，留空则清除: ",
+                default=_get_openai_originator(),
+                success_text="OpenAI Originator 已更新",
+            )
+        elif selected_index == 13:
+            _update_config_value(
+                "openai_pow_value",
+                "请输入 OpenAI POW 参数，留空则清除: ",
+                default=_get_openai_pow_value(),
+                success_text="OpenAI POW 参数已更新",
+            )
 
 
 def prompt_runtime_settings() -> None:
     selected_index = 0
     while True:
+        current_provider = _card_provider_label()
+        max_use_config_key = "efuncard_card_max_use_count" if _card_provider_key() == "efuncard" else "card_max_use_count"
         options = [
             f"注册类型: {_register_type_label()}",
             f"默认代理: {str(CONFIG.get('default_proxy') or '').strip() or '未设置'}",
-            f"单卡最大绑定次数: {get_card_max_use_count()}",
+            f"单卡最大绑定次数({current_provider}): {get_card_max_use_count()}",
+            f"日志模式: {'详细' if bool(CONFIG.get('verbose_info_logs_enabled', DEFAULT_CONFIG['verbose_info_logs_enabled'])) else '精简'}",
             f"subscribe 失败重开号: {'开' if bool(CONFIG.get('subscribe_retry_new_account_enabled', True)) else '关'}",
+            f"3DS 触发换号: {'开' if bool(CONFIG.get('subscribe_switch_account_on_3ds_enabled', True)) else '关'}",
             f"subscribe 失败次数上限: {int(CONFIG.get('subscribe_retry_new_account_limit', 50) or 50)}",
             "返回",
         ]
@@ -2061,17 +2209,25 @@ def prompt_runtime_settings() -> None:
                 success_text="默认代理已更新",
             )
         elif selected_index == 2:
-            raw = _prompt_input("请输入单卡最大绑定次数: ", str(get_card_max_use_count()))
+            raw = _prompt_input(f"请输入单卡最大绑定次数({current_provider}): ", str(get_card_max_use_count()))
             if raw is None:
                 continue
             try:
-                CONFIG["card_max_use_count"] = _parse_positive_int(raw)
+                CONFIG[max_use_config_key] = _parse_positive_int(raw)
             except ValueError:
                 log_warn("输入无效")
                 continue
             save_config()
-            log_ok(f"单卡最大绑定次数已更新为 {CONFIG['card_max_use_count']}")
+            log_ok(f"单卡最大绑定次数({current_provider})已更新为 {CONFIG[max_use_config_key]}")
         elif selected_index == 3:
+            enabled = bool(CONFIG.get("verbose_info_logs_enabled", DEFAULT_CONFIG["verbose_info_logs_enabled"]))
+            toggle_choice = _select_from_menu("日志模式", ["详细", "精简"], 0 if enabled else 1)
+            if toggle_choice == -1:
+                continue
+            CONFIG["verbose_info_logs_enabled"] = toggle_choice == 0
+            save_config()
+            log_ok(f"日志模式已更新为 {'详细' if CONFIG['verbose_info_logs_enabled'] else '精简'}")
+        elif selected_index == 4:
             enabled = bool(CONFIG.get("subscribe_retry_new_account_enabled", True))
             toggle_choice = _select_from_menu("subscribe 失败重开号", ["开", "关"], 0 if enabled else 1)
             if toggle_choice == -1:
@@ -2079,7 +2235,15 @@ def prompt_runtime_settings() -> None:
             CONFIG["subscribe_retry_new_account_enabled"] = toggle_choice == 0
             save_config()
             log_ok("subscribe 失败重开号配置已更新")
-        elif selected_index == 4:
+        elif selected_index == 5:
+            enabled = bool(CONFIG.get("subscribe_switch_account_on_3ds_enabled", True))
+            toggle_choice = _select_from_menu("3DS 触发换号", ["开", "关"], 0 if enabled else 1)
+            if toggle_choice == -1:
+                continue
+            CONFIG["subscribe_switch_account_on_3ds_enabled"] = toggle_choice == 0
+            save_config()
+            log_ok("3DS 触发换号配置已更新")
+        elif selected_index == 6:
             raw = _prompt_input(
                 "请输入 subscribe 失败次数上限: ",
                 str(int(CONFIG.get("subscribe_retry_new_account_limit", 50) or 50)),
@@ -2193,10 +2357,9 @@ def prompt_execution_count() -> None:
     register_type = str(dashboard.get("register_type") or "team")
     estimated_accounts = int(dashboard.get("estimated_accounts") or 0)
     estimated_positions = int(dashboard.get("estimated_positions") or 0)
-    max_allowed = max(0, estimated_accounts) if register_type == "team" else 0
     prompt = f"请输入生成账户数，0 表示不限，当前为 {current_display}"
     if register_type == "team":
-        prompt += f"，最大不超过 {max_allowed}（对应约 {estimated_positions} 个位置）"
+        prompt += f"，当前预计可生成 {estimated_accounts} 个账号（对应约 {estimated_positions} 个位置，仅供参考）"
     else:
         prompt += "，普号模式下不受 AISub / 卡池限制"
     raw = _prompt_input(f"{prompt}: ")
@@ -2207,13 +2370,12 @@ def prompt_execution_count() -> None:
     except ValueError:
         log_warn("输入无效，保持原配置")
         return
-    if max_allowed > 0 and target_value > max_allowed:
-        log_warn(f"生成账户数不能超过预计可生成账号数 {max_allowed}")
-        return
     CONFIG["target_type"] = "register_count"
     CONFIG["target_value"] = target_value
     save_config()
     log_ok(f"生成账户数已更新为 {target_value}")
+    if register_type == "team" and estimated_accounts > 0 and target_value > estimated_accounts:
+        log_warn(f"当前目标高于预计可生成账号数 {estimated_accounts}，运行时会在资源耗尽或达到目标时停止")
 
 
 def prompt_other_config() -> None:
@@ -2319,10 +2481,13 @@ def _normalize_use_count(value: Any) -> int:
 
 def get_card_max_use_count() -> int:
     """获取单张卡允许绑定的最大次数。"""
+    provider = _card_provider_key()
+    config_key = "efuncard_card_max_use_count" if provider == "efuncard" else "card_max_use_count"
+    default_key = "efuncard_card_max_use_count" if provider == "efuncard" else "card_max_use_count"
     try:
-        count = int(CONFIG.get("card_max_use_count") or DEFAULT_CONFIG["card_max_use_count"])
+        count = int(CONFIG.get(config_key) or DEFAULT_CONFIG[default_key])
     except (TypeError, ValueError):
-        count = int(DEFAULT_CONFIG["card_max_use_count"])
+        count = int(DEFAULT_CONFIG[default_key])
     return max(1, count)
 
 
@@ -2356,7 +2521,394 @@ def _drop_code_entry(code_array: list[dict[str, Any]], code_index: int, *, reaso
     save_code_array(code_array)
     if code_value:
         detail = f"，原因: {reason}" if reason else ""
-        log_info(f"CDKEY {code_value} 已从源文件移除{detail}")
+        log_verbose(f"CDKEY {code_value} 已从源文件移除{detail}")
+
+
+def _build_efuncard_headers(*, json_content: bool = False) -> Dict[str, str]:
+    csrf_token = str(CONFIG.get("efuncard_csrf_token") or DEFAULT_CONFIG["efuncard_csrf_token"]).strip()
+    if not csrf_token:
+        raise RuntimeError("EFunCard CSRF Token 未配置")
+
+    base_url = str(CONFIG.get("efuncard_base_url") or DEFAULT_CONFIG["efuncard_base_url"]).rstrip("/")
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "connection": "keep-alive",
+        "referer": f"{base_url}/",
+        "sec-ch-ua": '"Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"macOS"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "x-csrf-token": csrf_token,
+    }
+    if json_content:
+        headers["content-type"] = "application/json"
+        headers["origin"] = base_url
+    return headers
+
+
+def _build_efuncard_cookies() -> Dict[str, str]:
+    csrf_token = str(CONFIG.get("efuncard_csrf_token") or DEFAULT_CONFIG["efuncard_csrf_token"]).strip()
+    if not csrf_token:
+        raise RuntimeError("EFunCard CSRF Token 未配置")
+    return {"csrf_token": csrf_token}
+
+
+def _normalize_country_name(value: Any) -> str:
+    text = str(value or "").strip()
+    lowered = text.lower()
+    if lowered in {"us", "usa", "united states", "united states of america", "美国"}:
+        return "United States"
+    return text
+
+
+def _parse_efuncard_node_address(node_instructions: str) -> Dict[str, str]:
+    fields = {
+        "address": "",
+        "city": "",
+        "state": "",
+        "zipcode": "",
+        "country": "United States",
+    }
+    normalized = _normalize_address_component(node_instructions)
+    if not normalized:
+        return fields
+
+    parts = [part.strip() for part in normalized.split(",") if part.strip()]
+    if len(parts) >= 5:
+        fields["address"] = _normalize_address_component(", ".join(parts[:-4]))
+        fields["city"] = _normalize_address_component(parts[-4])
+        fields["state"] = _normalize_address_component(parts[-3]).upper()
+        fields["zipcode"] = _normalize_address_component(parts[-2])
+        fields["country"] = _normalize_country_name(parts[-1]) or "United States"
+        return fields
+
+    if len(parts) == 4:
+        fields["address"] = _normalize_address_component(parts[0])
+        fields["city"] = _normalize_address_component(parts[1])
+        fields["state"] = _normalize_address_component(parts[2]).upper()
+        fields["zipcode"] = _normalize_address_component(parts[3])
+        return fields
+
+    if len(parts) == 3:
+        fields["address"] = _normalize_address_component(parts[0])
+        fields["city"] = _normalize_address_component(parts[1])
+        state_zip = _normalize_address_component(parts[2])
+        match = re.match(r"^([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)$", state_zip)
+        if match:
+            fields["state"] = match.group(1).upper()
+            fields["zipcode"] = match.group(2)
+        else:
+            fields["state"] = state_zip.upper()
+        return fields
+
+    fields["address"] = normalized
+    return fields
+
+
+def _load_efuncard_city_dataset(proxies: Any = None) -> Dict[str, Any]:
+    global EFUNCARD_CITY_DATA_CACHE
+
+    if isinstance(EFUNCARD_CITY_DATA_CACHE, dict):
+        return EFUNCARD_CITY_DATA_CACHE
+
+    url = str(CONFIG.get("efuncard_address_cities_url") or DEFAULT_CONFIG["efuncard_address_cities_url"]).strip()
+    if not url:
+        return {}
+
+    try:
+        resp = requests.get(
+            url,
+            headers={
+                "accept": "*/*",
+                "accept-language": "zh-CN,zh;q=0.9",
+                "referer": "https://usaddressgen.com/tax-free-address/",
+                "sec-ch-ua": '"Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"',
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": '"macOS"',
+                "sec-fetch-dest": "empty",
+                "sec-fetch-mode": "cors",
+                "sec-fetch-site": "same-origin",
+                "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+            },
+            proxies=proxies,
+            impersonate="chrome",
+            timeout=20,
+        )
+        if resp.status_code != 200:
+            raise RuntimeError(f"HTTP {resp.status_code}")
+        payload = resp.json()
+        EFUNCARD_CITY_DATA_CACHE = payload if isinstance(payload, dict) else {}
+    except Exception as exc:
+        log_warn(f"EFunCard 地址城市库加载失败，改用节点地址: {exc}")
+        return {}
+
+    return EFUNCARD_CITY_DATA_CACHE or {}
+
+
+def _generate_efuncard_street_line() -> str:
+    street_roots = [
+        "Oak", "Maple", "Pine", "Cedar", "Lake", "Hill", "Park", "Washington",
+        "Lincoln", "Madison", "Adams", "Jackson", "Sunset", "Willow", "River",
+    ]
+    street_suffixes = ["Street", "Avenue", "Road", "Drive", "Lane", "Court", "Way", "Boulevard"]
+    number = random.randint(100, 9999)
+    root = random.choice(street_roots + LAST_NAMES[:10])
+    suffix = random.choice(street_suffixes)
+    return f"{number} {root} {suffix}"
+
+
+def _build_efuncard_address(node_instructions: str, proxies: Any = None) -> Dict[str, str]:
+    fields = _parse_efuncard_node_address(node_instructions)
+    dataset = _load_efuncard_city_dataset(proxies)
+    states = dataset.get("states") if isinstance(dataset, dict) else {}
+
+    preferred_state = fields["state"].upper()
+    preferred_city = fields["city"].strip().lower()
+    selected_state_code = preferred_state
+    selected_city_name = fields["city"]
+
+    if isinstance(states, dict) and states:
+        state_data = states.get(preferred_state) if preferred_state else None
+        if isinstance(state_data, dict):
+            cities = state_data.get("cities")
+            if isinstance(cities, list) and cities:
+                if not selected_city_name:
+                    city_entry = random.choice(cities)
+                    name_data = city_entry.get("name") if isinstance(city_entry, dict) else {}
+                    selected_city_name = str((name_data or {}).get("en") or "").strip()
+                elif preferred_city:
+                    matched = next(
+                        (
+                            city_entry
+                            for city_entry in cities
+                            if isinstance(city_entry, dict)
+                            and str(((city_entry.get("name") or {}).get("en") or "")).strip().lower() == preferred_city
+                        ),
+                        None,
+                    )
+                    if matched:
+                        name_data = matched.get("name") if isinstance(matched, dict) else {}
+                        selected_city_name = str((name_data or {}).get("en") or selected_city_name).strip()
+        else:
+            selectable_states = [
+                (state_code, state_payload)
+                for state_code, state_payload in states.items()
+                if isinstance(state_payload, dict) and isinstance(state_payload.get("cities"), list) and state_payload.get("cities")
+            ]
+            if selectable_states:
+                selected_state_code, state_data = random.choice(selectable_states)
+                cities = state_data.get("cities") or []
+                city_entry = random.choice(cities)
+                name_data = city_entry.get("name") if isinstance(city_entry, dict) else {}
+                selected_city_name = str((name_data or {}).get("en") or "").strip()
+
+    address_line = fields["address"] or _generate_efuncard_street_line()
+    zipcode = fields["zipcode"]
+    if not zipcode or not re.fullmatch(r"\d{5}(?:-\d{4})?", zipcode):
+        zipcode = f"{random.randint(10000, 99999)}"
+
+    return {
+        "address": _normalize_address_component(address_line),
+        "city": _normalize_address_component(selected_city_name or fields["city"]),
+        "state": _normalize_address_component(selected_state_code or fields["state"]).upper(),
+        "zipcode": zipcode,
+        "country": _normalize_country_name(fields["country"]) or "United States",
+    }
+
+
+def _build_efuncard_card_template(address_fields: Dict[str, str]) -> str:
+    lines = [
+        f"Address: {address_fields.get('address') or ''}",
+        f"City: {address_fields.get('city') or ''}",
+        f"State: {address_fields.get('state') or ''}",
+        f"ZIP Code: {address_fields.get('zipcode') or ''}",
+        f"Country: {address_fields.get('country') or 'United States'}",
+    ]
+    return "\n".join(lines).strip()
+
+
+def _normalize_efuncard_response(payload: Any, *, allow_unused: bool, proxies: Any = None) -> Dict[str, Any]:
+    if not isinstance(payload, dict):
+        raise RuntimeError("EFunCard 返回不是 JSON 对象")
+
+    success = bool(payload.get("success"))
+    data = payload.get("data")
+    error = str(payload.get("error") or payload.get("message") or "").strip()
+
+    if success and isinstance(data, dict):
+        card_number = str(data.get("cardNumber") or "").strip()
+        cvv = str(data.get("cvv") or data.get("cardPassword") or "").strip()
+        expiry_month = data.get("expiryMonth")
+        expiry_year = data.get("expiryYear")
+
+        if not card_number or not cvv:
+            raise RuntimeError("EFunCard 已返回成功，但缺少卡号或 CVV")
+
+        try:
+            expiry_month_int = int(expiry_month)
+            expiry_year_int = int(expiry_year)
+            expiry = f"{expiry_month_int:02d}{expiry_year_int % 100:02d}"
+        except (TypeError, ValueError):
+            expiry = ""
+
+        expire_time = str(data.get("autoCancelAt") or "").strip()
+        if not expire_time:
+            created_at = _parse_iso_datetime(data.get("createdAt"))
+            validity_minutes = data.get("validityMinutes")
+            try:
+                validity_minutes_int = int(validity_minutes)
+            except (TypeError, ValueError):
+                validity_minutes_int = 0
+            if created_at and validity_minutes_int > 0:
+                expire_time = (created_at + timedelta(minutes=validity_minutes_int)).isoformat()
+
+        address_fields = _build_efuncard_address(
+            str(data.get("nodeInstructions") or data.get("groupInstructions") or "").strip(),
+            proxies,
+        )
+
+        return {
+            "success": True,
+            "vendor": "efuncard",
+            "data": {
+                "valid": True,
+                "message": "",
+                "cardTemplate": _build_efuncard_card_template(address_fields),
+                "cards": [
+                    {
+                        "cardNumber": card_number,
+                        "cardPassword": cvv,
+                        "cardData": {
+                            "expiry": expiry,
+                            "expireTime": expire_time,
+                            "expiryMonth": expiry_month,
+                            "expiryYear": expiry_year,
+                            "provider": "efuncard",
+                            "lastFour": str(data.get("lastFour") or "").strip(),
+                            "cardPrefix": str(data.get("cardPrefix") or "").strip(),
+                        },
+                    }
+                ],
+                "rawVendorData": data,
+            },
+        }
+
+    if allow_unused and "未使用" in error:
+        return {
+            "success": True,
+            "vendor": "efuncard",
+            "data": {
+                "valid": True,
+                "message": error,
+                "cards": [],
+            },
+        }
+
+    return {
+        "success": False,
+        "vendor": "efuncard",
+        "data": {
+            "valid": False,
+            "message": error or "EFunCard 请求失败",
+            "cards": [],
+        },
+    }
+
+
+def _request_efuncard_query(code: str, proxies: Any = None) -> Dict[str, Any]:
+    base_url = str(CONFIG.get("efuncard_base_url") or DEFAULT_CONFIG["efuncard_base_url"]).rstrip("/")
+    resp = requests.get(
+        f"{base_url}/api/cards/query/{quote(code, safe='')}",
+        headers=_build_efuncard_headers(),
+        cookies=_build_efuncard_cookies(),
+        proxies=proxies,
+        impersonate="chrome",
+        timeout=20,
+    )
+    content_type = str(resp.headers.get("content-type", "")).lower()
+    data: Any
+    if "application/json" in content_type:
+        data = resp.json()
+    else:
+        data = {"raw_text": resp.text}
+    if not isinstance(data, dict):
+        raise RuntimeError(f"EFunCard query 返回不是 JSON 对象: HTTP {resp.status_code}")
+    return _normalize_efuncard_response(data, allow_unused=True, proxies=proxies)
+
+
+def _request_efuncard_redeem(code: str, proxies: Any = None) -> Dict[str, Any]:
+    base_url = str(CONFIG.get("efuncard_base_url") or DEFAULT_CONFIG["efuncard_base_url"]).rstrip("/")
+    resp = requests.post(
+        f"{base_url}/api/redeem",
+        headers=_build_efuncard_headers(json_content=True),
+        cookies=_build_efuncard_cookies(),
+        json={"code": code},
+        proxies=proxies,
+        impersonate="chrome",
+        timeout=20,
+    )
+    content_type = str(resp.headers.get("content-type", "")).lower()
+    data: Any
+    if "application/json" in content_type:
+        data = resp.json()
+    else:
+        data = {"raw_text": resp.text}
+    if not isinstance(data, dict):
+        raise RuntimeError(f"EFunCard redeem 返回不是 JSON 对象: HTTP {resp.status_code}")
+    normalized = _normalize_efuncard_response(data, allow_unused=False, proxies=proxies)
+    payload = normalized.get("data") if isinstance(normalized, dict) else {}
+    message = str((payload or {}).get("message") or "").strip()
+    if not has_cards(normalized) and "已使用" in message:
+        log_verbose("EFunCard redeem 提示激活码已使用，回退 query 查询卡信息")
+        query_data = _request_efuncard_query(code, proxies)
+        if has_cards(query_data):
+            return query_data
+        raise RuntimeError("EFunCard redeem 提示已使用，但 query 未返回卡信息")
+    return normalized
+
+
+def _fetch_efuncard_payload(code: str, proxies: Any = None) -> Dict[str, Any]:
+    query_data = _request_efuncard_query(code, proxies)
+    if has_cards(query_data):
+        expiry_status = _get_card_expiry_status(query_data)
+        if not expiry_status["expired"]:
+            return query_data
+        expired_text = str(expiry_status.get("remaining_text") or "0秒")
+        log_warn(f"EFunCard query 返回的卡已过期（已过期 {expired_text}），准备重新激活")
+
+    query_payload = query_data.get("data") if isinstance(query_data, dict) else {}
+    if has_cards(query_data) or (isinstance(query_payload, dict) and query_payload.get("valid") is True):
+        redeem_data = _request_efuncard_redeem(code, proxies)
+        if has_cards(redeem_data):
+            expiry_status = _get_card_expiry_status(redeem_data)
+            if not expiry_status["expired"]:
+                return redeem_data
+            expired_text = str(expiry_status.get("remaining_text") or "0秒")
+            raise RuntimeError(f"EFunCard 激活后返回的卡已过期（已过期 {expired_text}）")
+        raise RuntimeError("EFunCard 激活成功但未返回卡信息")
+
+    return query_data
+
+
+def _try_fetch_efuncard_payload(code: str, proxies: Any = None) -> Optional[Dict[str, Any]]:
+    if _card_provider_key() == "efuncard":
+        return None
+    csrf_token = str(CONFIG.get("efuncard_csrf_token") or DEFAULT_CONFIG["efuncard_csrf_token"]).strip()
+    if not csrf_token:
+        return None
+    try:
+        data = _fetch_efuncard_payload(code, proxies)
+    except Exception as exc:
+        log_verbose(f"EFunCard 兜底查询失败，继续使用当前卡商结果: {exc}")
+        return None
+    if has_cards(data):
+        log_verbose(f"兑换码 {code} 已切换为 EFunCard 查询/激活流程")
+        return data
+    return None
 
 
 def validate_redeem_code(code: str, proxies: Any = None) -> Dict[str, Any]:
@@ -2374,7 +2926,7 @@ def validate_redeem_code(code: str, proxies: Any = None) -> Dict[str, Any]:
         if formatted_text:
             log_ok(f"卡信息 {formatted_text}")
         else:
-            log_info(f"validate 接口结果: {json.dumps(result, ensure_ascii=False)}")
+            log_verbose(f"validate 接口结果: {json.dumps(result, ensure_ascii=False)}")
         return result
     except SkipCurrentCode:
         raise
@@ -2391,27 +2943,50 @@ def validate_redeem_code(code: str, proxies: Any = None) -> Dict[str, Any]:
 
 def fetch_validate_payload(code: str, proxies: Any = None) -> Dict[str, Any]:
     """获取最终可用的卡片数据；未开卡时自动执行 redeem + task-status 轮询。"""
+    if _card_provider_key() == "efuncard":
+        return _fetch_efuncard_payload(code, proxies)
+
     validate_data = request_validate(code, proxies)
     if has_cards(validate_data):
-        return validate_data
+        expiry_status = _get_card_expiry_status(validate_data)
+        if not expiry_status["expired"]:
+            return validate_data
+        expired_text = str(expiry_status.get("remaining_text") or "0秒")
+        log_warn(f"validate 返回的卡已过期（已过期 {expired_text}），准备重新开卡")
 
     validate_payload = validate_data.get("data") if isinstance(validate_data, dict) else {}
-    if isinstance(validate_payload, dict) and validate_payload.get("valid") is True:
+    if has_cards(validate_data) or (isinstance(validate_payload, dict) and validate_payload.get("valid") is True):
         redeem_data = request_redeem(code, proxies)
         if has_cards(redeem_data):
-            return redeem_data
+            expiry_status = _get_card_expiry_status(redeem_data)
+            if not expiry_status["expired"]:
+                return redeem_data
+            expired_text = str(expiry_status.get("remaining_text") or "0秒")
+            raise RuntimeError(f"redeem 返回的卡已过期（已过期 {expired_text}）")
 
         redeem_payload = redeem_data.get("data") if isinstance(redeem_data, dict) else {}
         task_id = str((redeem_payload or {}).get("taskId") or "").strip()
         if not task_id:
             raise RuntimeError("redeem 成功但未返回 taskId")
-        return wait_for_redeem_task(task_id, proxies)
+        task_data = wait_for_redeem_task(task_id, proxies)
+        expiry_status = _get_card_expiry_status(task_data)
+        if has_cards(task_data) and expiry_status["expired"]:
+            expired_text = str(expiry_status.get("remaining_text") or "0秒")
+            raise RuntimeError(f"开卡完成但卡已过期（已过期 {expired_text}）")
+        return task_data
+
+    fallback_data = _try_fetch_efuncard_payload(code, proxies)
+    if fallback_data:
+        return fallback_data
 
     return validate_data
 
 
 def request_validate(code: str, proxies: Any = None) -> Dict[str, Any]:
     """请求 validate 接口。"""
+    if _card_provider_key() == "efuncard":
+        return _request_efuncard_query(code, proxies)
+
     redeem_base_url = str(CONFIG.get("redeem_base_url") or DEFAULT_CONFIG["redeem_base_url"]).rstrip("/")
     resp = requests.get(
         f"{redeem_base_url}/shop/shop/redeem/validate",
@@ -2432,16 +3007,16 @@ def request_validate(code: str, proxies: Any = None) -> Dict[str, Any]:
     if not isinstance(data, dict):
         raise RuntimeError("validate 返回不是 JSON 对象")
     payload = data.get("data") if isinstance(data, dict) else {}
-    if isinstance(payload, dict):
-        if has_cards(data):
-            log_ok("validate 已返回卡信息")
-        elif payload.get("valid") is True:
-            log_info("validate 显示兑换码有效，准备开卡")
+    if isinstance(payload, dict) and not has_cards(data) and payload.get("valid") is True:
+        log_verbose("validate 显示兑换码有效，准备开卡")
     return data
 
 
 def request_redeem(code: str, proxies: Any = None) -> Dict[str, Any]:
     """请求 redeem 开卡。"""
+    if _card_provider_key() == "efuncard":
+        return _request_efuncard_redeem(code, proxies)
+
     redeem_base_url = str(CONFIG.get("redeem_base_url") or DEFAULT_CONFIG["redeem_base_url"]).rstrip("/")
     headers = dict(VALIDATE_HEADERS)
     headers["content-type"] = "application/json"
@@ -2474,12 +3049,15 @@ def request_redeem(code: str, proxies: Any = None) -> Dict[str, Any]:
     if isinstance(payload, dict):
         task_id = str(payload.get("taskId") or "").strip()
         order_no = str(payload.get("orderNo") or "").strip()
-        log_info(f"redeem 已提交，orderNo={order_no} taskId={task_id}")
+        log_verbose(f"redeem 已提交，orderNo={order_no} taskId={task_id}")
     return data
 
 
 def request_redeem_task_status(task_id: str, proxies: Any = None) -> Dict[str, Any]:
     """查询 redeem task-status。"""
+    if _card_provider_key() == "efuncard":
+        raise RuntimeError("EFunCard 不支持 task-status 轮询")
+
     redeem_base_url = str(CONFIG.get("redeem_base_url") or DEFAULT_CONFIG["redeem_base_url"]).rstrip("/")
     resp = requests.get(
         f"{redeem_base_url}/shop/shop/redeem/task-status/{task_id}",
@@ -2516,7 +3094,7 @@ def wait_for_redeem_task(task_id: str, proxies: Any = None, retry_interval: int 
             return task_data
         if progress and progress != last_progress:
             last_progress = progress
-            log_info(f"开卡进行中: {progress}")
+            log_verbose(f"开卡进行中: {progress}")
             if progress == "发卡失败已回滚":
                 raise SkipCurrentCode("开卡进度出现“发卡失败已回滚” 1 次，跳过当前兑换码")
         time.sleep(retry_interval)
@@ -2533,30 +3111,37 @@ def has_cards(response_data: Any) -> bool:
     return isinstance(cards, list) and len(cards) > 0
 
 
-def is_exhausted_validate_response(response_data: Any) -> bool:
-    """判断兑换码是否已使用完，需要切换下一张卡。"""
-    if not isinstance(response_data, dict):
-        return False
-    if has_cards(response_data):
-        # 已经拿到卡数据时，即使服务端同时回了“该兑换码已使用完”，
-        # 这张卡仍然应该进入后续注册流程，不能在这里提前丢弃。
-        return False
+def get_validate_unavailable_reason(response_data: Any) -> tuple[str, str]:
+    """判断兑换码当前为何不可用。"""
+    if not isinstance(response_data, dict) or has_cards(response_data):
+        return "", ""
+
     data = response_data.get("data")
     if not isinstance(data, dict):
-        return False
+        return "", ""
 
     message = str(data.get("message") or "").strip()
     remaining_quantity = data.get("remainingQuantity")
     is_used = data.get("isUsed")
     valid = data.get("valid")
 
+    if "激活码未使用" in message:
+        return "unused", message
+    if "兑换码不存在" in message:
+        return "not_found", message
     if "该兑换码已使用完" in message:
-        return True
+        return "used", message
     if remaining_quantity == 0 and is_used is True:
-        return True
-    if valid is False and not has_cards(response_data):
-        return True
-    return False
+        return "used", message
+    if valid is False:
+        return "invalid", message or "兑换码无效"
+    return "", message
+
+
+def is_exhausted_validate_response(response_data: Any) -> bool:
+    """判断兑换码是否已使用完，需要切换下一张卡。"""
+    reason, _ = get_validate_unavailable_reason(response_data)
+    return reason == "used"
 
 
 def _normalize_address_component(value: Any) -> str:
@@ -2686,35 +3271,108 @@ def _extract_address_from_template(template: str) -> str:
     return ", ".join(address_parts)
 
 
-def format_validate_response(response_data: Any) -> str:
-    """将 validate 接口返回格式化为单行卡片信息。"""
+def _extract_first_card_and_data(response_data: Any) -> tuple[Optional[Dict[str, Any]], Dict[str, Any]]:
     if not isinstance(response_data, dict):
-        return ""
+        return None, {}
 
     data = response_data.get("data")
     if not isinstance(data, dict):
-        return ""
+        return None, {}
 
     cards = data.get("cards")
     if not isinstance(cards, list) or not cards:
-        return ""
+        return None, {}
 
     card = cards[0]
     if not isinstance(card, dict):
-        return ""
-
-    card_number = str(card.get("cardNumber") or "").strip()
-    card_password = str(card.get("cardPassword") or "").strip()
+        return None, {}
 
     card_data_raw = card.get("cardData")
     card_data: Dict[str, Any] = {}
-    if isinstance(card_data_raw, str) and card_data_raw.strip():
+    if isinstance(card_data_raw, dict):
+        card_data = dict(card_data_raw)
+    elif isinstance(card_data_raw, str) and card_data_raw.strip():
         try:
             parsed = json.loads(card_data_raw)
             if isinstance(parsed, dict):
                 card_data = parsed
         except Exception:
             card_data = {}
+
+    return card, card_data
+
+
+def _parse_iso_datetime(value: Any) -> Optional[datetime]:
+    text = str(value or "").strip()
+    if not text:
+        return None
+
+    normalized = text
+    if normalized.endswith("Z"):
+        normalized = normalized[:-1] + "+00:00"
+    normalized = re.sub(r"\.(\d{6})\d+(?=(?:[+-]\d{2}:\d{2})?$)", r".\1", normalized)
+
+    try:
+        return datetime.fromisoformat(normalized)
+    except ValueError:
+        pass
+
+    for fmt in ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S"):
+        try:
+            return datetime.strptime(normalized, fmt)
+        except ValueError:
+            continue
+    return None
+
+
+def _get_card_expiry_status(response_data: Any) -> Dict[str, Any]:
+    _, card_data = _extract_first_card_and_data(response_data)
+    expire_time_raw = str(card_data.get("expireTime") or "").strip()
+    if not expire_time_raw:
+        return {
+            "has_expire_time": False,
+            "expired": False,
+            "remaining_seconds": None,
+            "remaining_text": "",
+            "expire_time_raw": "",
+        }
+
+    expire_dt = _parse_iso_datetime(expire_time_raw)
+    if expire_dt is None:
+        return {
+            "has_expire_time": False,
+            "expired": False,
+            "remaining_seconds": None,
+            "remaining_text": "",
+            "expire_time_raw": expire_time_raw,
+        }
+
+    if expire_dt.tzinfo is None:
+        remaining_seconds = (expire_dt - datetime.now()).total_seconds()
+    else:
+        remaining_seconds = (expire_dt - datetime.now(expire_dt.tzinfo)).total_seconds()
+
+    return {
+        "has_expire_time": True,
+        "expired": remaining_seconds <= 0,
+        "remaining_seconds": remaining_seconds,
+        "remaining_text": _fmt_duration(abs(remaining_seconds)),
+        "expire_time_raw": expire_time_raw,
+    }
+
+
+def format_validate_response(response_data: Any) -> str:
+    """将 validate 接口返回格式化为单行卡片信息。"""
+    card, card_data = _extract_first_card_and_data(response_data)
+    if not card:
+        return ""
+
+    card_number = str(card.get("cardNumber") or "").strip()
+    card_password = str(card.get("cardPassword") or "").strip()
+
+    data = response_data.get("data")
+    if not isinstance(data, dict):
+        return ""
 
     expiry = str(card_data.get("expiry") or "").strip()
     expiry_display = expiry
@@ -2745,7 +3403,7 @@ def get_validate_context(proxies: Any = None) -> Dict[str, Any]:
         item = code_array[code_index]
         use_count = _normalize_use_count(item.get("use"))
         if use_count > 0:
-            log_info(f"第 {use_count + 1} 次使用当前 CDKEY，现场校验并开卡")
+            log_verbose(f"第 {use_count + 1} 次使用当前 CDKEY，现场校验并开卡")
         try:
             validate_result = wait_for_validate_result(code_value, proxies)
         except SkipCurrentCode as e:
@@ -2753,6 +3411,16 @@ def get_validate_context(proxies: Any = None) -> Dict[str, Any]:
             log_warn(f"当前兑换码 {code_value} 跳过: {e}")
             continue
 
+        unavailable_reason, unavailable_message = get_validate_unavailable_reason(validate_result.get("response"))
+        if unavailable_reason == "not_found":
+            _drop_code_entry(code_array, code_index, reason=unavailable_message or "兑换码不存在")
+            log_warn(f"当前兑换码 {code_value} 不存在，切换下一张卡")
+            continue
+        if unavailable_reason == "invalid":
+            _drop_code_entry(code_array, code_index, reason=unavailable_message or "兑换码无效")
+            detail = f": {unavailable_message}" if unavailable_message else ""
+            log_warn(f"当前兑换码 {code_value} 无效，切换下一张卡{detail}")
+            continue
         if is_exhausted_validate_response(validate_result.get("response")):
             _drop_code_entry(code_array, code_index, reason="达到服务端使用上限")
             log_warn(f"当前兑换码 {code_value} 已使用完，切换下一张卡")
@@ -2765,6 +3433,25 @@ def get_validate_context(proxies: Any = None) -> Dict[str, Any]:
             "code_index": code_index,
             "validate_result": validate_result,
         }
+
+
+def ensure_fresh_validate_context(validate_context: Dict[str, Any], proxies: Any = None) -> Dict[str, Any]:
+    """绑卡前检查当前卡剩余时间；已过期时重新获取新卡。"""
+    while True:
+        validate_result = validate_context.get("validate_result") or {}
+        response_data = validate_result.get("response")
+        expiry_status = _get_card_expiry_status(response_data)
+        if not expiry_status["has_expire_time"]:
+            return validate_context
+
+        remaining_text = str(expiry_status.get("remaining_text") or "0秒")
+        if expiry_status["expired"]:
+            log_warn(f"绑卡前检查：当前卡已过期（已过期 {remaining_text}），重新获取卡")
+            validate_context = get_validate_context(proxies)
+            continue
+
+        log_ok(f"绑卡前检查：当前卡剩余 {remaining_text}")
+        return validate_context
 
 
 def mark_code_used(code_array: list[dict[str, Any]], code_index: int, use_count: int) -> None:
@@ -2959,12 +3646,18 @@ def _extract_subscribe_failure_info(response_data: Any) -> tuple[str, str]:
 
 def wait_for_subscribe_success(
     access_token: str,
-    validate_result: Dict[str, Any],
+    validate_context: Dict[str, Any],
     proxies: Any = None,
 ) -> Dict[str, Any]:
     """阻塞等待 subscribe 成功。"""
     retry_with_new_account_enabled = bool(
         CONFIG.get("subscribe_retry_new_account_enabled", DEFAULT_CONFIG["subscribe_retry_new_account_enabled"])
+    )
+    switch_account_on_3ds_enabled = bool(
+        CONFIG.get(
+            "subscribe_switch_account_on_3ds_enabled",
+            DEFAULT_CONFIG["subscribe_switch_account_on_3ds_enabled"],
+        )
     )
     try:
         retry_with_new_account_limit = int(
@@ -2976,12 +3669,23 @@ def wait_for_subscribe_success(
     failed_attempts = 0
 
     while True:
+        validate_context = ensure_fresh_validate_context(validate_context, proxies)
+        validate_result = validate_context["validate_result"]
         subscribe_result = subscribe_aisub(access_token, validate_result, proxies)
         response_data = subscribe_result.get("response") or {}
         failure_text, failure_reason = _extract_subscribe_failure_info(response_data)
         if subscribe_result.get("status_code") == 200 and isinstance(response_data, dict) and response_data.get("success") is True:
-            return subscribe_result
-        if "该账号需要额外验证（3DS）" in failure_text:
+            steps = response_data.get("steps")
+            last_step = ""
+            if isinstance(steps, list):
+                last_step = next((str(step).strip() for step in reversed(steps) if str(step).strip()), "")
+            detail = f": {last_step}" if last_step else ""
+            log_ok(f"AISub 绑卡成功{detail}")
+            return {
+                "subscribe_result": subscribe_result,
+                "validate_context": validate_context,
+            }
+        if switch_account_on_3ds_enabled and "该账号需要额外验证（3DS）" in failure_text:
             detail = f"，原因: {failure_reason}" if failure_reason else ""
             raise RetryWithNewAccount(f"该账号需要额外验证（3DS），切换下一个账号继续复用当前卡{detail}")
         if "需要 hCaptcha challenge" in failure_text:
@@ -3038,7 +3742,7 @@ def generate_oauth_url(
     code_challenge = _sha256_b64url_no_pad(code_verifier)
 
     params = {
-        "client_id": CLIENT_ID,
+        "client_id": _get_openai_client_id(),
         "response_type": "code",
         "redirect_uri": redirect_uri,
         "scope": scope,
@@ -3049,6 +3753,9 @@ def generate_oauth_url(
         "id_token_add_organizations": "true",
         "codex_cli_simplified_flow": "true",
     }
+    originator = _get_openai_originator()
+    if originator:
+        params["originator"] = originator
     auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
     return OAuthStart(
         auth_url=auth_url,
@@ -3081,7 +3788,7 @@ def submit_callback_url(
         TOKEN_URL,
         {
             "grant_type": "authorization_code",
-            "client_id": CLIENT_ID,
+            "client_id": _get_openai_client_id(),
             "code": cb["code"],
             "redirect_uri": redirect_uri,
             "code_verifier": code_verifier,
@@ -3155,10 +3862,33 @@ def _ensure_openai_device_id(session: Any, initial_response: Any = None) -> str:
     return ""
 
 
+def _enrich_token_json_with_registration_context(
+    token_json: str,
+    *,
+    password: str,
+    birthdate: str,
+    mailbox: Dict[str, Any],
+) -> str:
+    try:
+        token_data = json.loads(token_json)
+    except Exception:
+        return token_json
+    token_data["password"] = password
+    token_data["first_name"] = str(mailbox.get("first_name") or "")
+    token_data["last_name"] = str(mailbox.get("last_name") or "")
+    token_data["birthdate"] = birthdate
+    token_data["email_provider"] = str(mailbox.get("email_provider") or "")
+    token_data["custom_domain"] = bool(mailbox.get("custom_domain"))
+    if mailbox.get("junmail_mailbox_id"):
+        token_data["junmail_mailbox_id"] = str(mailbox.get("junmail_mailbox_id") or "")
+    return json.dumps(token_data, ensure_ascii=False, separators=(",", ":"))
+
 def run(proxy: Optional[str]) -> Optional[str]:
     proxies: Any = None
     if proxy:
         proxies = {"http": proxy, "https": proxy}
+
+    _record_last_run_failure("")
 
     s = requests.Session(proxies=proxies, impersonate="chrome")
     mailbox: Optional[Dict[str, Any]] = None
@@ -3171,16 +3901,19 @@ def run(proxy: Optional[str]) -> Optional[str]:
         if loc == "CN" or loc == "HK":
             raise RuntimeError("检查代理哦w - 所在地不支持")
     except Exception as e:
+        _record_last_run_failure(f"网络连接检查失败: {e}")
         log_error(f"网络连接检查失败: {e}")
         return None
 
     try:
         mailbox = create_registration_email_context(proxies)
     except Exception as e:
+        _record_last_run_failure(f"创建注册邮箱失败: {e}")
         log_error(f"创建注册邮箱失败: {e}")
         return None
     email = str(mailbox.get("email") or "").strip()
     if not email:
+        _record_last_run_failure("邮箱创建结果为空")
         log_error("邮箱创建结果为空")
         return None
     provider_name = "TempMail" if mailbox.get("custom_domain") else _email_provider_label(mailbox.get("email_provider"))
@@ -3188,16 +3921,25 @@ def run(proxy: Optional[str]) -> Optional[str]:
 
     oauth = generate_oauth_url()
     url = oauth.auth_url
+    pow_value = _get_openai_pow_value()
 
     try:
         resp = s.get(url, timeout=15)
         did = _ensure_openai_device_id(s, resp)
         if not did:
+            _record_last_run_failure("未获取到 OpenAI 下发的 Device ID（oai-did Cookie），当前代理/网络无法通过 auth.openai.com 前置校验")
             log_error("未获取到 OpenAI 下发的 Device ID（oai-did Cookie），当前代理/网络无法通过 auth.openai.com 前置校验")
             return None
 
-        signup_body = f'{{"username":{{"value":"{email}","kind":"email"}},"screen_hint":"signup"}}'
-        sen_req_body = f'{{"p":"","id":"{did}","flow":"authorize_continue"}}'
+        signup_body = json.dumps({
+            "username": {"value": email, "kind": "email"},
+            "screen_hint": "signup",
+        })
+        sen_req_body = json.dumps({
+            "p": pow_value,
+            "id": did,
+            "flow": "authorize_continue",
+        })
 
         sen_resp = requests.post(
             "https://sentinel.openai.com/backend-api/sentinel/req",
@@ -3213,11 +3955,18 @@ def run(proxy: Optional[str]) -> Optional[str]:
         )
 
         if sen_resp.status_code != 200:
+            _record_last_run_failure(f"Sentinel 异常拦截，状态码: {sen_resp.status_code}")
             log_error(f"Sentinel 异常拦截，状态码: {sen_resp.status_code}")
             return None
 
         sen_token = sen_resp.json()["token"]
-        sentinel = f'{{"p": "", "t": "", "c": "{sen_token}", "id": "{did}", "flow": "authorize_continue"}}'
+        sentinel = json.dumps({
+            "p": pow_value,
+            "t": "",
+            "c": sen_token,
+            "id": did,
+            "flow": "authorize_continue",
+        })
 
         signup_resp = s.post(
             "https://auth.openai.com/api/accounts/authorize/continue",
@@ -3230,11 +3979,13 @@ def run(proxy: Optional[str]) -> Optional[str]:
             data=signup_body,
         )
         if signup_resp.status_code >= 400:
+            _record_last_run_failure(f"注册入口失败: {signup_resp.status_code}")
             log_error(f"注册入口失败: {signup_resp.status_code}")
             return None
 
         password = str(mailbox.get("password") or "").strip()
         if not password:
+            _record_last_run_failure("注册上下文缺少密码")
             log_error("注册上下文缺少密码")
             return None
 
@@ -3254,6 +4005,7 @@ def run(proxy: Optional[str]) -> Optional[str]:
             data=register_body,
         )
         if pwd_resp.status_code >= 400:
+            _record_last_run_failure(f"提交注册信息失败: {pwd_resp.status_code}")
             log_error(f"提交注册信息失败: {pwd_resp.status_code}")
             return None
 
@@ -3266,11 +4018,14 @@ def run(proxy: Optional[str]) -> Optional[str]:
             },
         )
         if otp_resp.status_code >= 400:
+            _record_last_run_failure(f"发送验证码失败: {otp_resp.status_code}")
             log_error(f"发送验证码失败: {otp_resp.status_code}")
             return None
 
         code = get_oai_code(mailbox, proxies)
         if not code:
+            if not _peek_last_run_failure():
+                _record_last_run_failure("未获取到邮箱验证码")
             return None
 
         code_body = f'{{"code":"{code}"}}'
@@ -3284,6 +4039,7 @@ def run(proxy: Optional[str]) -> Optional[str]:
             data=code_body,
         )
         if code_resp.status_code >= 400:
+            _record_last_run_failure(f"验证码校验失败: {code_resp.status_code}")
             log_error(f"验证码校验失败: {code_resp.status_code}")
             return None
 
@@ -3302,23 +4058,60 @@ def run(proxy: Optional[str]) -> Optional[str]:
         create_account_status = create_account_resp.status_code
 
         if create_account_status != 200:
+            _record_last_run_failure(f"账户创建失败: {create_account_status}")
             log_error(f"账户创建失败: {create_account_status}")
+            return None
+        try:
+            create_account_payload = create_account_resp.json()
+        except Exception:
+            create_account_payload = {}
+        create_account_continue_url = str((create_account_payload.get("continue_url") or "")).strip()
+        create_account_page_type = str(((create_account_payload.get("page") or {}).get("type") or "")).strip()
+        if create_account_page_type == "add_phone" or "add-phone" in create_account_continue_url:
+            _record_last_run_failure("当前账号触发绑定手机")
+            log_error("当前账号触发绑定手机")
+            log_verbose(
+                "当前账号触发绑定手机 详情: "
+                + json.dumps(
+                    {
+                        "create_account_response": create_account_payload,
+                    },
+                    ensure_ascii=False,
+                    default=str,
+                )
+            )
             return None
         log_ok("OpenAI 账号创建完成")
 
         auth_cookie = s.cookies.get("oai-client-auth-session")
         if not auth_cookie:
+            _record_last_run_failure("未能获取到授权 Cookie")
             log_error("未能获取到授权 Cookie")
             return None
 
         auth_json = _decode_jwt_segment(auth_cookie.split(".")[0])
         workspaces = auth_json.get("workspaces") or []
         if not workspaces:
+            _record_last_run_failure("授权 Cookie 里没有 workspace 信息")
             log_error("授权 Cookie 里没有 workspace 信息")
+            log_verbose(
+                "授权 Cookie 里没有 workspace 信息 详情: "
+                + json.dumps(
+                    {
+                        "auth_cookie_payload": auth_json,
+                        "auth_cookie_prefix": str(auth_cookie)[:80],
+                        "create_account_response": create_account_payload,
+                    },
+                    ensure_ascii=False,
+                    default=str,
+                )
+            )
             return None
         workspace_id = str((workspaces[0] or {}).get("id") or "").strip()
         if not workspace_id:
+            _record_last_run_failure("无法解析 workspace_id")
             log_error("无法解析 workspace_id")
+            log_verbose(f"无法解析 workspace_id 详情: {json.dumps({'workspaces': workspaces}, ensure_ascii=False, default=str)}")
             return None
 
         select_body = f'{{"workspace_id":"{workspace_id}"}}'
@@ -3332,12 +4125,17 @@ def run(proxy: Optional[str]) -> Optional[str]:
         )
 
         if select_resp.status_code != 200:
+            _record_last_run_failure(f"选择 workspace 失败，状态码: {select_resp.status_code}")
             log_error(f"选择 workspace 失败，状态码: {select_resp.status_code}")
-            print(select_resp.text)
+            log_verbose(
+                f"选择 workspace 失败，状态码: {select_resp.status_code} 详情: "
+                + json.dumps({"response_text": select_resp.text}, ensure_ascii=False, default=str)
+            )
             return None
 
         continue_url = str((select_resp.json() or {}).get("continue_url") or "").strip()
         if not continue_url:
+            _record_last_run_failure("workspace/select 响应里缺少 continue_url")
             log_error("workspace/select 响应里缺少 continue_url")
             return None
 
@@ -3359,25 +4157,20 @@ def run(proxy: Optional[str]) -> Optional[str]:
                     redirect_uri=oauth.redirect_uri,
                     expected_state=oauth.state,
                 )
-                try:
-                    token_data = json.loads(token_json)
-                except Exception:
-                    return token_json
-                token_data["password"] = password
-                token_data["first_name"] = str(mailbox.get("first_name") or "")
-                token_data["last_name"] = str(mailbox.get("last_name") or "")
-                token_data["birthdate"] = birthdate
-                token_data["email_provider"] = str(mailbox.get("email_provider") or "")
-                token_data["custom_domain"] = bool(mailbox.get("custom_domain"))
-                if mailbox.get("junmail_mailbox_id"):
-                    token_data["junmail_mailbox_id"] = str(mailbox.get("junmail_mailbox_id") or "")
-                return json.dumps(token_data, ensure_ascii=False, separators=(",", ":"))
+                return _enrich_token_json_with_registration_context(
+                    token_json,
+                    password=password,
+                    birthdate=birthdate,
+                    mailbox=mailbox,
+                )
             current_url = next_url
 
+        _record_last_run_failure("未能在重定向链中捕获到最终 Callback URL")
         log_error("未能在重定向链中捕获到最终 Callback URL")
         return None
 
     except Exception as e:
+        _record_last_run_failure(f"运行时发生错误: {e}")
         log_error(f"运行时发生错误: {e}")
         return None
 
@@ -3458,6 +4251,7 @@ def main() -> None:
             if count == 1:
                 reset_teams_file(teams_file)
             log_section(f"开始第 {count} 次注册流程")
+            last_cycle_failure_reason = ""
 
             try:
                 validate_context: Optional[Dict[str, Any]] = None
@@ -3484,7 +4278,10 @@ def main() -> None:
                         if not validate_context:
                             raise RuntimeError("缺少 Team 绑定上下文")
 
-                        subscribe_result = wait_for_subscribe_success(access_token, validate_result, proxies)
+                        subscribe_context = wait_for_subscribe_success(access_token, validate_context, proxies)
+                        validate_context = subscribe_context["validate_context"]
+                        validate_result = validate_context["validate_result"]
+                        subscribe_result = subscribe_context["subscribe_result"]
                         current_use_count = int(validate_context["use_count"])
                         mark_code_used(
                             validate_context["code_array"],
@@ -3505,21 +4302,31 @@ def main() -> None:
                     ):
                         break
                 else:
-                    log_warn("本次注册失败")
+                    last_cycle_failure_reason = _take_last_run_failure()
+                    if bool(CONFIG.get("verbose_info_logs_enabled", DEFAULT_CONFIG["verbose_info_logs_enabled"])) and last_cycle_failure_reason:
+                        log_error(f"本次注册失败，原因: {last_cycle_failure_reason}")
+                    else:
+                        log_error("本次注册失败")
 
             except RetryWithNewAccount as e:
+                last_cycle_failure_reason = str(e)
                 log_warn(str(e))
             except StopScript as e:
+                last_cycle_failure_reason = str(e)
                 log_warn(str(e))
                 break
             except Exception as e:
+                last_cycle_failure_reason = str(e)
                 log_error(f"发生未捕获异常: {e}")
 
             if args.once:
                 break
 
             wait_time = random.randint(sleep_min, sleep_max)
-            log_info(f"休息 {wait_time} 秒")
+            if bool(CONFIG.get("verbose_info_logs_enabled", DEFAULT_CONFIG["verbose_info_logs_enabled"])) and last_cycle_failure_reason:
+                log_info(f"本轮未成功注册，{wait_time} 秒后重试；原因: {last_cycle_failure_reason}")
+            else:
+                log_info(f"休息 {wait_time} 秒")
             time.sleep(wait_time)
     finally:
         ended_at = datetime.now()

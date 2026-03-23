@@ -82,6 +82,17 @@ demo@outlook.com----password123----xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx----refre
 
 程序会直接从这里读取 `CDKEY`，每次现场 `validate / redeem`；达到最大使用次数后，会把对应项从这个文件里移除。
 
+当前已支持多卡商切换。
+
+- `NCET`
+- `EFunCard`
+
+无论卡商来源是哪一个，程序都会统一格式化成：
+
+```text
+卡号 MM/YY CVV 地址
+```
+
 ### 3. 启动程序
 
 ```bash
@@ -112,6 +123,7 @@ python3 team.py
 适合直接在终端里粘贴数据。
 
 - `粘贴追加 CDKEY`
+- `粘贴覆盖 CDKEY`
 
 支持：
 
@@ -123,6 +135,8 @@ python3 team.py
 说明：
 
 - `CDKEY` 是源数据仓
+- `粘贴追加 CDKEY` 会在保留现有内容的前提下自动去重追加
+- `粘贴覆盖 CDKEY` 会直接覆盖当前 `CDKEY` 文件，并把新导入码的 `use` 重置为 `0`
 - `兑换码` 是实际运行消费池
 
 ### 邮箱注册
@@ -148,13 +162,27 @@ python3 team.py
 
 用于设置：
 
+- `卡商`
 - `NPCMail API Key`
 - `GPTMail API Key`
 - `JunMail API Key`
 - `JunMail Base URL`
 - `AISub API Key`
-- `Redeem Base URL`
+- `NCET Base URL`
+- `EFunCard Base URL`
+- `EFunCard CSRF Token`
+- `EFunCard 城市库 URL`
 - `AISub Base URL`
+- `OpenAI Client ID`
+- `OpenAI Originator`
+- `OpenAI POW 参数`
+
+说明：
+
+- `OpenAI Client ID` 用于控制 OpenAI OAuth 授权链路里的 `client_id`
+- `OpenAI Originator` 会追加到 OpenAI OAuth 授权 URL 的 `originator` 参数
+- `OpenAI POW 参数` 会写入 OpenAI 注册链路里 `sentinel/req` 和 `openai-sentinel-token` 的 `p` 字段
+- 默认留空，不填时按原来的空值请求
 
 ### 运行策略
 
@@ -163,6 +191,7 @@ python3 team.py
 - 注册类型 (`普号` / `Team`)
 - 默认代理
 - 单卡最大绑定次数
+- 日志模式（默认精简，开启后打印详细日志）
 - `subscribe` 失败后是否重开号
 - `subscribe` 失败次数上限
 
@@ -172,10 +201,9 @@ python3 team.py
 
 限制规则：
 
-- 不能超过当前界面里的 `预计可生成位置`
-- 如果你输入更大的值，程序会直接拦住
-
-这个限制是为了避免配置了一个根本跑不完的目标。
+- 可以配置成高于当前界面里的预计剩余数量
+- 当前界面的 `预计可生成账号 / 预计可生成位置` 只作为参考，不再作为硬性上限
+- 如果资源先耗尽，程序会提前停止
 
 ## 程序运行时你会看到什么
 
@@ -242,6 +270,14 @@ python3 team.py
 2. 进入 `配置中心`
 3. 进入 `导入数据`
 4. 选择 `粘贴追加 CDKEY`
+5. 直接在终端粘贴
+
+### 只想整批替换现有码
+
+1. 运行 `python3 team.py`
+2. 进入 `配置中心`
+3. 进入 `导入数据`
+4. 选择 `粘贴覆盖 CDKEY`
 5. 直接在终端粘贴
 
 ### 只想改接口地址或 Key

@@ -1,0 +1,35 @@
+{
+  "url": "https://auth.openai.com/create-account",
+  "title": "你的会话已结束 - OpenAI",
+  "bodyText": "你的会话已结束\n登录以继续，或在不登录的情况下使用 ChatGPT.com\n登录\n使用条款隐私政策",
+  "htmlLength": 12421,
+  "inputs": [
+    {
+      "i": 0,
+      "tag": "A",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "登录"
+    },
+    {
+      "i": 1,
+      "tag": "A",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "使用条款"
+    },
+    {
+      "i": 2,
+      "tag": "A",
+      "type": null,
+      "name": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "隐私政策"
+    }
+  ]
+}

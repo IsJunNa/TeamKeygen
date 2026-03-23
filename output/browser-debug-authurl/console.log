@@ -1,0 +1,6 @@
+[warning]   WARN  [Statsig] The user does not have the required id_type "userID" for Dynamic config "login_web_existing_user_login_option_google"
+[warning]   WARN  [Statsig] The user does not have the required id_type "userID" for Dynamic config "login_web_existing_user_login_option_microsoft"
+[warning]   WARN  [Statsig] The user does not have the required id_type "userID" for Dynamic config "login_web_existing_user_login_option_apple"
+[warning]   WARN  [Statsig] The user does not have the required id_type "userID" for Dynamic config "login_web_existing_user_login_option_email"
+[warning]   WARN  [Statsig] The user does not have the required id_type "userID" for Dynamic config "login_web_existing_user_login_option_phone_number"
+[warning] Datadog Browser SDK: Customer data exceeds the recommended 3KiB threshold. More details: https://docs.datadoghq.com/real_user_monitoring/browser/troubleshooting/#customer-data-exceeds-the-recommended-threshold-warning

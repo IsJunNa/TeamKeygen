@@ -1,0 +1,277 @@
+[
+  {
+    "url": "https://auth.openai.com/sign-in-with-chatgpt",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/manifest-64062c91.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/styles-DD9pupH_.css",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth.openai.com/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+    "status": 302,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/statsig-CDDMC_8Z.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/entry.client-BSrzl5_K.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/app-core-BVP192sF.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth.openai.com/cdn-cgi/challenge-platform/h/g/scripts/jsd/ea2d291c0fdc/main.js?",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/react-intl-CIPQd2Ij.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/react-router-Dv7ITjcY.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/locale.client-BzGvlw7-.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/react-fF7O6JU9.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/zod-BeXw7Xwl.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/segment-D0siyHcc.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/styles-BHk20sZa.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/client-only-CK-Jv2Qx.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/app-components-DjlQZIFe.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/react-aria-date-picker-deps-TZiGtfVr.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/react-aria-BS94rT6D.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/datadog-BTgRrIvw.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/app-components-phone-number-input-WbIAgrSP.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/route-CCav6kv-.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/root-BmrnVNq0.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/app-components-old-app-DTUyxsIZ.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/FallbackErrorPage-_nuIS_RE.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/route-Dh7USo48.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/phone-number-C6DHDTQA.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/zh-CN-te9kS7Ws.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth-cdn.oaistatic.com/assets/favicon-hQZ_bs-n.svg",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth.openai.com/cdn-cgi/challenge-platform/h/g/jsd/oneshot/ea2d291c0fdc/0.7043422232533452:1774186898:MSsQRqLQQzhsJBxlR4VjYmdoIWxSNEF_A27V-G2yc50/9e05c67addd71876",
+    "status": 200,
+    "method": "POST"
+  },
+  {
+    "url": "https://featureassets.org/v1/initialize?k=client-tN5GMyzpIPKXd3KNv7ANIfiqjRSvNNTTWbZdbdabF58&st=javascript-client&sv=3.32.1&t=1774188581533&sid=a6ea115c-4ea1-4223-90ab-1aac5a68933d&se=1",
+    "status": 200,
+    "method": "POST"
+  },
+  {
+    "url": "https://prodregistryv2.org/v1/rgstr?k=client-tN5GMyzpIPKXd3KNv7ANIfiqjRSvNNTTWbZdbdabF58&st=javascript-client&sv=3.32.1&t=1774188581737&sid=a6ea115c-4ea1-4223-90ab-1aac5a68933d&ec=1&gz=1",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://chatgpt.com/ces/v1/projects/oai/settings",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://sentinel.openai.com/backend-api/sentinel/sdk.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Axhr%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=90be4231-7f99-45dd-93cc-a8121972a3df&batch_time=1774188582398",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://chatgpt.com/ces/v1/projects/oai/settings",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Afetch%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=212c4430-768e-43eb-b9ec-1e6d27fc0fe5&batch_time=1774188582394",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Afetch%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=17e50bc2-cad9-442b-b193-23d9442afe01&batch_time=1774188582396",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Afetch%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=4a73c25a-ad2d-4ed6-a2d1-3b6eebeb33a8&batch_time=1774188582395",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Axhr%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=fc8f109d-299f-492d-8f8f-95f114a322df&batch_time=1774188583378",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Afetch%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=a605ee6b-83d7-448c-8360-de09dd6819c3&batch_time=1774188582396",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://sentinel.openai.com/sentinel/20260219f9f6/sdk.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Axhr%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=9a85b1a1-5d20-41f9-9d8e-5f64de9ef5fe&batch_time=1774188583379",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Afetch%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=66f4daa1-b293-4b04-b2c2-c4f214bd95ce&batch_time=1774188583452",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Axhr%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=be25237c-cea2-4bd6-a165-f7fd9c4332f5&batch_time=1774188583490",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://sentinel.openai.com/backend-api/sentinel/frame.html?sv=20260219f9f6",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Afetch%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=53792566-04ef-4610-9909-7b7f6920654c&batch_time=1774188583752",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Afetch%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=6b822a53-a9b7-4eb9-ae5f-a4d1337281dd&batch_time=1774188583777",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://sentinel.openai.com/sentinel/20260219f9f6/sdk.js",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://sentinel.openai.com/cdn-cgi/challenge-platform/scripts/jsd/main.js",
+    "status": 302,
+    "method": "GET"
+  },
+  {
+    "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&ddtags=sdk_version%3A6.4.0%2Capi%3Afetch%2Cenv%3Aprod%2Cservice%3Alogin-web%2Cversion%3Af305bca6afc89159e811fd824396d6daaf880760&dd-api-key=pub87c677d9c9bf34b387f60a689c1990a6&dd-evp-origin-version=6.4.0&dd-evp-origin=browser&dd-request-id=3253cc7a-df84-4796-9685-8ca2f375fd28&batch_time=1774188584489",
+    "status": 202,
+    "method": "POST"
+  },
+  {
+    "url": "https://sentinel.openai.com/cdn-cgi/challenge-platform/h/g/scripts/jsd/ea2d291c0fdc/main.js?",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://sentinel.openai.com/cdn-cgi/challenge-platform/h/g/jsd/oneshot/ea2d291c0fdc/0.7043422232533452:1774186898:MSsQRqLQQzhsJBxlR4VjYmdoIWxSNEF_A27V-G2yc50/9e05c69ae004af1e",
+    "status": 200,
+    "method": "POST"
+  },
+  {
+    "url": "https://chatgpt.com/ces/v1/b",
+    "status": 200,
+    "method": "POST"
+  },
+  {
+    "url": "https://chatgpt.com/ces/v1/b",
+    "status": 200,
+    "method": "POST"
+  }
+]

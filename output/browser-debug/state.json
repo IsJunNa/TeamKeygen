@@ -1,0 +1,150 @@
+{
+  "url": "https://auth.openai.com/sign-in-with-chatgpt",
+  "title": "",
+  "bodyText": "",
+  "content": "<!DOCTYPE html><html lang=\"zh-CN\"><head><link rel=\"stylesheet\" href=\"https://auth-cdn.oaistatic.com/assets/styles-DD9pupH_.css\"><style nonce=\"\">@font-face{font-display:swap;font-family:OpenAI Sans;font-style:normal;font-weight:400;src:url(https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Regular.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:italic;font-weight:400;src:url(https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-RegularItalic.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:normal;font-weight:500;src:url(https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Medium.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:italic;font-weight:500;src:url(https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-MediumItalic.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:normal;font-weight:600;src:url(https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Semibold.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:italic;font-weight:600;src:url(https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-SemiboldItalic.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:normal;font-weight:700;src:url(https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Bold.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:italic;font-weight:700;src:url(https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-BoldItalic.woff2) format(\"woff2\")}</style><script type=\"text/javascript\" src=\"https://sentinel.openai.com/backend-api/sentinel/sdk.js\" async=\"\" defer=\"\"></script><meta charset=\"UTF-8\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"https://auth-cdn.oaistatic.com/assets/favicon-hQZ_bs-n.svg\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/manifest-64062c91.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/entry.client-BSrzl5_K.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/statsig-CDDMC_8Z.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/app-core-BVP192sF.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/react-fF7O6JU9.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/react-intl-CIPQd2Ij.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/react-router-Dv7ITjcY.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/locale.client-BzGvlw7-.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/zod-BeXw7Xwl.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/datadog-BTgRrIvw.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/segment-D0siyHcc.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/app-components-DjlQZIFe.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/styles-BHk20sZa.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/react-aria-date-picker-deps-TZiGtfVr.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/react-aria-BS94rT6D.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/app-components-phone-number-input-WbIAgrSP.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/phone-number-C6DHDTQA.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/app-components-old-app-DTUyxsIZ.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/root-BmrnVNq0.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/client-only-CK-Jv2Qx.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/FallbackErrorPage-_nuIS_RE.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/route-CCav6kv-.js\"><link rel=\"modulepreload\" href=\"https://auth-cdn.oaistatic.com/assets/route-Dh7USo48.js\"><link rel=\"stylesheet\" href=\"https://auth-cdn.oaistatic.com/assets/styles-DD9pupH_.css\"><style>@font-face{font-display:swap;font-family:OpenAI Sans;font-style:normal;font-weight:400;src:url(https://cdn.openai.com/common/fonts/openai-sans/v3/OpenAISans-Regular.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:italic;font-weight:400;src:url(https://cdn.openai.com/common/fonts/openai-sans/v3/OpenAISans-RegularItalic.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:normal;font-weight:500;src:url(https://cdn.openai.com/common/fonts/openai-sans/v3/OpenAISans-Medium.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:italic;font-weight:500;src:url(https://cdn.openai.com/common/fonts/openai-sans/v3/OpenAISans-MediumItalic.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:normal;font-weight:600;src:url(https://cdn.openai.com/common/fonts/openai-sans/v3/OpenAISans-Semibold.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:italic;font-weight:600;src:url(https://cdn.openai.com/common/fonts/openai-sans/v3/OpenAISans-SemiboldItalic.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:normal;font-weight:700;src:url(https://cdn.openai.com/common/fonts/openai-sans/v3/OpenAISans-Bold.woff2) format(\"woff2\")}@font-face{font-display:swap;font-family:OpenAI Sans;font-style:italic;font-weight:700;src:url(https://cdn.openai.com/common/fonts/openai-sans/v3/OpenAISans-BoldItalic.woff2) format(\"woff2\")}</style><script type=\"text/javascript\" src=\"https://sentinel.openai.com/sentinel/20260219f9f6/sdk.js\" async=\"\" defer=\"\"></script></head><body style=\"background-color: rgb(255, 255, 255);\"><script nonce=\"\">((storageKey2, restoreKey) => {\n    if (!window.history.state || !window.history.state.key) {\n      let key = Math.random().toString(32).slice(2);\n      window.history.replaceState({ key }, \"\");\n    }\n    try {\n      let positions = JSON.parse(sessionStorage.getItem(storageKey2) || \"{}\");\n      let storedY = positions[restoreKey || window.history.state.key];\n      if (typeof storedY === \"number\") {\n        window.scrollTo(0, storedY);\n      }\n    } catch (error) {\n      console.error(error);\n      sessionStorage.removeItem(storageKey2);\n    }\n  })(\"react-router-scroll-positions\", null)</script><script id=\"bootstrap-inert-script\" type=\"application/json\">{\"track\":\"stable\",\"isDefaultBootstrapValue\":false,\"statsigBootstrap\":null,\"shouldConsumeStatsigBootstrap\":false,\"immutableClientSessionMetadata\":{\"session_id\":\"\",\"openai_client_id\":\"\",\"app_name_enum\":\"\",\"auth_session_logging_id\":\"\",\"originator\":\"\"},\"requestStartMillis\":1774188579052,\"experimentEvaluations\":[]}</script><script nonce=\"\">window.__reactRouterContext = {\"basename\":\"/\",\"future\":{\"v8_middleware\":false,\"unstable_optimizeDeps\":true,\"unstable_splitRouteModules\":false,\"unstable_subResourceIntegrity\":false,\"unstable_viteEnvironmentApi\":false},\"routeDiscovery\":{\"mode\":\"initial\"},\"ssr\":true,\"isSpaMode\":false};window.__reactRouterContext.stream = new ReadableStream({start(controller){window.__reactRouterContext.streamController = controller;}}).pipeThrough(new TextEncoderStream());</script><script nonce=\"\" type=\"module\" async=\"\">import \"https://auth-cdn.oaistatic.com/assets/manifest-64062c91.js\";\nimport * as route0 from \"https://auth-cdn.oaistatic.com/assets/root-BmrnVNq0.js\";\nimport * as route1 from \"https://auth-cdn.oaistatic.com/assets/route-CCav6kv-.js\";\n  \n  window.__reactRouterRouteModules = {\"root\":route0,\"LEGACY_LOGIN_WEB_PAGE_SPLAT\":route1};\n\nimport(\"https://auth-cdn.oaistatic.com/assets/entry.client-BSrzl5_K.js\");</script><script nonce=\"\">window.__reactRouterContext.streamController.enqueue(\"[{\\\"_1\\\":2,\\\"_3\\\":-5,\\\"_4\\\":-5},\\\"loaderData\\\",{},\\\"actionData\\\",\\\"errors\\\"]\\n\");</script><script nonce=\"\">window.__reactRouterContext.streamController.close();</script><script nonce=\"\" id=\"_R_\">requestAnimationFrame(function(){$RT=performance.now()});</script><script nonce=\"\">$RB=[];$RV=function(a){$RT=performance.now();for(var b=0;b<a.length;b+=2){var c=a[b],e=a[b+1];null!==e.parentNode&&e.parentNode.removeChild(e);var f=c.parentNode;if(f){var g=c.previousSibling,h=0;do{if(c&&8===c.nodeType){var d=c.data;if(\"/$\"===d||\"/&\"===d)if(0===h)break;else h--;else\"$\"!==d&&\"$?\"!==d&&\"$~\"!==d&&\"$!\"!==d&&\"&\"!==d||h++}d=c.nextSibling;f.removeChild(c);c=d}while(c);for(;e.firstChild;)f.insertBefore(e.firstChild,c);g.data=\"$\";g._reactRetry&&requestAnimationFrame(g._reactRetry)}}a.length=0};\n$RC=function(a,b){if(b=document.getElementById(b))(a=document.getElementById(a))?(a.previousSibling.data=\"$~\",$RB.push(a,b),2===$RB.length&&(\"number\"!==typeof $RT?requestAnimationFrame($RV.bind(null,$RB)):(a=performance.now(),setTimeout($RV.bind(null,$RB),2300>a&&2E3<a?2300-a:$RT+300-a)))):b.parentNode.removeChild(b)};$RC(\"B:0\",\"S:0\")</script><script nonce=\"\">$RC(\"B:1\",\"S:1\")</script><script nonce=\"\">(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.nonce='GtBsruEIikoW8werTmVGHg==';d.innerHTML=\"window.__CF$cv$params={r:'9e05c67addd71876',t:'MTc3NDE4ODU3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='GtBsruEIikoW8werTmVGHg==';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>((u,d)=>{if(!window.history.state||!window.history.state.key){let h=Math.random().toString(32).slice(2);window.history.replaceState({key:h},\"\")}try{let m=JSON.parse(sessionStorage.getItem(u)||\"{}\")[d||window.history.state.key];typeof m==\"number\"&&window.scrollTo(0,m)}catch(h){console.error(h),sessionStorage.removeItem(u)}})(\"react-router-scroll-positions\", null)</script><script> </script><script type=\"module\" async=\"\"> </script><iframe src=\"https://sentinel.openai.com/backend-api/sentinel/frame.html?sv=20260219f9f6\" style=\"display: none;\"></iframe></body></html>",
+  "inputs": [],
+  "cookies": [
+    {
+      "name": "oai-chat-web-route",
+      "value": "\"ChIxMC4xMjguMzAuMTA4OjMwMDAQzpigAQ==\"",
+      "domain": "sentinel.openai.com",
+      "path": "/chat/frontend",
+      "expires": 1774793384.477416,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "oai-did",
+      "value": "b968cbab-edbc-4dbb-a97e-bd0debe6659e",
+      "domain": ".openai.com",
+      "path": "/",
+      "expires": 1805724579.159386,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__cflb",
+      "value": "0H28w2ZepuU3KZxNdeaW8eYKWH8EE4275ETwvgv2ek5",
+      "domain": "auth.openai.com",
+      "path": "/",
+      "expires": 1774190379.159725,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_cfuvid",
+      "value": "ZAT24MAagizNx6.of32qInD1BTCcyk4cn.2YQAwDc_c-1774188579109-0.0.1.1-604800000",
+      "domain": ".auth.openai.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "1Xcl2mg3L73kA30EFJJPXPD.AgZ8hsGGpd1eGGvIk7I-1774188579-1.0.1.1-Mlik5GKsQJC7gNxuLB_omqYdN33aGc1jFIgGBYh4y6nE0YfQjMSS.T5FzcUm6pRi1ejc7xSq12sVvuR6E4VPI6LF9DHMdwLsJ9Et3BVD07E",
+      "domain": ".oaistatic.com",
+      "path": "/",
+      "expires": 1774190379.948885,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_cfuvid",
+      "value": "EcVlgs0SEnAcZOiPava8C0CcB88vHoRqaWh4QmMHrQQ-1774188579918-0.0.1.1-604800000",
+      "domain": ".oaistatic.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "cf_clearance",
+      "value": "cpUgvbv.EtXUBHg6q4Dz2Cv9JUHoVkxjTzDcc._ozWE-1774188581-1.2.1.1-EFq_6VmoM8H4_aBCe_Lka9PEr3rm59VWX.y1ViE3dxu0OJeh_qjKgFO6K2sTJ7V.2iJ0qTvbwMy3crksIJPeqTGVheOuL1jD44bYjCZZRbbWslNVTL7wjGun5_byO11lS6nUoxP2mSoxD7hqonsxUrrSqv1NYL9cTrsCgSljysyDLTyvMOQKZgKvTjvY0ezsVlAMp66WMDAnbIIfCog6dPVMjDGKUkaWnDs74qPTny8",
+      "domain": ".auth.openai.com",
+      "path": "/",
+      "expires": 1805724581.810173,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://openai.com",
+      "_crHasCrossSiteAncestor": false
+    },
+    {
+      "name": "__cf_bm",
+      "value": "PmAKa5LE.EDbpEa5qkhYYvKLFiiDLaCvA8uOILqBEws-1774188581-1.0.1.1-3mS.ey1TprUvihkMYIIvWsx_Uc_B5Dd6.J7LoPc7MPNXMPPZts7UQ8GKelHZUUaCRmtCq5lWd1jX1H.ZdP.Xq9RepALCxXUW1ydXERbTvMM",
+      "domain": ".auth.openai.com",
+      "path": "/",
+      "expires": 1774190381.810213,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__cflb",
+      "value": "0H28vzvP5FJafnkHxiscDFksMo5URnbBKFc2NXXvdZd",
+      "domain": "sentinel.openai.com",
+      "path": "/",
+      "expires": 1774192183.352164,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "__cf_bm",
+      "value": "G41Q30yMFFgzJBCi_gFxRNkAGVOe_vjeM9w.X79NZkw-1774188583-1.0.1.1-kBVE_jtkFkSA2lJ5UXQtAFWWdgvYAQbpgUEKtuDn5kQc4_vxBH0qysbr3mkpb05cK1M1xityibA_0rA9UTWMk60slu4TzrWIw.ct1G5SoWw",
+      "domain": ".sentinel.openai.com",
+      "path": "/",
+      "expires": 1774190383.35223,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_cfuvid",
+      "value": "oLfYSUWKYFcKjrGFbV5R3xSAepYuviYYul2SvVArmYQ-1774188583238-0.0.1.1-604800000",
+      "domain": ".sentinel.openai.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "cf_clearance",
+      "value": "yOKp7tOBk6SjfXPII_I4WBg5LPQ4G6OHig8teflIh38-1774188585-1.2.1.1-YLt4rw.H0aqeSGjtJ5zpRzSGPRslq9pa.P355XbHciHJTY2b7gwf1nz4FiJ7n2ngEWu7UrFsp4AX9EpEgROViZcpyTAIghJhh7xZilY1ew4GDzzCAaL6gIb0n0YamJSHYIaMfqpXBT8fbLRSLLoZ3uVrskvcvcK6vUh7zJFa1kS5uOQ0HYNOA3X.lF2P7WX_5u4qIApDKdISsBBXO7KA1.RIHHRXHD_ucrt5oES0FbA",
+      "domain": ".sentinel.openai.com",
+      "path": "/",
+      "expires": 1805724585.447559,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://openai.com",
+      "_crHasCrossSiteAncestor": false
+    },
+    {
+      "name": "_dd_s",
+      "value": "aid=acc6cacc-0034-4c97-ae2f-ce88e7fb0549&rum=2&id=2187ac7f-144b-469c-ae60-a70c88790295&created=1774188582388&expire=1774189482388",
+      "domain": "auth.openai.com",
+      "path": "/",
+      "expires": 1774189494,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Strict"
+    }
+  ],
+  "navigator": {
+    "webdriver": false,
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+    "platform": "MacIntel",
+    "language": "zh-CN"
+  },
+  "htmlLength": 10744
+}

@@ -1,3 +1,404 @@
 {
-  "teams": []
+  "teams": [
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiTGVTX1EtWXJPbTNzQ3NxcXRSbGt4USIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3NDI0NTcxMCwiZW1haWwiOiI4cjduZDJoeTJ0QGlzanVuLnh5eiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJleHAiOjE3NzQyNDkzMTIsImh0dHBzOi8vYXBpLm9wZW5haS5jb20vYXV0aCI6eyJjaGF0Z3B0X2FjY291bnRfaWQiOiJhZjg4NDA1Yi0yYjg2LTQ1OWQtYjNhOC1hYjY5MTg0MDE5ZWIiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfc3RhcnQiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV91bnRpbCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fbGFzdF9jaGVja2VkIjoiMjAyNi0wMy0yM1QwNjowMTo1MC4yMDEyNTUrMDA6MDAiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUlJck13VGxhbHoxdEp0cEZKUmI2MHpaUiIsImdyb3VwcyI6W10sImxvY2FsaG9zdCI6dHJ1ZSwib3JnYW5pemF0aW9ucyI6W3siaWQiOiJvcmctdzFsYlNzRmpKUFRoMnh1WXRQcG5ZeWdTIiwiaXNfZGVmYXVsdCI6dHJ1ZSwicm9sZSI6Im93bmVyIiwidGl0bGUiOiJQZXJzb25hbCJ9XSwidXNlcl9pZCI6InVzZXItSUlyTXdUbGFsejF0SnRwRkpSYjYwelpSIn0sImlhdCI6MTc3NDI0NTcxMiwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJkZDUzYjY0Yi1mYmM4LTQ0NDktYTYxOS1kMTFmYzc5MzNiN2UiLCJuYW1lIjoiUm9iZXJ0IExvcGV6IiwicmF0IjoxNzc0MjQ1NjkzLCJzaWQiOiI3MmRmYTcyYy0wYmNhLTQ1NDEtYWU1OC1mNzRjMzYyMjVmY2QiLCJzdWIiOiJhdXRoMHx6TFpteG9JUHFRdnh6Ukx5WHdWajVmNjcifQ.R8jKfd3YfCgm8sY318k5ojacT35mPZ6gCTRlZs1IL71wpHMZuYJ3q6S1zxgZXLCNHsYX6pJbFA-j1wwOE_ysevF1u0LNSUNhr-CsZypRyAt4O1c45hNHqHhTV4z-WqvWHKr26ER7I2SuUr0hq0HaWvPWzLbDFtCkeHC3go3e9hZJRLv5HLNhXiuy477_DmH7vwlnHpb_Q-Q5I1t-Lhb9MayX9KBegU0xTl2gYx2lix_jZn1tbAvjlwMVTldXuDPVhrizFEcqSM7OJwKOUKYLrZFQWUVld29v7bAb9MYI7JApkfDrVYqPp-DDu1IX9EqdJbyNUUxRfXHVC182B4tnp8oIhrvCda-H4Kr6IHuoJDNFIhMBh2wWHYCIu4d3k0JMaa6qiw75kI480eP4iMzcPgE-sMNGj7d78wmyAz0vS7ElVwZcXl23V4IMmw7CpZCMBDtxkvTO-o6cNeb2xA3jXC9fke-ks5VxXhQsPSTzhKyrxhc2JZ7ek2g1tcBB638fXVaMsaU_N41xfSoveQ2Zt5_vha-XIuRoMeYMG_2um7F1EkLJGi6nvjdaHDs-i-Ww7p_dEA3dgM556jbSKicKL_rZUeyALDFrF-OH6Rp51jwSFyE5Sussej9odXfCOq2rhQ9XWHjLlB7WF4L-rbX5Qmxw45Rp4l9ivyvk5YIRPBk",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc1MTA5NzEzLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiYWY4ODQwNWItMmI4Ni00NTlkLWIzYTgtYWI2OTE4NDAxOWViIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLUlJck13VGxhbHoxdEp0cEZKUmI2MHpaUl9fYWY4ODQwNWItMmI4Ni00NTlkLWIzYTgtYWI2OTE4NDAxOWViIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUlJck13VGxhbHoxdEp0cEZKUmI2MHpaUiIsImxvY2FsaG9zdCI6dHJ1ZSwidXNlcl9pZCI6InVzZXItSUlyTXdUbGFsejF0SnRwRkpSYjYwelpSIn0sImh0dHBzOi8vYXBpLm9wZW5haS5jb20vcHJvZmlsZSI6eyJlbWFpbCI6IjhyN25kMmh5MnRAaXNqdW4ueHl6IiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJpYXQiOjE3NzQyNDU3MTIsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiNzliZDJhOGMtMzA5Yi00NzI1LTg0NjgtMGI5Nzg5NjM0YzU3IiwibmJmIjoxNzc0MjQ1NzEyLCJwd2RfYXV0aF90aW1lIjoxNzc0MjQ1NzEwMjAxLCJzY3AiOlsib3BlbmlkIiwiZW1haWwiLCJwcm9maWxlIiwib2ZmbGluZV9hY2Nlc3MiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX2VCa1RzZ1BFZjgxWEhTY0xFRnN2ZEdQTiIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHx6TFpteG9JUHFRdnh6Ukx5WHdWajVmNjcifQ.UGhHCKug9xBRx504c-RIIVczsIiYFRK-JX3sHNzBsTM_nwPIT6R2-BB3zZ1x4Z_XoEyI-bETkbTZkLTVFg1g5fSmlX9PApC7Ta9Xlt4513n9rck0Iojkt90Hk3mNA6xAmkYKkPgWVe0PpUQZqy7cL1hT4AGw_vK98uv8rJn1d30LYrMy4DXZv0wrM_FsHOXBee_C80-R4gNURbamF2Vr0kAWqz3sNxxzm7mxXnf7iUcDG6aZ8t7c92OYzpelBhSa6QT7u_jRc6Kw-SEn3xmZA471QAsjeVO13gN_knyJ4j8BDjFdhK5MKtsCMEfkwxSp-_yykRBesy_qRvQxX4JF6lLnCD6l7VUMu0CQr53f0EzzA8a61kH2mFVByZvdcTnHyib2L7fOPLhXgpz3dXGeV31DKbOjFefpR0wBlhRj4UFi5dhRMLZUsD--kZtxTyIycV3QipPyh65Y0dVW6cN1OlcWrDYyW0kDyOl89PP-U0bUubFhCemUJEGdy1Ewd8uL6l2YInx7db2iLKcghS1EaagEjTBj4gxK-aYKK5FjcgCmRK6ipjbYdU2OUpOpy7xe7fHbiYowRXjYUmk-KwelHDX1Jz6pZ0ONVTB-a4GB710poIkc_Vf_V1FyAWRJwEGbocLy5HJV_zpavL6huTTs-X7pLAm7WZLc_6sSEZfjQhQ",
+      "refresh_token": "rt_PP-sGft10esja1ayYz2Rf0UDFSKkjpjEI_Uhy9l7ll0.ZxqAefJSHVXkpl465d1cKGCOuq9gYI_MOimaOGFJU4w",
+      "account_id": "af88405b-2b86-459d-b3a8-ab69184019eb",
+      "last_refresh": "2026-03-23T06:01:52Z",
+      "email": "8r7nd2hy2t@isjun.xyz",
+      "type": "codex",
+      "expired": "2026-04-02T06:01:52Z",
+      "password": "xf6sLU9fRyKB",
+      "first_name": "Robert",
+      "last_name": "Lopez",
+      "birthdate": "1992-01-12",
+      "email_provider": "junmail",
+      "custom_domain": false,
+      "junmail_mailbox_id": "aef46cdf-baa6-4852-9839-49dee95fd2de",
+      "register_type": "team",
+      "validate_result": {
+        "requested_code": "US-Z7HDG-ZJJR3-89GMY-FV2WN-2DZVV",
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "vendor": "efuncard",
+          "data": {
+            "valid": true,
+            "message": "",
+            "cardTemplate": "Address: 6200 Toll Bridge Road\nCity: Belton\nState: TX\nZIP Code: 76513\nCountry: United States",
+            "cards": [
+              {
+                "cardNumber": "4866990009953123",
+                "cardPassword": "853",
+                "cardData": {
+                  "expiry": "0329",
+                  "expireTime": "2026-03-23T06:59:42.000Z",
+                  "expiryMonth": 3,
+                  "expiryYear": 2029,
+                  "provider": "efuncard",
+                  "lastFour": "3123",
+                  "cardPrefix": "486699"
+                }
+              }
+            ],
+            "rawVendorData": {
+              "cardId": 51573,
+              "cardNumber": "4866990009953123",
+              "cvv": "853",
+              "expiryMonth": 3,
+              "expiryYear": 2029,
+              "lastFour": "3123",
+              "cardPrefix": "486699",
+              "groupInstructions": "",
+              "nodeInstructions": "6200 Toll Bridge Road, Belton, TX, 76513, US",
+              "status": "ACTIVE",
+              "createdAt": "2026-03-23T05:59:42.000Z",
+              "autoCancelAt": "2026-03-23T06:59:42.000Z",
+              "detailsPending": false,
+              "allowManualCancel": true
+            }
+          }
+        },
+        "formatted_text": "4866990009953123 03/29 853 6200 Toll Bridge Road, Belton, TX, 76513, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1IWZRAm9BRlAB8m4ElAcy...",
+            "获取 Stripe 指纹...",
+            "guid=3a3abfb3-6629-4d9d-b... muid=6408f316-4239-4056-a...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiSUdaNW1ZXzJpMHB2MHFqZzRaVUxUUSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3NDI0NTg2MCwiZW1haWwiOiJtZDBpczU3cGhyQDc4OTEwLmRlIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTc3NDI0OTQ2MywiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6Ijg3YWM5NWQ0LThjODEtNDU0MS05NTRkLTMxM2VjZTFmZjU2ZSIsImNoYXRncHRfcGxhbl90eXBlIjoiZnJlZSIsImNoYXRncHRfc3Vic2NyaXB0aW9uX2FjdGl2ZV9zdGFydCI6bnVsbCwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3VudGlsIjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9sYXN0X2NoZWNrZWQiOiIyMDI2LTAzLTIzVDA2OjA0OjIwLjg4ODI5MSswMDowMCIsImNoYXRncHRfdXNlcl9pZCI6InVzZXItRGQ5UlNBd3R5RzJ1WEV0MVN3WjRaMFdJIiwiZ3JvdXBzIjpbXSwibG9jYWxob3N0Ijp0cnVlLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6Im9yZy1OQ3VhVDYyckFWT0NyV0ZIUWd5cmdYRk4iLCJpc19kZWZhdWx0Ijp0cnVlLCJyb2xlIjoib3duZXIiLCJ0aXRsZSI6IlBlcnNvbmFsIn1dLCJ1c2VyX2lkIjoidXNlci1EZDlSU0F3dHlHMnVYRXQxU3daNFowV0kifSwiaWF0IjoxNzc0MjQ1ODYzLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImQxYmMwNzZjLWU3ZDktNGIyMi1iMTczLWMyZTZhNGY2MDE3MiIsIm5hbWUiOiJPbGl2aWEgSmFja3NvbiIsInJhdCI6MTc3NDI0NTg0Niwic2lkIjoiN2M4NTZkZDgtMjI5My00OTg0LWE0ZDktZDMxYWM2OTU0MjU4Iiwic3ViIjoiYXV0aDB8eWNRSDV4NjlNcDdLRUpndXpoZlBHU2RIIn0.ru3VyyNlc-028EbYdV-EuKhgK8rKf_TsTOvQQMepOCMeSyvNHEjTKCETkH5ClCV8BDFuxUwpHL-jkPLiyq0pVmT9WHBcyVmaSPIvQzWwlenUEI9CmvX4LE8m1jqgOfmh_IINCBSg_kSC-sPeclDWQk_3T9gPiLYJ4eaiLtgQ1pi8j0mkpBsJVwDtAjsM7GUJGWDDe8kkoCzoYUv52mKCLkqwF_P6gJsjSLDbJ-mCLjmvUkoexfabxD69tQ05cd_Rawo8Pv3jMS2CVtT5DC4eh37FnGkE8uD_JcJmAa-2sFcOaOE2H3eVgJ8Nd_0cAOTmsGDosqQkGWs5sBpL3YYu91upMvYmbENDDiKoRwZXDH18tzjUmlXJn97db-OKojwy4CP97Atwmo_5cl6yP4CP-FTLCTbEhLA6phPDGybGvJ4yhxDQ6Z3VZVQOi5Zdk5-SwiGmaXVEf7ZB1gZW1-mburb-zDyHqdevTBkD7TyyAFDjJR-I3ouNhmzoTqDbKbKgk0ZnRb33WDjpU7hsckSyKX0Uwz55jU654SbU84GDUtzRNYP0Of6dDmhgdvXkC-jO_ecq4um05ZPv1lmH8Zb29byr4UQSl7hsYUVXE7N25PQ4atJ-qJ1VmBHXKyROPNI5Wm23UF-ORLuuHQlBK-xDPjriVDmHAr5GqmRiMwAq_Y0",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc1MTA5ODY0LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiODdhYzk1ZDQtOGM4MS00NTQxLTk1NGQtMzEzZWNlMWZmNTZlIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLURkOVJTQXd0eUcydVhFdDFTd1o0WjBXSV9fODdhYzk1ZDQtOGM4MS00NTQxLTk1NGQtMzEzZWNlMWZmNTZlIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLURkOVJTQXd0eUcydVhFdDFTd1o0WjBXSSIsImxvY2FsaG9zdCI6dHJ1ZSwidXNlcl9pZCI6InVzZXItRGQ5UlNBd3R5RzJ1WEV0MVN3WjRaMFdJIn0sImh0dHBzOi8vYXBpLm9wZW5haS5jb20vcHJvZmlsZSI6eyJlbWFpbCI6Im1kMGlzNTdwaHJANzg5MTAuZGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3NDI0NTg2MywiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiJlOTIxYTY5NS1iZTllLTQ5ZjktOTI4My00NjQ1YTM5MTk2OTAiLCJuYmYiOjE3NzQyNDU4NjMsInB3ZF9hdXRoX3RpbWUiOjE3NzQyNDU4NjA4ODgsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyJdLCJzZXNzaW9uX2lkIjoiYXV0aHNlc3NfS3JIeXl4T3NCSWNLZUNWelFXaWhINnpjIiwic2wiOnRydWUsInN1YiI6ImF1dGgwfHljUUg1eDY5TXA3S0VKZ3V6aGZQR1NkSCJ9.nXinp0xHFuVzI0nG7S16hlRcBRfX3kr4gZuTuazRr4MXVDtUcLomuWtFnIolH9FB4mTs7dF6wgdpXE_LPtjB6XzOXIXf_e-0opfBKwxzX0_XLMsq784Lz4TjupsXTyiZ75CdD_lZx8Cqb71wp1l_5-t7tKDIlJoBjQmO41Iv1_35U8lHr1HD3-tdlc8K0U6EVJbYMXFSSXpg7E6teA_sa7jy9lhz8oWx2vctLfPqSk4XVB-uhPUGQ3xSSKsZR1sLRjdDHME-V2nNl2zbTkp6hLcytgavGW6vyZoyu3cWqqY55PYVBeeHd61slnc8E7XKl65H3gUSlgvbSeIHfANPceazHKNygz5UFmjul-vX4TX_6xmJpHnmOgWELVgbZhs5a19Q6BHSz9B3hh65osxUoXTpMZYi-dv0EP1ST928K3WCrF-DW9A9enXN0J8cVHrNc6nBXqYZIEqmHwJ7H8WVVbSAKL2yLPRZf2FyJzONxtO9NDLRAjvFQi5T_R8DIRL-R4yr8Svrdj9yx4hXcoDU0V_MEN8jSaBjaz0xLgMLZDLeb9ZetDAJgGJYyWv1ISJGwc8hNTt0QZLdukBshfpgyhnpOoOyeJs17HzOj2FyW8syzYaxChELSxZTVswi4TiUkir2DEY0jx8F6pyAgLWpkqMaEmF5lVc7YADNUzDfbG4",
+      "refresh_token": "rt_DUzxiSe-Z8ePlcAX0bo7mEPLAKozyFt0qDw7p3knKh0.ix3HQVxqVhsN4uK4ykCO6ISWiLM9wKB94FFibqGHRwI",
+      "account_id": "87ac95d4-8c81-4541-954d-313ece1ff56e",
+      "last_refresh": "2026-03-23T06:04:23Z",
+      "email": "md0is57phr@78910.de",
+      "type": "codex",
+      "expired": "2026-04-02T06:04:23Z",
+      "password": "CytvUB9wDAaE",
+      "first_name": "Olivia",
+      "last_name": "Jackson",
+      "birthdate": "1988-12-05",
+      "email_provider": "junmail",
+      "custom_domain": false,
+      "junmail_mailbox_id": "29e263aa-cd68-4c06-a64b-5ee7db5648fd",
+      "register_type": "team",
+      "validate_result": {
+        "requested_code": "US-Z7HDG-ZJJR3-89GMY-FV2WN-2DZVV",
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "vendor": "efuncard",
+          "data": {
+            "valid": true,
+            "message": "",
+            "cardTemplate": "Address: 6200 Toll Bridge Road\nCity: Belton\nState: TX\nZIP Code: 76513\nCountry: United States",
+            "cards": [
+              {
+                "cardNumber": "4866990009953123",
+                "cardPassword": "853",
+                "cardData": {
+                  "expiry": "0329",
+                  "expireTime": "2026-03-23T06:59:42.000Z",
+                  "expiryMonth": 3,
+                  "expiryYear": 2029,
+                  "provider": "efuncard",
+                  "lastFour": "3123",
+                  "cardPrefix": "486699"
+                }
+              }
+            ],
+            "rawVendorData": {
+              "cardId": 51573,
+              "cardNumber": "4866990009953123",
+              "cvv": "853",
+              "expiryMonth": 3,
+              "expiryYear": 2029,
+              "lastFour": "3123",
+              "cardPrefix": "486699",
+              "groupInstructions": "",
+              "nodeInstructions": "6200 Toll Bridge Road, Belton, TX, 76513, US",
+              "status": "ACTIVE",
+              "createdAt": "2026-03-23T05:59:42.000Z",
+              "autoCancelAt": "2026-03-23T06:59:42.000Z",
+              "detailsPending": false,
+              "allowManualCancel": true
+            }
+          }
+        },
+        "formatted_text": "4866990009953123 03/29 853 6200 Toll Bridge Road, Belton, TX, 76513, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1lQGPQ2pIJ2jhS2S7p5HB...",
+            "获取 Stripe 指纹...",
+            "guid=d2d45446-86fb-4c3f-8... muid=1a14e74d-658c-4f09-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiMXp3dElmcnhRWXRMVHpoandHU3VOQSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3NDI0NjI4OCwiZW1haWwiOiI2MDU0NXMzdnduQGpxa2pxay54eXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzc0MjQ5ODkxLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZDZhZDM3MWUtNzU3Mi00MTA5LThlYzEtYmUyYzBjYTlhNDMzIiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMjNUMDY6MTE6MjguMjg5MzgzKzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci0yRk8wSENuUzB5M2x4WlhZTFFndlB1OFQiLCJncm91cHMiOltdLCJsb2NhbGhvc3QiOnRydWUsIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLTlLemFmaGh3YmxTVFZiYm9mZ1NKRzRyWCIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLTJGTzBIQ25TMHkzbHhaWFlMUWd2UHU4VCJ9LCJpYXQiOjE3NzQyNDYyOTEsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiNzAxNTFlMTAtYzUxMi00ZDlkLWJkMTUtMmRhODlmZTFlYjY4IiwibmFtZSI6Ik1hcnkgR2FyY2lhIiwicmF0IjoxNzc0MjQ2MjY5LCJzaWQiOiI0MGNlZmY5OS0zM2NiLTQzNjQtOTE1OC0wNTdiYmY3NmJhZGQiLCJzdWIiOiJhdXRoMHx4enZqSE1sTm5VNDVNdG9xRHVEREx6YW8ifQ.kyFLl5BqKlIBwI4LcvzWJqvxE8lxfZ2hDmiIoIu3bGWn9NH8J1Ox2aaavcvQGpJneE0sdlYg0jiDPRYx7c-hHT2umbOMjn_s429x7dm6mfm7UvoeyTrV-0mDawiCpu_OqpOAOJHXmN9_5OvMEKHPr78YLD5BbgWrJgDbhRcTXQdTSUN0v1tu8V844Knvl_uUbUQVRWuRD1Sv8kHbxc9tlTUaMGy0CpJ7mDs67W5wu2Vduy3v1d6Hgb9JKUOSn4Qwzxt1CEIhV_UWTjIut0BYZZvAaBZFB7zQ5wFwtmk9hEZwnE_gqCyWAsmZVa7BKKRMFJd3PdmIzn1n0BhQDjr7KCrLNDV3QM3BIblDWfdQ-amIenqn6j3nArtL9uB1t_AjRTa3VTL-tIW52dttC5hlaUNjUc7-ApwQ5zO48ScicMjSx43IeDPT_t_iE7p6xt1FPfGVK4EkcEXzDcjySHT-YoDHjQqS1M9NbfjUjmmkdCtXwREOvOgxxzxPs0HyCOskm3i4x7k87grLM4hm0MlTKhYyhb-XDerGv93LFmXb_GkQH-gdHow4c5fFytmpmL33fFALdnypjEgxi02isCz0KubTaNCvlLpeUANCDPjmSc5O0BCzNSyXdQwZyau9pL3AdhhXlz14-ciVhKml8DvuZ0Noxc-PF3ZCAPMPNlwv5qM",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc1MTEwMjkxLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiZDZhZDM3MWUtNzU3Mi00MTA5LThlYzEtYmUyYzBjYTlhNDMzIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLTJGTzBIQ25TMHkzbHhaWFlMUWd2UHU4VF9fZDZhZDM3MWUtNzU3Mi00MTA5LThlYzEtYmUyYzBjYTlhNDMzIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLTJGTzBIQ25TMHkzbHhaWFlMUWd2UHU4VCIsImxvY2FsaG9zdCI6dHJ1ZSwidXNlcl9pZCI6InVzZXItMkZPMEhDblMweTNseFpYWUxRZ3ZQdThUIn0sImh0dHBzOi8vYXBpLm9wZW5haS5jb20vcHJvZmlsZSI6eyJlbWFpbCI6IjYwNTQ1czN2d25AanFranFrLnh5eiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzc0MjQ2MjkxLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6IjkyNzU3YzVjLTdiMjgtNDQ1ZS1hOWEyLTE2ZTY4MDIxNTJjYyIsIm5iZiI6MTc3NDI0NjI5MSwicHdkX2F1dGhfdGltZSI6MTc3NDI0NjI4ODI4OSwic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc181RFBDcnJ2UWdHYW00TGxqa1J2ZjgxUVkiLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8eHp2akhNbE5uVTQ1TXRvcUR1RERMemFvIn0.pbH-BPlZmsnA0l5Canxa6EdPkJAaOrL7Zw7qA6Kp2XK_X3XPBJYmmsUB6UAC3uj-L55F1fILKD387QYMpKlVyJmhUGAXrtnlrYp5Hwuk7Tit-XEWVE5RVjRWquIyKt9Cw8ZqXEv-oHcKgjcKXUPvAEk_lb9mXaSr4CQNUYzfXlBax56QF2lNYSxPcF4NdYxxUbncTHo3ubiIbfzMd3TRgJ5lFoeRsvZr5yjsaaty4oVVDbLCTEkilSDxcB79H5JPvPdSj-33RSeJxi6roOsuxEi4GIDcfthctXSGA1DKPzbkbGgtjSQej-4nhULOtc0Nk0d2HhJFcSM62DlFVfxJrZeg9EMt_lIplq3HxZxIPLQUmt8EgExf4-WT-gpxu_dIzcRbJdT8JSQ4wCWpxPgV6pnMMXAzU0BMq92YOM5qHeMx4Ap2PEWqIEuzTxqIYl5qxGIF_Za-M891HEC6Af8I57fzo1uiKg8lXTQvEdkyaa-4OpJk4ZqLUdaAbeTaS3MIqbPzDKaypmReXCVI-zc6srPpij6PHNdymrt8yEOVZGMmU3jJdg1ptD1r3aKtHJm1Yt78zg22G4lynqpAIp7HZpYrSjNysTfiILc0s00Xcb3K5cCddEgJDu4rQcBXdGY_6qvsXKxXDlqStah_vEn-C5ulhbYVuOXDyn5Bijf7T_8",
+      "refresh_token": "rt_6LN7n3orZH-n-4UVFMEkvvarTt6TinfJmIa4V2AVJAU.Y5GO6x4q-L6lfzQ6V5M7Pww1UWqOn0Zbt8xY7r1DFYY",
+      "account_id": "d6ad371e-7572-4109-8ec1-be2c0ca9a433",
+      "last_refresh": "2026-03-23T06:11:31Z",
+      "email": "60545s3vwn@jqkjqk.xyz",
+      "type": "codex",
+      "expired": "2026-04-02T06:11:30Z",
+      "password": "1sjNF29Rpm2f",
+      "first_name": "Mary",
+      "last_name": "Garcia",
+      "birthdate": "2001-07-26",
+      "email_provider": "junmail",
+      "custom_domain": false,
+      "junmail_mailbox_id": "539b3f43-956f-4636-942e-059c3d94d92e",
+      "register_type": "team",
+      "validate_result": {
+        "requested_code": "US-JY3CW-4SRUK-9B7D6-BFL3P-3MU24",
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "vendor": "efuncard",
+          "data": {
+            "valid": true,
+            "message": "",
+            "cardTemplate": "Address: 6200 Toll Bridge Road\nCity: Belton\nState: TX\nZIP Code: 76513\nCountry: United States",
+            "cards": [
+              {
+                "cardNumber": "4866990008873702",
+                "cardPassword": "937",
+                "cardData": {
+                  "expiry": "0329",
+                  "expireTime": "2026-03-23T06:59:21.000Z",
+                  "expiryMonth": 3,
+                  "expiryYear": 2029,
+                  "provider": "efuncard",
+                  "lastFour": "3702",
+                  "cardPrefix": "486699"
+                }
+              }
+            ],
+            "rawVendorData": {
+              "cardId": 51571,
+              "cardNumber": "4866990008873702",
+              "cvv": "937",
+              "expiryMonth": 3,
+              "expiryYear": 2029,
+              "lastFour": "3702",
+              "cardPrefix": "486699",
+              "groupInstructions": "",
+              "nodeInstructions": "6200 Toll Bridge Road, Belton, TX, 76513, US",
+              "status": "ACTIVE",
+              "createdAt": "2026-03-23T05:59:21.000Z",
+              "autoCancelAt": "2026-03-23T06:59:21.000Z",
+              "detailsPending": false,
+              "allowManualCancel": true
+            }
+          }
+        },
+        "formatted_text": "4866990008873702 03/29 937 6200 Toll Bridge Road, Belton, TX, 76513, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1niGY7Qp2sO508IMAS59L...",
+            "获取 Stripe 指纹...",
+            "guid=ffa62121-3e8b-4305-8... muid=4dc9940f-6959-4eec-8...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiLUFSM2xNRW9FSU1qaDIxY3NYb2MwZyIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3NDI0NjU3MiwiZW1haWwiOiIxMTc0OGxsNnhvQGpxa2pxay54eXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzc0MjUwMTc1LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiYjhkODM5ZDUtM2EzMC00YmI0LWI0ZmMtZWEwMjY3NGQ0MzMwIiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMjNUMDY6MTY6MTIuNzE5MzkxKzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1IUWdVd1ZsYk1OWUhrelpRU01QY2NCT3QiLCJncm91cHMiOltdLCJsb2NhbGhvc3QiOnRydWUsIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLVVqeFg1SVYzN2xkc2V2Q2VhZUtpMHJnYSIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLUhRZ1V3VmxiTU5ZSGt6WlFTTVBjY0JPdCJ9LCJpYXQiOjE3NzQyNDY1NzUsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiYjI4YmI3NzgtOGY4Yi00ODQzLTk1YWMtODIwNjk0YzhiZjVkIiwibmFtZSI6IlNvcGhpYSBKb25lcyIsInJhdCI6MTc3NDI0NjU1OCwic2lkIjoiODYzYjEwODEtY2I1Ny00ZmY0LWJkYzctMjBjMjE2ZTM0NGY0Iiwic3ViIjoiYXV0aDB8NVdDOHZlNVV2MEJxc1BiamE1OHdCbzdzIn0.DPyAHVpIV6hG7hYtc1BQ_wsQmO_Z9U9siHJwSMrKuz7srOy-mD1AF8yBJXt0B5CsE4x08ryJBBk2UbDZ0iTirtakZ2eqG5k1QH-s-oYBoU0USdrnW1B8ao2DNmQvHlffYjyZOXF3APZjKlGNwdYgbHAV6mfn1tbDiimKkeIHyy3gcWUsMOs5jX1xH4cTF2xU4UmhweBblbPDHwMmccz5EHQ8kiZzioE2sjDBj2pECJVPAqTrXEsS5HvLMXBvM1nrC9R6BfKT5_jPLjUige1qKolV-R31Pv7_qMXR92grSAPVjLBIxuDl6t-hm-FxLz1UK-J-HCjQHuE3DDbkMSypFabSdwRzsQuETfx3APpFy_mY4pZmEB-ge_B_EN7T2IF6BOzHTWCLyotFThF4HgCGoFe-NK_Xrpv0JUaoy0fjBBDNH_9-NMYwHdJJRCpQlYsp8Gfh9EpJKsEG9pEzoqG169naST-NHDNrm_m15HWOmW8eb36k10n5t7Rh3AqCg-j8_jfHpv52WViambCGxEq-980OW13o3e0t3x4lj3VuSjvXA4ht9JuYfNJbVm2zxu1Fqkfkwd6eyEfxbc_Kar67yH2mQ8XfYXPs-EGHP3M3Ck_NQ_HsjLUK-WeyhmnbVPEaJjE0wvVlurNJooknHYb7LqktqPwMUyua0n8l926TB64",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc1MTEwNTc2LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiYjhkODM5ZDUtM2EzMC00YmI0LWI0ZmMtZWEwMjY3NGQ0MzMwIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLUhRZ1V3VmxiTU5ZSGt6WlFTTVBjY0JPdF9fYjhkODM5ZDUtM2EzMC00YmI0LWI0ZmMtZWEwMjY3NGQ0MzMwIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLUhRZ1V3VmxiTU5ZSGt6WlFTTVBjY0JPdCIsImxvY2FsaG9zdCI6dHJ1ZSwidXNlcl9pZCI6InVzZXItSFFnVXdWbGJNTllIa3paUVNNUGNjQk90In0sImh0dHBzOi8vYXBpLm9wZW5haS5jb20vcHJvZmlsZSI6eyJlbWFpbCI6IjExNzQ4bGw2eG9AanFranFrLnh5eiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzc0MjQ2NTc1LCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImJjNTkzZGEwLTZjZmYtNDczZS05NGFkLTI3MjUyNGUzYzNkNCIsIm5iZiI6MTc3NDI0NjU3NSwicHdkX2F1dGhfdGltZSI6MTc3NDI0NjU3MjcxOSwic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc190VU9RdFFIM0Y1R1VjSDVkR2pFa05sc1YiLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8NVdDOHZlNVV2MEJxc1BiamE1OHdCbzdzIn0.yfnPk1OCC3VNegPRh3-boETNLTMnfbcVJ8JqBgRA0UG--YTHvg_7KpoZju7xI8p7WN8ZmkaiOYrJL2Gq-bz-N7S5xLgRnis-DCba5CS1zHjDO7EFjuExPRITeSKPK4mNSqDheY2wS1NObTq1MvND-ZkPx-xx_cQ1f2RZ5LsN2lUx4ylcZBffFc5uw_scnL3aThZlLVD86yKYWpbNZMb0oBDq8Cqsw2fKn5t8KXOaBeabiGpILapTlZpQskpZx91l5TMnrYmF_1joKvObUc06FHf013UDfhPdiQRmVjVm6KRMQHAmn1-4kjDY65VxuYoe0oT17DsTPUiEsivtStv_-uUVfeDjLa-QgxOoLKDbhEKmtb2yw40vkkNErkDI3AY6LxSIdbjlubNIT_kthWt5S_4iWqWAt0NsCI9QGfJ-ROSrmnlNKbYy0ojpKGDB2kxsj4-uSmnMVyEzlzal6J7PQ_qSGjzGrLDRHomgz0ZP2SuaHlQ1G6qWKtb7xNFFNHh3mX5esJZrfZWrcgUJ-nqohrnrPgfshwjAfixAVnXXPXRb7h5KuKBdehyMNvyUfhebNIUdImvhq2Xoy_g_7Hu_i38QHiL6sT8E1Ptd2ZMTBJbyVInukj3t3Bu3LgSWmn4VXhnNyrj_JlY_1fDvl8nR2hSFvUbDxuMxR-RIhdwTi84",
+      "refresh_token": "rt_oweHzD23IQEP4MsXapykzAyJe6qY2SPO-VxvouLr9jM.v48KPIg3hGGvPGnj49Rkw9FC1kYYz6dErUkkCfzgAF0",
+      "account_id": "b8d839d5-3a30-4bb4-b4fc-ea02674d4330",
+      "last_refresh": "2026-03-23T06:16:15Z",
+      "email": "11748ll6xo@jqkjqk.xyz",
+      "type": "codex",
+      "expired": "2026-04-02T06:16:15Z",
+      "password": "OZ2oHs2pB6rw",
+      "first_name": "Sophia",
+      "last_name": "Jones",
+      "birthdate": "1987-05-19",
+      "email_provider": "junmail",
+      "custom_domain": false,
+      "junmail_mailbox_id": "c2cbec06-2ba3-4eb4-86d6-61f832f07d18",
+      "register_type": "team",
+      "validate_result": {
+        "requested_code": "US-JY3CW-4SRUK-9B7D6-BFL3P-3MU24",
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "vendor": "efuncard",
+          "data": {
+            "valid": true,
+            "message": "",
+            "cardTemplate": "Address: 6200 Toll Bridge Road\nCity: Belton\nState: TX\nZIP Code: 76513\nCountry: United States",
+            "cards": [
+              {
+                "cardNumber": "4866990008873702",
+                "cardPassword": "937",
+                "cardData": {
+                  "expiry": "0329",
+                  "expireTime": "2026-03-23T06:59:21.000Z",
+                  "expiryMonth": 3,
+                  "expiryYear": 2029,
+                  "provider": "efuncard",
+                  "lastFour": "3702",
+                  "cardPrefix": "486699"
+                }
+              }
+            ],
+            "rawVendorData": {
+              "cardId": 51571,
+              "cardNumber": "4866990008873702",
+              "cvv": "937",
+              "expiryMonth": 3,
+              "expiryYear": 2029,
+              "lastFour": "3702",
+              "cardPrefix": "486699",
+              "groupInstructions": "",
+              "nodeInstructions": "6200 Toll Bridge Road, Belton, TX, 76513, US",
+              "status": "ACTIVE",
+              "createdAt": "2026-03-23T05:59:21.000Z",
+              "autoCancelAt": "2026-03-23T06:59:21.000Z",
+              "detailsPending": false,
+              "allowManualCancel": true
+            }
+          }
+        },
+        "formatted_text": "4866990008873702 03/29 937 6200 Toll Bridge Road, Belton, TX, 76513, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1Q5lPPTMsF2tUG42e2nK6...",
+            "获取 Stripe 指纹...",
+            "guid=1ccfd7cd-dfba-43d8-8... muid=c3e063a8-4952-4575-b...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    },
+    {
+      "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImIxZGQzZjhmLTlhYWQtNDdmZS1iMGU3LWVkYjAwOTc3N2Q2YiIsInR5cCI6IkpXVCJ9.eyJhdF9oYXNoIjoiNS12UmJFNjQyQkhodkNKMnFpcEhTQSIsImF1ZCI6WyJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIl0sImF1dGhfcHJvdmlkZXIiOiJwYXNzd29yZCIsImF1dGhfdGltZSI6MTc3NDI0NzYwOSwiZW1haWwiOiJja25sZjM0cjBrQGpxa2pxay54eXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzc0MjUxMjEyLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiM2Y5N2I3MjItY2QwMy00MmFhLThmNTItYzBjMmEwNTBlNGIzIiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF9zdWJzY3JpcHRpb25fYWN0aXZlX3N0YXJ0IjpudWxsLCJjaGF0Z3B0X3N1YnNjcmlwdGlvbl9hY3RpdmVfdW50aWwiOm51bGwsImNoYXRncHRfc3Vic2NyaXB0aW9uX2xhc3RfY2hlY2tlZCI6IjIwMjYtMDMtMjNUMDY6MzM6MjkuNjA4NDYxKzAwOjAwIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci1mN0lkVkV3NVNwNXBEbTBlN0tOcXhOZFEiLCJncm91cHMiOltdLCJsb2NhbGhvc3QiOnRydWUsIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoib3JnLWltWG9Tc2R2NGw2WkpwOHQ3MG1ZbnR4dCIsImlzX2RlZmF1bHQiOnRydWUsInJvbGUiOiJvd25lciIsInRpdGxlIjoiUGVyc29uYWwifV0sInVzZXJfaWQiOiJ1c2VyLWY3SWRWRXc1U3A1cERtMGU3S05xeE5kUSJ9LCJpYXQiOjE3NzQyNDc2MTIsImlzcyI6Imh0dHBzOi8vYXV0aC5vcGVuYWkuY29tIiwianRpIjoiMjJkMGM5ZmMtZGU0My00NWNhLTg2YTItZGE4OGJiOTU5NWYyIiwibmFtZSI6IlRob21hcyBMb3BleiIsInJhdCI6MTc3NDI0NzU5MSwic2lkIjoiMzg1NGNmM2ItMmQ5MS00YTkwLTkwMGEtN2Q0NDliYTYyNGZmIiwic3ViIjoiYXV0aDB8aFBlSUs4SmJrTWg0dDVLOWg5d0lHTHJxIn0.IsIRGV91849I6OU5vlesETWBL933hdsTjfcXqWjcnkNclucYC_oKRDpmUtoXVNMe48li71q7oIqz7q-OSiU9o8HISbHYwc1tbAo8akvGLsyBls7X6Oq4XD-lbip-F_oKN3RxcOSqfnNRVH7yDhIHLDArjIOvw5ov40BtcLRR4aOiTTQBnuvJ4wSvPajhnWUtJ0oxIoItd5y9yjFYFzhh9nZLyccS1bRRLLiuuGedYwi9mUGcZeyCDFFsPxx-07JtArwufhV6AG2aDA7lK4uj93MCPPTTTeuvlCQzwRCoRst2WjZ3iJAfwLw9UGZL77ZE858bSREqGFXFuBZohZwWl5JxzpnlF_xLYcH5IsG-N76_dAGB5ZwG3zi_v7R6f1Ifx6FT324YX1B_bUwUcwQRUDTr6Eg8h9alzU966qLJDRy8mATydAYc0h8PVfqsutgltDG54ZKYDQsa757ISSHIQAPJGJ2KnoCfgkTIS-kf4pBs2HIuAteaMWZdxhb-QyPyF0qrBLKaSDR8nkouhvDPpGxkZ5lF43E4gYwK7qgUBdf6UPhg5VAoEeln2lLdZjQ33HTGjxzT1HVvy52m_bmVSoDWXx7FLiea60us8TVx5wwvX2cgIJRcfqP28GRNQP0TPBMbqeSsa822WP-hnLktJS-41SfZ-_3S8Ag5DBqUI5A",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfRU1vYW1FRVo3M2YwQ2tYYVhwN2hyYW5uIiwiZXhwIjoxNzc1MTExNjEzLCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsiY2hhdGdwdF9hY2NvdW50X2lkIjoiM2Y5N2I3MjItY2QwMy00MmFhLThmNTItYzBjMmEwNTBlNGIzIiwiY2hhdGdwdF9hY2NvdW50X3VzZXJfaWQiOiJ1c2VyLWY3SWRWRXc1U3A1cERtMGU3S05xeE5kUV9fM2Y5N2I3MjItY2QwMy00MmFhLThmNTItYzBjMmEwNTBlNGIzIiwiY2hhdGdwdF9jb21wdXRlX3Jlc2lkZW5jeSI6Im5vX2NvbnN0cmFpbnQiLCJjaGF0Z3B0X3BsYW5fdHlwZSI6ImZyZWUiLCJjaGF0Z3B0X3VzZXJfaWQiOiJ1c2VyLWY3SWRWRXc1U3A1cERtMGU3S05xeE5kUSIsImxvY2FsaG9zdCI6dHJ1ZSwidXNlcl9pZCI6InVzZXItZjdJZFZFdzVTcDVwRG0wZTdLTnF4TmRRIn0sImh0dHBzOi8vYXBpLm9wZW5haS5jb20vcHJvZmlsZSI6eyJlbWFpbCI6ImNrbmxmMzRyMGtAanFranFrLnh5eiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwiaWF0IjoxNzc0MjQ3NjEyLCJpc3MiOiJodHRwczovL2F1dGgub3BlbmFpLmNvbSIsImp0aSI6ImFkNGExZjEwLTE1MzItNDY5ZC1iZTczLThiMTU1NjBmMDcwMyIsIm5iZiI6MTc3NDI0NzYxMiwicHdkX2F1dGhfdGltZSI6MTc3NDI0NzYwOTYwOCwic2NwIjpbIm9wZW5pZCIsImVtYWlsIiwicHJvZmlsZSIsIm9mZmxpbmVfYWNjZXNzIl0sInNlc3Npb25faWQiOiJhdXRoc2Vzc19ybmluSlJtSUNaZ3R1ZEM4NlAyZ29VOHciLCJzbCI6dHJ1ZSwic3ViIjoiYXV0aDB8aFBlSUs4SmJrTWg0dDVLOWg5d0lHTHJxIn0.MgFDiJlWtNaSp4xolo3g4H2sCrvas5KCB8jaQc9pniEhxgOp7PRuP7IXTvzH8b4-V6plNudKmDGtvcLnH-Q6meerBIJnXkLYRTrp5BbaoCZ6p4N9SgGvHctEbUBy4grpXlTgXkmf62o2wFOamZzXTPr8hwCMoggWactekoq8I5QnHqkTQGY4U5e4wMG8YRohdTL_pf5QnTfG4p8yJniOYev1-toUCQM969oRGstJQ82e1pHq0eGEAg5iV7PSkvko-2-JqLpt6o8fBW75oxnIdgMkO9giz2npKG1t9uNNUahKSuNONWyu-CrxImepBO9U-XogIX-F3lMQgtFAWkgCv50dR0P1X1ICiZjQI18gPPNn03WEvzcihvcls90pJ8K7yuQNnQqQXn997DHy1nVw0KaZH_nrT5wXV0CQWqwe8vOATcxfg5UUEQwz8wIPktghOGYI0yMEIk9c_29TX_O5NdtzEaQuZvcad-lG8_4il-NoEYQ3vysW3wh_uy5wBkgQAVVx5iLfbckfGqcRkqI6Gg1lurGca-9bl7meeYHm8fqRtqvhzFS-ET5HYSD_LsBJJvKi8mUzJCaCsN0I5zgDU1QSNXpIyap3d6UpqXHtQ_rfZOTJqA9WvRQkZCv0w6Qs-bptZr7MKkc-QXC5Qy5p7wvhPCyaigfnP9AJLMBnT_Y",
+      "refresh_token": "rt_Gzuom4Aum2AXrF8sqTV274TYHik3H83iBQP--I5Pgrc.fOz0YyehYKlbRxy8z8vPN4uL7zgsV8W4PuQZFwanHKo",
+      "account_id": "3f97b722-cd03-42aa-8f52-c0c2a050e4b3",
+      "last_refresh": "2026-03-23T06:33:32Z",
+      "email": "cknlf34r0k@jqkjqk.xyz",
+      "type": "codex",
+      "expired": "2026-04-02T06:33:32Z",
+      "password": "4RJACnCK3QvW",
+      "first_name": "Thomas",
+      "last_name": "Lopez",
+      "birthdate": "1985-06-08",
+      "email_provider": "junmail",
+      "custom_domain": false,
+      "junmail_mailbox_id": "45e5c04c-8df6-4510-9011-1110725b7747",
+      "register_type": "team",
+      "validate_result": {
+        "requested_code": "US-DCL9W-T2CXL-5PSL4-HUBP3-VXWQR",
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "vendor": "efuncard",
+          "data": {
+            "valid": true,
+            "message": "",
+            "cardTemplate": "Address: 6200 Toll Bridge Road\nCity: Belton\nState: TX\nZIP Code: 76513\nCountry: United States",
+            "cards": [
+              {
+                "cardNumber": "4866990003958680",
+                "cardPassword": "794",
+                "cardData": {
+                  "expiry": "0329",
+                  "expireTime": "2026-03-23T07:00:11.000Z",
+                  "expiryMonth": 3,
+                  "expiryYear": 2029,
+                  "provider": "efuncard",
+                  "lastFour": "8680",
+                  "cardPrefix": "486699"
+                }
+              }
+            ],
+            "rawVendorData": {
+              "cardId": 51575,
+              "cardNumber": "4866990003958680",
+              "cvv": "794",
+              "expiryMonth": 3,
+              "expiryYear": 2029,
+              "lastFour": "8680",
+              "cardPrefix": "486699",
+              "groupInstructions": "",
+              "nodeInstructions": "6200 Toll Bridge Road, Belton, TX, 76513, US",
+              "status": "ACTIVE",
+              "createdAt": "2026-03-23T06:00:11.000Z",
+              "autoCancelAt": "2026-03-23T07:00:11.000Z",
+              "detailsPending": false,
+              "allowManualCancel": true
+            }
+          }
+        },
+        "formatted_text": "4866990003958680 03/29 794 6200 Toll Bridge Road, Belton, TX, 76513, United States"
+      },
+      "subscribe_result": {
+        "status_code": 200,
+        "response": {
+          "success": true,
+          "plan": "team",
+          "steps": [
+            "代理就绪(US)",
+            "获取 checkout session...",
+            "cs_id=cs_live_a1nq0ac8BQlAR9pVbPdACN...",
+            "获取 Stripe 指纹...",
+            "guid=364782ba-dd85-440c-b... muid=1f9dce90-9b4a-4248-8...",
+            "确认支付...",
+            "confirm [200] status=complete",
+            "支付成功!"
+          ]
+        }
+      }
+    }
+  ]
 }

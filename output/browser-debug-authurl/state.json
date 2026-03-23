@@ -1,0 +1,142 @@
+{
+  "url": "https://auth.openai.com/log-in",
+  "title": "欢迎回来 - OpenAI",
+  "bodyText": "欢迎回来\n电子邮件地址\n继续\n还没有帐户？请注册\n或\n继续使用 Google 登录\n继续使用 Apple 登录\n继续使用 Microsoft 登录\n继续使用手机登录\n使用条款隐私政策",
+  "htmlLength": 15805,
+  "inputs": [
+    {
+      "i": 0,
+      "tag": "INPUT",
+      "type": "email",
+      "name": "email",
+      "id": "_r_1_-email",
+      "src": null,
+      "placeholder": "电子邮件地址",
+      "aria": null,
+      "text": ""
+    },
+    {
+      "i": 1,
+      "tag": "BUTTON",
+      "type": "submit",
+      "name": "intent",
+      "id": "",
+      "src": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "继续"
+    },
+    {
+      "i": 2,
+      "tag": "A",
+      "type": null,
+      "name": null,
+      "id": "",
+      "src": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "注册"
+    },
+    {
+      "i": 3,
+      "tag": "BUTTON",
+      "type": null,
+      "name": "intent",
+      "id": "",
+      "src": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "继续使用 Google 登录"
+    },
+    {
+      "i": 4,
+      "tag": "BUTTON",
+      "type": null,
+      "name": "intent",
+      "id": "",
+      "src": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "继续使用 Apple 登录"
+    },
+    {
+      "i": 5,
+      "tag": "BUTTON",
+      "type": null,
+      "name": "intent",
+      "id": "",
+      "src": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "继续使用 Microsoft 登录"
+    },
+    {
+      "i": 6,
+      "tag": "BUTTON",
+      "type": "button",
+      "name": null,
+      "id": "",
+      "src": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "继续使用手机登录"
+    },
+    {
+      "i": 7,
+      "tag": "A",
+      "type": null,
+      "name": null,
+      "id": "",
+      "src": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "使用条款"
+    },
+    {
+      "i": 8,
+      "tag": "A",
+      "type": null,
+      "name": null,
+      "id": "",
+      "src": null,
+      "placeholder": null,
+      "aria": null,
+      "text": "隐私政策"
+    },
+    {
+      "i": 9,
+      "tag": "IFRAME",
+      "type": null,
+      "name": null,
+      "id": "",
+      "src": "https://sentinel.openai.com/backend-api/sentinel/frame.html?sv=20260219f9f6",
+      "placeholder": null,
+      "aria": null,
+      "text": ""
+    }
+  ],
+  "frames": [
+    {
+      "url": "https://auth.openai.com/log-in",
+      "name": "",
+      "text": "欢迎回来\n电子邮件地址\n继续\n还没有帐户？请注册\n或\n继续使用 Google 登录\n继续使用 Apple 登录\n继续使用 Microsoft 登录\n继续使用手机登录\n使用条款隐私政策",
+      "htmlLength": 15805
+    },
+    {
+      "url": "https://sentinel.openai.com/backend-api/sentinel/frame.html?sv=20260219f9f6",
+      "name": "",
+      "text": "(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'9e05c86bd18f2f21',t:'MTc3NDE4ODY1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();",
+      "htmlLength": 1193
+    },
+    {
+      "url": "about:blank",
+      "name": "",
+      "text": "",
+      "htmlLength": 363
+    }
+  ],
+  "navigator": {
+    "webdriver": false,
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
+  }
+}

@@ -1,0 +1,77 @@
+[
+  {
+    "url": "https://auth.openai.com/sign-in-with-chatgpt",
+    "status": 307,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth.openai.com/sign-in-with-chatgpt",
+    "status": 403,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth.openai.com/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1?ray=9e05c6727a9c5126",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://auth.openai.com/cdn-cgi/challenge-platform/h/g/flow/ov1/1044590391:1774186898:gt3m7A_P_M2vozqxOkj067bGZynyZAmWDh67WoJF07Y/9e05c6727a9c5126/eT9mLN4ByoqjuxFOUtg..M8iplmOBYOb965v0Ab5kxI-1774188577-1.2.1.1-ki8PxXMcfOzdSLyHMhvcb_A6MIL2xETnLXJzE14FqxE1Is4Y73.HEe23O73.JTUu",
+    "status": 200,
+    "method": "POST"
+  },
+  {
+    "url": "blob:https://auth.openai.com/72f91a7d-9d92-4b92-b59e-89854cb20587",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://challenges.cloudflare.com/turnstile/v0/g/ea2d291c0fdc/api.js?onload=MNurp8&render=explicit",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/cmg/1",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/rs3jr/0x4AAAAAAADnPIDROrmt1Wwj/light/fbE/new/normal?lang=auto",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/flow/ov1/1614241286:1774186898:llxCo0KRCwA10Oo-pEpAYbjCVhWjWy6Lwx8B7_kPlS0/9e05c681eca501d9/qGgJMBE3OyeGR2nLsYlDlyPDecsABIzCUiBRW80H8Z8-1774188580-1.2.1.1-kt_mNtiygHbB1ekvOknUj0M8P8z_rgFvraITmIGNdswpmH1NKCYfKnfJT5PyjXCN",
+    "status": 200,
+    "method": "POST"
+  },
+  {
+    "url": "blob:https://challenges.cloudflare.com/7528fa18-4ed3-4d8f-80d6-350b4862e9cc",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "blob:https://challenges.cloudflare.com/7528fa18-4ed3-4d8f-80d6-350b4862e9cc",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/pat/9e05c681eca501d9/1774188580956/239c29e1dd52d56f1db1b168f1f51da1a06e8b07634d1b55b7ebccf0542a250f/IrySpzBj7B-S_m5",
+    "status": 401,
+    "method": "GET"
+  },
+  {
+    "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/d/9e05c681eca501d9/1774188580956/ki-ttGeFbjvd4w-",
+    "status": 200,
+    "method": "GET"
+  },
+  {
+    "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/flow/ov1/1614241286:1774186898:llxCo0KRCwA10Oo-pEpAYbjCVhWjWy6Lwx8B7_kPlS0/9e05c681eca501d9/qGgJMBE3OyeGR2nLsYlDlyPDecsABIzCUiBRW80H8Z8-1774188580-1.2.1.1-kt_mNtiygHbB1ekvOknUj0M8P8z_rgFvraITmIGNdswpmH1NKCYfKnfJT5PyjXCN",
+    "status": 200,
+    "method": "POST"
+  },
+  {
+    "url": "blob:https://challenges.cloudflare.com/cb5a15a3-46d4-4ad1-9fa4-1a2be0726cf1",
+    "status": 200,
+    "method": "GET"
+  }
+]
