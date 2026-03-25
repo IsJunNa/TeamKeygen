@@ -16,6 +16,7 @@ import importlib.util
 import pprint
 import tty
 import termios
+from types import MethodType
 import unicodedata
 import html
 from datetime import datetime, timezone, timedelta
@@ -60,9 +61,16 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "target_value": 0,
     "tempmail_base": "https://api.tempmail.lol/v2",
     "tempmail_plus_api": "https://tempmail.plus/api",
+    "duckmail_api_base": "https://api.duckmail.sbs",
+    "duckmail_bearer": "",
     "npcmail_base": "https://dash.xphdfs.me",
     "gptmail_base": "https://mail.chatgpt.org.uk/api",
     "junmail_base": "https://mail.zhujunpeng.cc.cd",
+    "lamail_api_base": "https://maliapi.215.im/v1",
+    "lamail_api_key": "",
+    "lamail_domain": "",
+    "cfmail_config_path": "cpa_20260323/zhuce5_cfmail_accounts.json",
+    "cfmail_profile": "auto",
     "tm_email_provider": "gptmail",
     "tm_npcmail_apikey": "",
     "gptmail_api_key": "gpt-test",
@@ -95,6 +103,14 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "oauth_redirect_uri": "http://localhost:1455/auth/callback",
     "oauth_scope": "openid email profile offline_access",
     "openai_pow_value": "",
+    "token_json_dir": "codex_tokens",
+    "ak_file": "ak.txt",
+    "rk_file": "rk.txt",
+    "upload_api_url": "",
+    "upload_api_token": "",
+    "upload_api_proxy": "",
+    "cpa_cleanup_enabled": True,
+    "cpa_upload_every_n": 3,
     "default_proxy": "",
     "default_sleep_min": 5,
     "default_sleep_max": 30
@@ -165,6 +181,8 @@ GPTMAIL_BASE = str(CONFIG.get("gptmail_base") or DEFAULT_CONFIG["gptmail_base"])
 CURRENT_OUTPUT_DIR = ""
 EFUNCARD_CITY_DATA_CACHE: Optional[Dict[str, Any]] = None
 LAST_RUN_FAILURE_REASON = ""
+FILE_WRITE_LOCK = threading.Lock()
+_CPA_REFERENCE_MODULE: Any = None
 
 FIRST_NAMES = [
     "James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph",
@@ -200,10 +218,14 @@ LOG_STYLES = {
 }
 
 EMAIL_PROVIDER_LABELS: Dict[str, str] = {
+    "duckmail": "DuckMail",
     "npcmail": "NPCMail",
     "gptmail": "GPTMail",
     "junmail": "JunMail",
-    "xiaomajiang": "临时邮箱(仅可做测试使用,封号严重)",
+    "lamail": "LaMail",
+    "cfmail": "CFMail",
+    "tempmail_lol": "TempMail.lol",
+    "xiaomajiang": "TempMail.lol(兼容旧配置)",
     "local_graph": "本地Outlook邮箱",
     "tempmail": "TempMail",
 }
@@ -361,12 +383,23 @@ def _card_provider_label(value: Any = None) -> str:
 
 def _extract_verification_code(content: str) -> str:
     text = str(content or "")
-    match = re.search(r"\b(\d{6})\b", text)
-    if match:
-        return match.group(1)
-    match = re.search(r"\b(\d{4,8})\b", text)
-    if match:
-        return match.group(1)
+    patterns = [
+        r"Verification code:?\s*(\d{6})",
+        r"code is\s*(\d{6})",
+        r"代码为[:：]?\s*(\d{6})",
+        r"验证码[:：]?\s*(\d{6})",
+        r"Your ChatGPT code is\s*(\d{6})",
+        r"temporary verification code to continue:\s*(\d{6})",
+        r">\s*(\d{6})\s*<",
+        r"(?<![#&])\b(\d{6})\b",
+        r"\b(\d{4,8})\b",
+    ]
+    for pattern in patterns:
+        matches = re.findall(pattern, text, re.IGNORECASE)
+        for code in matches:
+            if code == "177010":
+                continue
+            return str(code)
     return ""
 
 
@@ -503,6 +536,149 @@ def _load_custom_domains() -> list[str]:
 
 def _local_email_file_path() -> str:
     return _resolve_config_path(str(CONFIG.get("tm_local_email_file") or DEFAULT_CONFIG["tm_local_email_file"]))
+
+
+def _cfmail_config_path() -> str:
+    return _resolve_config_path(str(CONFIG.get("cfmail_config_path") or DEFAULT_CONFIG["cfmail_config_path"]))
+
+
+@dataclass(frozen=True)
+class CfmailAccount:
+    name: str
+    worker_domain: str
+    email_domain: str
+    admin_password: str
+
+
+_cfmail_account_lock = threading.Lock()
+_cfmail_reload_lock = threading.Lock()
+_cfmail_account_index = 0
+_CFMAIL_ACCOUNTS_CACHE: list[CfmailAccount] = []
+_CFMAIL_CONFIG_MTIME: Optional[float] = None
+
+
+def _normalize_host(value: str) -> str:
+    host = str(value or "").strip()
+    if host.startswith("https://"):
+        host = host[len("https://"):]
+    elif host.startswith("http://"):
+        host = host[len("http://"):]
+    return host.strip().strip("/")
+
+
+def _normalize_cfmail_account(raw: Dict[str, Any]) -> Optional[CfmailAccount]:
+    if not isinstance(raw, dict):
+        return None
+    if not raw.get("enabled", True):
+        return None
+    name = str(raw.get("name") or "").strip()
+    worker_domain = _normalize_host(raw.get("worker_domain") or raw.get("WORKER_DOMAIN") or "")
+    email_domain = _normalize_host(raw.get("email_domain") or raw.get("EMAIL_DOMAIN") or "")
+    admin_password = str(raw.get("admin_password") or raw.get("ADMIN_PASSWORD") or "").strip()
+    if not name or not worker_domain or not email_domain or not admin_password:
+        return None
+    return CfmailAccount(
+        name=name,
+        worker_domain=worker_domain,
+        email_domain=email_domain,
+        admin_password=admin_password,
+    )
+
+
+def _load_cfmail_accounts_from_file(config_path: str, *, silent: bool = False) -> list[Dict[str, Any]]:
+    path = str(config_path or "").strip()
+    if not path or not os.path.exists(path):
+        return []
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as exc:
+        if not silent:
+            log_warn(f"读取 CFMail 配置失败: {exc}")
+        return []
+    if isinstance(data, list):
+        return [item for item in data if isinstance(item, dict)]
+    if isinstance(data, dict):
+        accounts = data.get("accounts")
+        if isinstance(accounts, list):
+            return [item for item in accounts if isinstance(item, dict)]
+    if not silent:
+        log_warn(f"CFMail 配置格式无效: {path}")
+    return []
+
+
+def _build_cfmail_accounts(raw_accounts: list[Dict[str, Any]]) -> list[CfmailAccount]:
+    accounts: list[CfmailAccount] = []
+    seen_names: set[str] = set()
+    for item in raw_accounts:
+        account = _normalize_cfmail_account(item)
+        if not account:
+            continue
+        key = account.name.lower()
+        if key in seen_names:
+            continue
+        seen_names.add(key)
+        accounts.append(account)
+
+    env_worker_domain = _normalize_host(os.getenv("CFMAIL_WORKER_DOMAIN", ""))
+    env_email_domain = _normalize_host(os.getenv("CFMAIL_EMAIL_DOMAIN", ""))
+    env_admin_password = str(os.getenv("CFMAIL_ADMIN_PASSWORD", "")).strip()
+    env_profile_name = str(os.getenv("CFMAIL_PROFILE_NAME", "default")).strip() or "default"
+    if env_worker_domain and env_email_domain and env_admin_password:
+        env_account = CfmailAccount(
+            name=env_profile_name,
+            worker_domain=env_worker_domain,
+            email_domain=env_email_domain,
+            admin_password=env_admin_password,
+        )
+        accounts = [item for item in accounts if item.name.lower() != env_account.name.lower()]
+        accounts.insert(0, env_account)
+
+    return accounts
+
+
+def _reload_cfmail_accounts_if_needed(force: bool = False) -> bool:
+    global _CFMAIL_CONFIG_MTIME, _CFMAIL_ACCOUNTS_CACHE, _cfmail_account_index
+    config_path = _cfmail_config_path()
+    if not config_path:
+        return False
+    try:
+        mtime = os.path.getmtime(config_path)
+    except OSError:
+        if force:
+            _CFMAIL_ACCOUNTS_CACHE = []
+            _CFMAIL_CONFIG_MTIME = None
+        return False
+    with _cfmail_reload_lock:
+        if not force and _CFMAIL_CONFIG_MTIME == mtime and _CFMAIL_ACCOUNTS_CACHE:
+            return False
+        raw_accounts = _load_cfmail_accounts_from_file(config_path, silent=True)
+        _CFMAIL_ACCOUNTS_CACHE = _build_cfmail_accounts(raw_accounts)
+        _CFMAIL_CONFIG_MTIME = mtime
+        _cfmail_account_index = 0
+        return True
+
+
+def _select_cfmail_account(profile_name: str = "auto") -> Optional[CfmailAccount]:
+    global _cfmail_account_index
+    if not _CFMAIL_ACCOUNTS_CACHE:
+        _reload_cfmail_accounts_if_needed(force=True)
+    accounts = _CFMAIL_ACCOUNTS_CACHE
+    if not accounts:
+        return None
+
+    selected_name = str(profile_name or "auto").strip()
+    if selected_name and selected_name.lower() != "auto":
+        for account in accounts:
+            if account.name.lower() == selected_name.lower():
+                return account
+        return None
+
+    with _cfmail_account_lock:
+        index = _cfmail_account_index % len(accounts)
+        account = accounts[index]
+        _cfmail_account_index = (index + 1) % len(accounts)
+        return account
 
 
 def _parse_local_graph_account_line(line: str) -> Optional[Dict[str, Any]]:
@@ -672,6 +848,129 @@ def _fetch_graph_mail_code(mailbox: Dict[str, Any], proxies: Any = None) -> str:
     return ""
 
 
+def _create_duckmail_session(proxies: Any = None) -> Any:
+    session = requests.Session(proxies=proxies, impersonate="chrome131")
+    session.headers.update(
+        {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        }
+    )
+    return session
+
+
+def _create_duckmail_mailbox(proxies: Any = None) -> Dict[str, str]:
+    bearer = str(CONFIG.get("duckmail_bearer") or DEFAULT_CONFIG["duckmail_bearer"]).strip()
+    if not bearer:
+        raise RuntimeError("请先配置 DuckMail Bearer")
+    api_base = str(CONFIG.get("duckmail_api_base") or DEFAULT_CONFIG["duckmail_api_base"]).strip().rstrip("/")
+    chars = string.ascii_lowercase + string.digits
+    local_part = "".join(random.choice(chars) for _ in range(random.randint(8, 13)))
+    email = f"{local_part}@duckmail.sbs"
+    email_password = _generate_password()
+    session = _create_duckmail_session(proxies)
+
+    try:
+        create_resp = session.post(
+            f"{api_base}/accounts",
+            json={"address": email, "password": email_password},
+            headers={"Authorization": f"Bearer {bearer}"},
+            timeout=15,
+        )
+        if create_resp.status_code not in (200, 201):
+            raise RuntimeError(f"DuckMail 创建邮箱失败: HTTP {create_resp.status_code}")
+        time.sleep(0.5)
+        token_resp = session.post(
+            f"{api_base}/token",
+            json={"address": email, "password": email_password},
+            timeout=15,
+        )
+        if token_resp.status_code != 200:
+            raise RuntimeError(f"DuckMail 获取 Token 失败: HTTP {token_resp.status_code}")
+        payload = token_resp.json() if token_resp.content else {}
+    finally:
+        try:
+            session.close()
+        except Exception:
+            pass
+
+    token = str(payload.get("token") or "").strip() if isinstance(payload, dict) else ""
+    if not token:
+        raise RuntimeError("DuckMail 返回 token 为空")
+    return {"email": email, "email_password": email_password, "token": token}
+
+
+def _fetch_duckmail_messages(mail_token: str, proxies: Any = None) -> list[Dict[str, Any]]:
+    if not mail_token:
+        return []
+    api_base = str(CONFIG.get("duckmail_api_base") or DEFAULT_CONFIG["duckmail_api_base"]).strip().rstrip("/")
+    session = _create_duckmail_session(proxies)
+    try:
+        resp = session.get(
+            f"{api_base}/messages",
+            headers={"Authorization": f"Bearer {mail_token}"},
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            return []
+        payload = resp.json() if resp.content else {}
+    except Exception:
+        return []
+    finally:
+        try:
+            session.close()
+        except Exception:
+            pass
+    if not isinstance(payload, dict):
+        return []
+    messages = payload.get("hydra:member") or payload.get("member") or payload.get("data") or []
+    return messages if isinstance(messages, list) else []
+
+
+def _fetch_duckmail_message_detail(mail_token: str, msg_id: str, proxies: Any = None) -> Optional[Dict[str, Any]]:
+    if not mail_token or not msg_id:
+        return None
+    api_base = str(CONFIG.get("duckmail_api_base") or DEFAULT_CONFIG["duckmail_api_base"]).strip().rstrip("/")
+    normalized_id = str(msg_id).split("/")[-1]
+    session = _create_duckmail_session(proxies)
+    try:
+        resp = session.get(
+            f"{api_base}/messages/{normalized_id}",
+            headers={"Authorization": f"Bearer {mail_token}"},
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            return None
+        payload = resp.json() if resp.content else {}
+        return payload if isinstance(payload, dict) else None
+    except Exception:
+        return None
+    finally:
+        try:
+            session.close()
+        except Exception:
+            pass
+
+
+def _fetch_duckmail_code(mail_token: str, proxies: Any = None) -> str:
+    messages = _fetch_duckmail_messages(mail_token, proxies)
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        msg_id = str(message.get("id") or message.get("@id") or "").strip()
+        content = _stringify_message_payload(message)
+        if not _looks_like_openai_message(content) and msg_id:
+            detail = _fetch_duckmail_message_detail(mail_token, msg_id, proxies)
+            content = _stringify_message_payload(detail)
+        if not _looks_like_openai_message(content):
+            continue
+        code = _extract_verification_code(content)
+        if code:
+            return code
+    return ""
+
+
 def _npcmail_request(method: str, endpoint: str, *, body: Any = None, proxies: Any = None) -> Any:
     api_key = str(CONFIG.get("tm_npcmail_apikey") or "").strip()
     if not api_key:
@@ -732,6 +1031,121 @@ def _junmail_request(
         json_body=body,
         proxies=proxies,
     )
+
+
+def _lamail_headers(*, bearer: str = "", use_json: bool = False, api_key: str = "") -> Dict[str, str]:
+    headers = {"Accept": "application/json"}
+    if use_json:
+        headers["Content-Type"] = "application/json"
+    if bearer:
+        headers["Authorization"] = f"Bearer {bearer}"
+    if api_key:
+        headers["X-API-Key"] = api_key
+    return headers
+
+
+def _lamail_unwrap_json(resp: Any, *, action: str = "请求") -> Any:
+    try:
+        payload = resp.json() if resp.content else {}
+    except Exception as exc:
+        raise RuntimeError(f"LaMail {action}返回非 JSON: HTTP {resp.status_code}") from exc
+    if isinstance(payload, dict) and "success" in payload:
+        if payload.get("success") is not True:
+            raise RuntimeError(str(payload.get("error") or f"LaMail {action}失败"))
+        return payload.get("data")
+    return payload
+
+
+def _create_lamail_mailbox(proxies: Any = None) -> Dict[str, str]:
+    api_base = str(CONFIG.get("lamail_api_base") or DEFAULT_CONFIG["lamail_api_base"]).strip().rstrip("/")
+    api_key = str(CONFIG.get("lamail_api_key") or DEFAULT_CONFIG["lamail_api_key"]).strip()
+    domain = str(CONFIG.get("lamail_domain") or DEFAULT_CONFIG["lamail_domain"]).strip()
+    payload: Dict[str, Any] = {}
+    if domain:
+        payload["domain"] = domain
+    resp = requests.post(
+        f"{api_base}/accounts",
+        json=payload,
+        headers=_lamail_headers(use_json=True, api_key=api_key),
+        proxies=proxies,
+        impersonate="chrome",
+        timeout=15,
+    )
+    if resp.status_code not in (200, 201):
+        raise RuntimeError(f"LaMail 创建邮箱失败: HTTP {resp.status_code}")
+    data = _lamail_unwrap_json(resp, action="创建邮箱")
+    if not isinstance(data, dict):
+        raise RuntimeError("LaMail 创建邮箱返回格式异常")
+    email = str(data.get("address") or data.get("email") or "").strip()
+    token = str(data.get("token") or "").strip()
+    if not email or not token:
+        raise RuntimeError("LaMail 返回邮箱或 token 为空")
+    return {"email": email, "token": token}
+
+
+def _fetch_lamail_messages(mail_token: str, email: str, proxies: Any = None) -> list[Dict[str, Any]]:
+    if not mail_token or not email:
+        return []
+    api_base = str(CONFIG.get("lamail_api_base") or DEFAULT_CONFIG["lamail_api_base"]).strip().rstrip("/")
+    try:
+        resp = requests.get(
+            f"{api_base}/messages",
+            params={"address": email},
+            headers=_lamail_headers(bearer=mail_token),
+            proxies=proxies,
+            impersonate="chrome",
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            return []
+        data = _lamail_unwrap_json(resp, action="拉取邮件列表")
+    except Exception:
+        return []
+    if not isinstance(data, dict):
+        return []
+    messages = data.get("messages") or []
+    return messages if isinstance(messages, list) else []
+
+
+def _fetch_lamail_message_detail(mail_token: str, msg_id: str, proxies: Any = None) -> Optional[Dict[str, Any]]:
+    if not mail_token or not msg_id:
+        return None
+    api_base = str(CONFIG.get("lamail_api_base") or DEFAULT_CONFIG["lamail_api_base"]).strip().rstrip("/")
+    try:
+        resp = requests.get(
+            f"{api_base}/messages/{quote(msg_id)}",
+            headers=_lamail_headers(bearer=mail_token),
+            proxies=proxies,
+            impersonate="chrome",
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            return None
+        data = _lamail_unwrap_json(resp, action="拉取邮件详情")
+        return data if isinstance(data, dict) else None
+    except Exception:
+        return None
+
+
+def _fetch_lamail_code(mail_token: str, email: str, proxies: Any = None) -> str:
+    messages = _fetch_lamail_messages(mail_token, email, proxies)
+    for message in reversed(messages):
+        if not isinstance(message, dict):
+            continue
+        content = _stringify_message_payload(message)
+        if not _looks_like_openai_message(content):
+            detail = _fetch_lamail_message_detail(
+                mail_token,
+                str(message.get("id") or "").strip(),
+                proxies,
+            )
+            content = _stringify_message_payload(detail)
+        if not _looks_like_openai_message(content):
+            continue
+        code = _extract_verification_code(content)
+        if code:
+            return code
+    return ""
 
 
 def _create_junmail_mailbox(address: str = "", domain: str = "", proxies: Any = None) -> Dict[str, str]:
@@ -835,11 +1249,99 @@ def _fetch_tempmail_lol_code(token: str, proxies: Any = None) -> str:
                 str(message.get("html") or ""),
             ]
         )
-        if "openai" not in content.lower():
+        if not _looks_like_openai_message(content):
             continue
         code = _extract_verification_code(content)
         if code:
             return code
+    return ""
+
+
+def _create_cfmail_mailbox(proxies: Any = None) -> Dict[str, Any]:
+    _reload_cfmail_accounts_if_needed()
+    profile_name = str(CONFIG.get("cfmail_profile") or DEFAULT_CONFIG["cfmail_profile"]).strip() or "auto"
+    account = _select_cfmail_account(profile_name)
+    if not account:
+        raise RuntimeError(f"没有可用的 CFMail 配置，请检查: {_cfmail_config_path()}")
+
+    local_part = f"oc{secrets.token_hex(5)}"
+    resp = requests.post(
+        f"https://{account.worker_domain}/admin/new_address",
+        headers={
+            "x-admin-auth": account.admin_password,
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        json={"enablePrefix": True, "name": local_part, "domain": account.email_domain},
+        proxies=proxies,
+        impersonate="chrome",
+        timeout=15,
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"CFMail 创建邮箱失败: HTTP {resp.status_code}")
+    try:
+        payload = resp.json() if resp.content else {}
+    except Exception as exc:
+        raise RuntimeError("CFMail 创建邮箱返回非 JSON") from exc
+    email = str(payload.get("address") or "").strip()
+    token = str(payload.get("jwt") or "").strip()
+    if not email or not token:
+        raise RuntimeError("CFMail 返回邮箱或 jwt 为空")
+    return {
+        "email": email,
+        "token": token,
+        "cfmail_api_base": f"https://{account.worker_domain}",
+        "cfmail_account_name": account.name,
+    }
+
+
+def _fetch_cfmail_messages(mailbox: Dict[str, Any], proxies: Any = None) -> list[Dict[str, Any]]:
+    api_base = str(mailbox.get("cfmail_api_base") or "").strip()
+    mail_token = str(mailbox.get("tm_token") or "").strip()
+    if not api_base or not mail_token:
+        return []
+    try:
+        resp = requests.get(
+            f"{api_base}/api/mails",
+            params={"limit": 10, "offset": 0},
+            headers={"Accept": "application/json", "Authorization": f"Bearer {mail_token}"},
+            proxies=proxies,
+            impersonate="chrome",
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            return []
+        payload = resp.json() if resp.content else {}
+    except Exception:
+        return []
+    if not isinstance(payload, dict):
+        return []
+    messages = payload.get("results") or []
+    return messages if isinstance(messages, list) else []
+
+
+def _fetch_cfmail_code(mailbox: Dict[str, Any], proxies: Any = None) -> str:
+    email = str(mailbox.get("email") or "").strip().lower()
+    messages = _fetch_cfmail_messages(mailbox, proxies)
+    patterns = [
+        r"Subject:\s*Your ChatGPT code is\s*(\d{6})",
+        r"Your ChatGPT code is\s*(\d{6})",
+        r"temporary verification code to continue:\s*(\d{6})",
+        r"(?<![#&])\b(\d{6})\b",
+    ]
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        recipient = str(message.get("address") or "").strip().lower()
+        if recipient and email and recipient != email:
+            continue
+        content = _stringify_message_payload(message)
+        if not _looks_like_openai_message(content):
+            continue
+        for pattern in patterns:
+            match = re.search(pattern, content, re.IGNORECASE | re.DOTALL)
+            if match:
+                return str(match.group(1) or "").strip()
     return ""
 
 
@@ -873,6 +1375,19 @@ def create_registration_email_context(proxies: Any = None) -> Dict[str, Any]:
         return context
 
     provider = str(CONFIG.get("tm_email_provider") or "gptmail").strip().lower()
+    if provider == "duckmail":
+        mailbox = _create_duckmail_mailbox(proxies)
+        context.update(
+            {
+                "email": mailbox["email"],
+                "email_provider": "duckmail",
+                "custom_domain": False,
+                "tm_token": mailbox["token"],
+                "email_password": mailbox["email_password"],
+            }
+        )
+        return context
+
     if provider == "npcmail":
         body: Dict[str, Any] = {"count": 1, "expiryDays": 30}
         if reg_domain:
@@ -890,14 +1405,26 @@ def create_registration_email_context(proxies: Any = None) -> Dict[str, Any]:
         context.update({"email": address, "email_provider": "npcmail", "custom_domain": False})
         return context
 
-    if provider == "xiaomajiang":
+    if provider in {"tempmail_lol", "xiaomajiang"}:
         inbox = _create_tempmail_lol_inbox(proxies)
         context.update(
             {
                 "email": inbox["email"],
-                "email_provider": "xiaomajiang",
+                "email_provider": "tempmail_lol",
                 "custom_domain": False,
                 "tm_token": inbox["token"],
+            }
+        )
+        return context
+
+    if provider == "lamail":
+        mailbox = _create_lamail_mailbox(proxies)
+        context.update(
+            {
+                "email": mailbox["email"],
+                "email_provider": "lamail",
+                "custom_domain": False,
+                "tm_token": mailbox["token"],
             }
         )
         return context
@@ -910,6 +1437,20 @@ def create_registration_email_context(proxies: Any = None) -> Dict[str, Any]:
                 "email_provider": "junmail",
                 "custom_domain": False,
                 "junmail_mailbox_id": mailbox["mailbox_id"],
+            }
+        )
+        return context
+
+    if provider == "cfmail":
+        mailbox = _create_cfmail_mailbox(proxies)
+        context.update(
+            {
+                "email": mailbox["email"],
+                "email_provider": "cfmail",
+                "custom_domain": False,
+                "tm_token": mailbox["token"],
+                "cfmail_api_base": mailbox["cfmail_api_base"],
+                "cfmail_account_name": mailbox["cfmail_account_name"],
             }
         )
         return context
@@ -997,33 +1538,47 @@ def _fetch_tempmail_plus_code(address: str, epin: str = "", proxies: Any = None)
     return _extract_verification_code(content)
 
 
-def get_oai_code(mailbox: Dict[str, Any], proxies: Any = None) -> str:
+def get_oai_code(
+    mailbox: Dict[str, Any],
+    proxies: Any = None,
+    *,
+    timeout_seconds: int = 180,
+    tried_codes: Optional[set[str]] = None,
+) -> str:
     email = str(mailbox.get("email") or "").strip()
     provider = str(mailbox.get("email_provider") or "gptmail").strip().lower()
     receiver_addr = str(mailbox.get("tm_addr") or "").strip()
     receiver_epin = str(mailbox.get("tm_epin") or "").strip()
     tempmail_lol_token = str(mailbox.get("tm_token") or "").strip()
+    blocked_codes = tried_codes if isinstance(tried_codes, set) else set()
+    attempts = max(1, int(math.ceil(max(1, timeout_seconds) / 3)))
 
-    for attempt in range(60):
+    for attempt in range(attempts):
         try:
             if mailbox.get("custom_domain") and receiver_addr:
                 code = _fetch_tempmail_plus_code(receiver_addr, receiver_epin, proxies)
+            elif provider == "duckmail":
+                code = _fetch_duckmail_code(tempmail_lol_token, proxies)
             elif provider == "npcmail":
                 code = _fetch_npcmail_code(email, proxies)
-            elif provider == "xiaomajiang":
+            elif provider == "tempmail_lol" or provider == "xiaomajiang":
                 code = _fetch_tempmail_lol_code(tempmail_lol_token, proxies)
+            elif provider == "lamail":
+                code = _fetch_lamail_code(tempmail_lol_token, email, proxies)
             elif provider == "junmail":
                 code = _fetch_junmail_code(str(mailbox.get("junmail_mailbox_id") or "").strip(), proxies)
+            elif provider == "cfmail":
+                code = _fetch_cfmail_code(mailbox, proxies)
             elif provider == "local_graph":
                 code = _fetch_graph_mail_code(mailbox, proxies)
             else:
                 code = _fetch_gptmail_code(email, proxies)
-            if code:
+            if code and code not in blocked_codes:
                 log_ok(f"收到验证码: {code}")
                 return code
         except Exception:
             pass
-        if attempt < 59:
+        if attempt < attempts - 1:
             time.sleep(3)
     log_warn("验证码超时")
     return ""
@@ -1198,6 +1753,609 @@ def _teams_file_path() -> str:
 
 def _output_root_path() -> str:
     return _resolve_config_path(str(CONFIG.get("output_root") or DEFAULT_CONFIG["output_root"]))
+
+
+def _ak_file_path() -> str:
+    return _resolve_config_path(str(CONFIG.get("ak_file") or DEFAULT_CONFIG["ak_file"]))
+
+
+def _rk_file_path() -> str:
+    return _resolve_config_path(str(CONFIG.get("rk_file") or DEFAULT_CONFIG["rk_file"]))
+
+
+def _token_json_dir_path() -> str:
+    return _resolve_config_path(str(CONFIG.get("token_json_dir") or DEFAULT_CONFIG["token_json_dir"]))
+
+
+def _ensure_parent_dir(path: str) -> None:
+    parent = os.path.dirname(str(path or ""))
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+
+
+def _append_text_line(file_path: str, line: str) -> None:
+    if not file_path or not line:
+        return
+    _ensure_parent_dir(file_path)
+    with FILE_WRITE_LOCK:
+        with open(file_path, "a", encoding="utf-8") as f:
+            f.write(f"{line}\n")
+
+
+def _save_codex_token_artifacts(token_data: Dict[str, Any]) -> str:
+    if not isinstance(token_data, dict):
+        return ""
+    email = str(token_data.get("email") or "").strip()
+    access_token = str(token_data.get("access_token") or "").strip()
+    refresh_token = str(token_data.get("refresh_token") or "").strip()
+    if not email or not access_token:
+        return ""
+
+    if access_token:
+        _append_text_line(_ak_file_path(), access_token)
+    if refresh_token:
+        _append_text_line(_rk_file_path(), refresh_token)
+
+    token_payload = dict(token_data)
+    token_payload["type"] = str(token_payload.get("type") or "codex")
+    token_dir = _token_json_dir_path()
+    os.makedirs(token_dir, exist_ok=True)
+    token_path = os.path.join(token_dir, f"{email}.json")
+    with FILE_WRITE_LOCK:
+        with open(token_path, "w", encoding="utf-8") as f:
+            json.dump(token_payload, f, ensure_ascii=False, indent=2)
+    return token_path
+
+
+def _resolve_cpa_upload_proxy_candidates() -> list[Optional[str]]:
+    configured = str(CONFIG.get("upload_api_proxy") or DEFAULT_CONFIG["upload_api_proxy"]).strip()
+    default_proxy = str(CONFIG.get("default_proxy") or DEFAULT_CONFIG["default_proxy"]).strip()
+    if configured:
+        lowered = configured.lower()
+        if lowered in {"direct", "none", "off", "false", "0"}:
+            return [None]
+        if lowered == "default":
+            return [default_proxy or None, None]
+        return [configured]
+    if default_proxy:
+        return [default_proxy, None]
+    return [None]
+
+
+def _upload_token_json(filepath: str) -> bool:
+    upload_api_url = str(CONFIG.get("upload_api_url") or DEFAULT_CONFIG["upload_api_url"]).strip()
+    upload_api_token = str(CONFIG.get("upload_api_token") or DEFAULT_CONFIG["upload_api_token"]).strip()
+    if not upload_api_url or not filepath or not os.path.exists(filepath):
+        return False
+
+    filename = os.path.basename(filepath)
+    proxy_candidates: list[Optional[str]] = []
+    for item in _resolve_cpa_upload_proxy_candidates():
+        if item not in proxy_candidates:
+            proxy_candidates.append(item)
+
+    last_error = ""
+    for index, proxy in enumerate(proxy_candidates):
+        mime = None
+        session = None
+        try:
+            from curl_cffi import CurlMime
+
+            mime = CurlMime()
+            mime.addpart(
+                name="file",
+                content_type="application/json",
+                filename=filename,
+                local_path=filepath,
+            )
+            session = requests.Session()
+            if proxy:
+                session.proxies = {"http": proxy, "https": proxy}
+            headers = {"Authorization": f"Bearer {upload_api_token}"} if upload_api_token else {}
+            resp = session.post(
+                upload_api_url,
+                multipart=mime,
+                headers=headers,
+                verify=False,
+                timeout=30,
+            )
+            if resp.status_code == 200:
+                mode = f"代理 {proxy}" if proxy else "直连"
+                log_ok(f"CPA 自动导入成功: {filename} ({mode})")
+                return True
+            last_error = f"HTTP {resp.status_code}"
+            if proxy and index < len(proxy_candidates) - 1:
+                log_warn(f"CPA 上传失败，切换直连重试: {filename} ({last_error})")
+                continue
+            log_warn(f"CPA 上传失败: {filename} ({last_error})")
+            return False
+        except Exception as exc:
+            last_error = str(exc)
+            if proxy and index < len(proxy_candidates) - 1:
+                log_warn(f"CPA 代理上传异常，切换直连重试: {filename} ({exc})")
+                continue
+            log_warn(f"CPA 上传异常: {filename} ({exc})")
+            return False
+        finally:
+            if mime:
+                try:
+                    mime.close()
+                except Exception:
+                    pass
+            if session:
+                try:
+                    session.close()
+                except Exception:
+                    pass
+
+    if last_error:
+        log_warn(f"CPA 上传失败: {filename} ({last_error})")
+    return False
+
+
+def _upload_all_tokens_to_cpa() -> tuple[int, int]:
+    upload_api_url = str(CONFIG.get("upload_api_url") or DEFAULT_CONFIG["upload_api_url"]).strip()
+    if not upload_api_url:
+        return 0, 0
+    token_dir = _token_json_dir_path()
+    if not os.path.isdir(token_dir):
+        return 0, 0
+    json_files = sorted(filename for filename in os.listdir(token_dir) if filename.endswith(".json"))
+    if not json_files:
+        return 0, 0
+
+    log_info(f"CPA 自动导入开始，共 {len(json_files)} 个 token 文件")
+    uploaded = 0
+    failed = 0
+    for filename in json_files:
+        filepath = os.path.join(token_dir, filename)
+        if _upload_token_json(filepath):
+            try:
+                os.remove(filepath)
+            except Exception:
+                pass
+            uploaded += 1
+        else:
+            failed += 1
+
+    if failed == 0:
+        log_ok(f"CPA 自动导入完成: 成功 {uploaded} 个")
+    else:
+        log_warn(f"CPA 自动导入完成: 成功 {uploaded} 个，失败 {failed} 个")
+    return uploaded, failed
+
+
+def _load_cpa_reference_module() -> Any:
+    global _CPA_REFERENCE_MODULE
+    if _CPA_REFERENCE_MODULE is not None:
+        return _CPA_REFERENCE_MODULE
+
+    script_path = os.path.join(BASE_DIR, "cpa_20260323", "ncs_register.py")
+    if not os.path.exists(script_path):
+        raise RuntimeError(f"未找到参考脚本: {script_path}")
+
+    spec = importlib.util.spec_from_file_location("teamkeygen_cpa_reference", script_path)
+    if not spec or not spec.loader:
+        raise RuntimeError("加载 CPA 参考脚本失败")
+
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    _CPA_REFERENCE_MODULE = module
+    return module
+
+
+def _run_cpa_cleanup_before_register() -> None:
+    upload_api_url = str(CONFIG.get("upload_api_url") or DEFAULT_CONFIG["upload_api_url"]).strip()
+    upload_api_token = str(CONFIG.get("upload_api_token") or DEFAULT_CONFIG["upload_api_token"]).strip()
+    if not upload_api_url:
+        return
+    if not upload_api_token:
+        log_warn("已配置 CPA 上传地址，但未配置管理密钥，跳过注册前清理")
+        return
+
+    try:
+        module = _load_cpa_reference_module()
+        log_info("注册前开始清理 CPA 无效号")
+        result = module._cpa_execute_cleanup(
+            {
+                "management_url": upload_api_url,
+                "management_token": upload_api_token,
+                "active_probe": True,
+                "probe_workers": 12,
+                "delete_workers": 8,
+                "max_active_probes": 120,
+            },
+            log=lambda message: log_info(f"[CPA清理] {message}"),
+        )
+        log_ok(
+            f"CPA 清理完成: 扫描 {int(result.get('scanned_total') or 0)} 个，"
+            f"删除 {int(result.get('deleted_total') or 0)} 个"
+        )
+    except Exception as exc:
+        log_warn(f"CPA 清理失败，继续注册: {exc}")
+
+
+def _extract_code_from_url(url: str) -> str:
+    if not url or "code=" not in url:
+        return ""
+    try:
+        return str(parse_qs(urlparse(url).query).get("code", [""])[0] or "").strip()
+    except Exception:
+        return ""
+
+
+def _build_proxy_dict(proxy: Optional[str]) -> Any:
+    value = str(proxy or "").strip()
+    if not value:
+        return None
+    return {"http": value, "https": value}
+
+
+def _sync_cpa_reference_runtime(module: Any) -> None:
+    module.OAUTH_ISSUER = "https://auth.openai.com"
+    module.OAUTH_CLIENT_ID = _get_openai_client_id()
+    module.OAUTH_REDIRECT_URI = str(
+        CONFIG.get("oauth_redirect_uri") or DEFAULT_CONFIG["oauth_redirect_uri"]
+    ).strip()
+
+
+def _cpa_style_wait_for_verification_email(
+    self: Any,
+    mail_token: str,
+    timeout: int = 120,
+    email: str = "",
+    provider: str = "",
+) -> Optional[str]:
+    mailbox = dict(getattr(self, "_team_mailbox_context", {}) or {})
+    if mail_token and not mailbox.get("tm_token"):
+        mailbox["tm_token"] = mail_token
+    if email and not mailbox.get("email"):
+        mailbox["email"] = email
+    proxy_mapping = _build_proxy_dict(getattr(self, "proxy", None))
+    code = get_oai_code(mailbox, proxy_mapping, timeout_seconds=max(1, int(timeout or 120)))
+    return code or None
+
+
+def _cpa_reference_verbose_enabled() -> bool:
+    return bool(CONFIG.get("verbose_info_logs_enabled", DEFAULT_CONFIG["verbose_info_logs_enabled"]))
+
+
+def _cpa_style_log(
+    self: Any,
+    step: Any,
+    method: Any,
+    url: Any,
+    status: Any,
+    body: Any = None,
+) -> None:
+    if not _cpa_reference_verbose_enabled():
+        return
+    original = getattr(self, "_team_original_log", None)
+    if callable(original):
+        original(step, method, url, status, body)
+
+
+def _cpa_style_print(self: Any, *parts: Any, **kwargs: Any) -> None:
+    if not _cpa_reference_verbose_enabled():
+        return
+    original = getattr(self, "_team_original_print", None)
+    if callable(original):
+        original(*parts, **kwargs)
+        return
+    print(*parts, **kwargs)
+
+
+def _build_cpa_style_register(proxy: Optional[str], mailbox: Dict[str, Any]) -> Any:
+    module = _load_cpa_reference_module()
+    _sync_cpa_reference_runtime(module)
+    reg = module.ChatGPTRegister(proxy=proxy or None)
+    reg._team_mailbox_context = dict(mailbox or {})
+    if mailbox.get("cfmail_api_base"):
+        reg._cfmail_api_base = str(mailbox.get("cfmail_api_base") or "")
+    if mailbox.get("cfmail_account_name"):
+        reg._cfmail_account_name = str(mailbox.get("cfmail_account_name") or "")
+    reg._team_original_log = getattr(reg, "_log", None)
+    reg._team_original_print = getattr(reg, "_print", None)
+    reg._log = MethodType(_cpa_style_log, reg)
+    reg._print = MethodType(_cpa_style_print, reg)
+    reg.wait_for_verification_email = MethodType(_cpa_style_wait_for_verification_email, reg)
+    return reg
+
+
+def _perform_cpa_style_codex_oauth_login_http(
+    reg: Any,
+    *,
+    mailbox: Dict[str, Any],
+    email: str,
+    password: str,
+) -> Optional[str]:
+    module = _load_cpa_reference_module()
+    _sync_cpa_reference_runtime(module)
+    oauth = generate_oauth_url()
+    issuer = "https://auth.openai.com"
+
+    reg._print("[OAuth] 开始执行 Codex OAuth 纯协议流程...")
+    reg.session.cookies.set("oai-did", reg.device_id, domain=".auth.openai.com")
+    reg.session.cookies.set("oai-did", reg.device_id, domain="auth.openai.com")
+
+    authorize_url = oauth.auth_url
+    provider = str(mailbox.get("email_provider") or "").strip().lower()
+    proxy_mapping = _build_proxy_dict(getattr(reg, "proxy", None))
+
+    def _oauth_json_headers(referer: str) -> Dict[str, str]:
+        headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Origin": issuer,
+            "Referer": referer,
+            "User-Agent": reg.ua,
+            "oai-device-id": reg.device_id,
+        }
+        headers.update(module._make_trace_headers())
+        return headers
+
+    def _bootstrap_oauth_session() -> tuple[bool, str]:
+        reg._print("[OAuth] 1/7 GET /oauth/authorize")
+        try:
+            resp = reg.session.get(
+                authorize_url,
+                headers={
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "Referer": f"{reg.BASE}/",
+                    "Upgrade-Insecure-Requests": "1",
+                    "User-Agent": reg.ua,
+                },
+                allow_redirects=True,
+                timeout=30,
+                impersonate=reg.impersonate,
+            )
+        except Exception as exc:
+            reg._print(f"[OAuth] /oauth/authorize 异常: {exc}")
+            return False, ""
+
+        final_url = str(resp.url)
+        has_login_session = any(
+            getattr(cookie, "name", "") == "login_session" for cookie in reg.session.cookies
+        )
+        if not has_login_session:
+            try:
+                resp_fallback = reg.session.get(
+                    f"{issuer}/api/oauth/oauth2/auth",
+                    headers={
+                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                        "Referer": authorize_url,
+                        "Upgrade-Insecure-Requests": "1",
+                        "User-Agent": reg.ua,
+                    },
+                    params=dict(urllib.parse.parse_qsl(urllib.parse.urlsplit(authorize_url).query)),
+                    allow_redirects=True,
+                    timeout=30,
+                    impersonate=reg.impersonate,
+                )
+                final_url = str(resp_fallback.url)
+            except Exception as exc:
+                reg._print(f"[OAuth] /api/oauth/oauth2/auth 异常: {exc}")
+            has_login_session = any(
+                getattr(cookie, "name", "") == "login_session" for cookie in reg.session.cookies
+            )
+        return has_login_session, final_url
+
+    def _post_authorize_continue(referer_url: str) -> Any:
+        sentinel_authorize = module.build_sentinel_token(
+            reg.session,
+            reg.device_id,
+            flow="authorize_continue",
+            user_agent=reg.ua,
+            sec_ch_ua=reg.sec_ch_ua,
+            impersonate=reg.impersonate,
+        )
+        if not sentinel_authorize:
+            reg._print("[OAuth] sentinel authorize token 生成失败")
+            return None
+        headers_continue = _oauth_json_headers(referer_url)
+        headers_continue["openai-sentinel-token"] = sentinel_authorize
+        try:
+            return reg.session.post(
+                f"{issuer}/api/accounts/authorize/continue",
+                json={"username": {"kind": "email", "value": email}},
+                headers=headers_continue,
+                timeout=30,
+                allow_redirects=False,
+                impersonate=reg.impersonate,
+            )
+        except Exception as exc:
+            reg._print(f"[OAuth] authorize/continue 异常: {exc}")
+            return None
+
+    _, authorize_final_url = _bootstrap_oauth_session()
+    if not authorize_final_url:
+        return None
+
+    continue_referer = (
+        authorize_final_url if authorize_final_url.startswith(issuer) else f"{issuer}/log-in"
+    )
+    reg._print("[OAuth] 2/7 POST /api/accounts/authorize/continue")
+    resp_continue = _post_authorize_continue(continue_referer)
+    if resp_continue is None:
+        reg._print("[OAuth] authorize/continue 请求未发出或失败")
+        return None
+
+    reg._print(f"[OAuth] /authorize/continue -> {resp_continue.status_code}")
+    if resp_continue.status_code == 400 and "invalid_auth_step" in (resp_continue.text or ""):
+        _, authorize_final_url = _bootstrap_oauth_session()
+        if not authorize_final_url:
+            return None
+        continue_referer = (
+            authorize_final_url if authorize_final_url.startswith(issuer) else f"{issuer}/log-in"
+        )
+        resp_continue = _post_authorize_continue(continue_referer)
+        if resp_continue is None:
+            reg._print("[OAuth] authorize/continue 重试失败")
+            return None
+
+    if resp_continue.status_code != 200:
+        reg._print(
+            f"[OAuth] authorize/continue 非200: {resp_continue.status_code}, body={resp_continue.text[:220]}"
+        )
+        return None
+
+    try:
+        continue_data = resp_continue.json()
+    except Exception:
+        reg._print(f"[OAuth] authorize/continue JSON 解析失败: {resp_continue.text[:220]}")
+        return None
+
+    continue_url = str(continue_data.get("continue_url") or "").strip()
+    page_type = str(((continue_data.get("page") or {}).get("type") or "")).strip()
+
+    reg._print("[OAuth] 3/7 POST /api/accounts/password/verify")
+    sentinel_pwd = module.build_sentinel_token(
+        reg.session,
+        reg.device_id,
+        flow="password_verify",
+        user_agent=reg.ua,
+        sec_ch_ua=reg.sec_ch_ua,
+        impersonate=reg.impersonate,
+    )
+    if not sentinel_pwd:
+        reg._print("[OAuth] sentinel password token 生成失败")
+        return None
+
+    headers_verify = _oauth_json_headers(f"{issuer}/log-in/password")
+    headers_verify["openai-sentinel-token"] = sentinel_pwd
+    try:
+        resp_verify = reg.session.post(
+            f"{issuer}/api/accounts/password/verify",
+            json={"password": password},
+            headers=headers_verify,
+            timeout=30,
+            allow_redirects=False,
+            impersonate=reg.impersonate,
+        )
+    except Exception as exc:
+        reg._print(f"[OAuth] password/verify 异常: {exc}")
+        return None
+
+    if resp_verify.status_code != 200:
+        reg._print(
+            f"[OAuth] password/verify 非200: {resp_verify.status_code}, body={resp_verify.text[:220]}"
+        )
+        return None
+
+    try:
+        verify_data = resp_verify.json()
+    except Exception:
+        reg._print(f"[OAuth] password/verify JSON 解析失败: {resp_verify.text[:220]}")
+        return None
+
+    continue_url = str(verify_data.get("continue_url") or continue_url or "").strip()
+    page_type = str(((verify_data.get("page") or {}).get("type") or page_type or "")).strip()
+
+    need_oauth_otp = (
+        page_type == "email_otp_verification"
+        or "email-verification" in continue_url
+        or "email-otp" in continue_url
+    )
+    if need_oauth_otp:
+        reg._print("[OAuth] 4/7 检测到邮箱 OTP 验证")
+        tried_codes: set[str] = set()
+        otp_code = get_oai_code(
+            mailbox,
+            proxy_mapping,
+            timeout_seconds=120,
+            tried_codes=tried_codes,
+        )
+        if not otp_code:
+            reg._print("[OAuth] OAuth 阶段 OTP 验证失败")
+            return None
+        tried_codes.add(otp_code)
+
+        headers_otp = _oauth_json_headers(f"{issuer}/email-verification")
+        try:
+            resp_otp = reg.session.post(
+                f"{issuer}/api/accounts/email-otp/validate",
+                json={"code": otp_code},
+                headers=headers_otp,
+                timeout=30,
+                allow_redirects=False,
+                impersonate=reg.impersonate,
+            )
+        except Exception as exc:
+            reg._print(f"[OAuth] email-otp/validate 异常: {exc}")
+            return None
+        if resp_otp.status_code != 200:
+            reg._print(
+                f"[OAuth] email-otp/validate 非200: {resp_otp.status_code}, body={resp_otp.text[:220]}"
+            )
+            return None
+        try:
+            otp_data = resp_otp.json()
+        except Exception:
+            reg._print(f"[OAuth] email-otp/validate JSON 解析失败: {resp_otp.text[:220]}")
+            return None
+        continue_url = str(otp_data.get("continue_url") or continue_url or "").strip()
+        page_type = str(((otp_data.get("page") or {}).get("type") or page_type or "")).strip()
+
+    code = ""
+    consent_url = continue_url
+    if consent_url and consent_url.startswith("/"):
+        consent_url = f"{issuer}{consent_url}"
+    if consent_url:
+        code = _extract_code_from_url(consent_url)
+
+    if not code and consent_url:
+        reg._print("[OAuth] 5/7 跟随 continue_url 提取 code")
+        code, _ = reg._oauth_follow_for_code(consent_url, referer=f"{issuer}/log-in/password")
+
+    consent_hint = (
+        ("consent" in (consent_url or ""))
+        or ("sign-in-with-chatgpt" in (consent_url or ""))
+        or ("workspace" in (consent_url or ""))
+        or ("organization" in (consent_url or ""))
+        or ("consent" in page_type)
+        or ("organization" in page_type)
+    )
+
+    if not code and consent_hint:
+        if not consent_url:
+            consent_url = f"{issuer}/sign-in-with-chatgpt/codex/consent"
+        reg._print("[OAuth] 6/7 执行 workspace/org 选择")
+        code = reg._oauth_submit_workspace_and_org(consent_url)
+
+    if not code:
+        fallback_consent = f"{issuer}/sign-in-with-chatgpt/codex/consent"
+        reg._print("[OAuth] 6/7 回退 consent 路径重试")
+        code = reg._oauth_submit_workspace_and_org(fallback_consent)
+        if not code:
+            code, _ = reg._oauth_follow_for_code(
+                fallback_consent,
+                referer=f"{issuer}/log-in/password",
+            )
+
+    if not code:
+        reg._print("[OAuth] 未获取到 authorization code")
+        return None
+
+    reg._print("[OAuth] 7/7 POST /oauth/token")
+    callback_url = f"{oauth.redirect_uri}?{urllib.parse.urlencode({'code': code, 'state': oauth.state})}"
+    try:
+        token_json = submit_callback_url(
+            callback_url=callback_url,
+            expected_state=oauth.state,
+            code_verifier=oauth.code_verifier,
+            redirect_uri=oauth.redirect_uri,
+        )
+    except Exception as exc:
+        reg._print(f"[OAuth] token 交换失败: {exc}")
+        return None
+
+    reg._print("[OAuth] Codex Token 获取成功")
+    return _enrich_token_json_with_registration_context(
+        token_json,
+        password=password,
+        birthdate=str(mailbox.get("birthdate") or "").strip(),
+        mailbox=mailbox,
+    )
 
 
 def load_code_array(quiet: bool = False) -> list[dict[str, Any]]:
@@ -1922,6 +3080,9 @@ def prompt_file_settings() -> None:
             f"本地邮箱文件: {_shorten_path_display(str(CONFIG.get('tm_local_email_file') or DEFAULT_CONFIG['tm_local_email_file']))}",
             f"CDKEY 文件: {_shorten_path_display(str(CONFIG.get('cdkey_file') or DEFAULT_CONFIG['cdkey_file']))}",
             f"成功账号文件: {_shorten_path_display(str(CONFIG.get('teams_file') or DEFAULT_CONFIG['teams_file']))}",
+            f"兑换结果文件: {_shorten_path_display(str(CONFIG.get('code_results_file') or DEFAULT_CONFIG['code_results_file']))}",
+            f"输出根目录: {_shorten_path_display(str(CONFIG.get('output_root') or DEFAULT_CONFIG['output_root'] or '未设置'))}",
+            f"CFMail 配置文件: {_shorten_path_display(str(CONFIG.get('cfmail_config_path') or DEFAULT_CONFIG['cfmail_config_path']))}",
             "返回",
         ]
         selected_index = _select_from_menu("配置中心 / 文件路径", options, selected_index)
@@ -1948,6 +3109,28 @@ def prompt_file_settings() -> None:
                 default=CONFIG.get("teams_file") or DEFAULT_CONFIG["teams_file"],
                 success_text="成功账号文件路径已更新",
             )
+        elif selected_index == 3:
+            _update_config_value(
+                "code_results_file",
+                "请输入兑换结果文件路径，支持相对路径: ",
+                default=CONFIG.get("code_results_file") or DEFAULT_CONFIG["code_results_file"],
+                success_text="兑换结果文件路径已更新",
+            )
+        elif selected_index == 4:
+            _update_config_value(
+                "output_root",
+                "请输入输出根目录，留空则清除: ",
+                default=CONFIG.get("output_root") or "",
+                success_text="输出根目录已更新",
+            )
+        elif selected_index == 5:
+            _update_config_value(
+                "cfmail_config_path",
+                "请输入 CFMail 配置文件路径，支持相对路径: ",
+                default=CONFIG.get("cfmail_config_path") or DEFAULT_CONFIG["cfmail_config_path"],
+                success_text="CFMail 配置文件路径已更新",
+            )
+            _reload_cfmail_accounts_if_needed(force=True)
 
 
 def prompt_import_settings() -> None:
@@ -1997,10 +3180,15 @@ def prompt_email_settings() -> None:
     selected_index = 0
     while True:
         current_provider = str(CONFIG.get("tm_email_provider") or "npcmail").strip().lower()
+        custom_domains = _load_custom_domains()
         options = [
             f"邮箱提供商: {_email_provider_label(current_provider)}",
             f"注册邮箱前缀: {str(CONFIG.get('tm_reg_prefix') or '').strip() or '未设置'}",
             f"注册邮箱域名: {str(CONFIG.get('tm_reg_domain') or '').strip() or '未设置'}",
+            f"TempMail.plus 地址: {str(CONFIG.get('tm_tm_addr') or '').strip() or '未设置'}",
+            f"TempMail.plus EPIN: {_mask_secret(str(CONFIG.get('tm_tm_epin') or ''))}",
+            f"自定义域名开关: {'开' if bool(CONFIG.get('tm_use_cd')) else '关'}",
+            f"自定义域名列表: {len(custom_domains)} 个",
             "返回",
         ]
         selected_index = _select_from_menu("配置中心 / 邮箱注册", options, selected_index)
@@ -2008,10 +3196,13 @@ def prompt_email_settings() -> None:
             return
         if selected_index == 0:
             provider_options = [
+                ("duckmail", "DuckMail"),
                 ("npcmail", "NPCMail"),
                 ("gptmail", "GPTMail"),
                 ("junmail", "JunMail"),
-                ("xiaomajiang", "临时邮箱(仅可做测试使用,封号严重)"),
+                ("lamail", "LaMail"),
+                ("cfmail", "CFMail"),
+                ("tempmail_lol", "TempMail.lol"),
                 ("local_graph", "本地Outlook邮箱"),
             ]
             provider_labels = [label for _, label in provider_options]
@@ -2040,6 +3231,42 @@ def prompt_email_settings() -> None:
                 default=CONFIG.get("tm_reg_domain") or "",
                 success_text="注册邮箱域名已更新",
             )
+        elif selected_index == 3:
+            _update_config_value(
+                "tm_tm_addr",
+                "请输入 TempMail.plus 地址，留空则清除: ",
+                default=CONFIG.get("tm_tm_addr") or "",
+                success_text="TempMail.plus 地址已更新",
+            )
+        elif selected_index == 4:
+            _update_config_value(
+                "tm_tm_epin",
+                "请输入 TempMail.plus EPIN，留空则清除: ",
+                default=CONFIG.get("tm_tm_epin") or "",
+                success_text="TempMail.plus EPIN 已更新",
+            )
+        elif selected_index == 5:
+            enabled = bool(CONFIG.get("tm_use_cd"))
+            toggle_choice = _select_from_menu("自定义域名开关", ["开", "关"], 0 if enabled else 1)
+            if toggle_choice == -1:
+                continue
+            CONFIG["tm_use_cd"] = toggle_choice == 0
+            save_config()
+            log_ok("自定义域名开关已更新")
+        elif selected_index == 6:
+            raw = _prompt_input(
+                "请输入自定义域名，多个可用逗号分隔，留空则清除: ",
+                ", ".join(custom_domains),
+            )
+            if raw is None:
+                continue
+            CONFIG["tm_custom_domains"] = [
+                part.strip()
+                for part in re.split(r"[\n,;]+", raw)
+                if part.strip()
+            ]
+            save_config()
+            log_ok("自定义域名列表已更新")
 
 
 def prompt_service_settings() -> None:
@@ -2049,18 +3276,30 @@ def prompt_service_settings() -> None:
         current_card_provider = _card_provider_key()
         options = [
             f"卡商: {_card_provider_label(current_card_provider)}",
+            f"TempMail.lol Base URL: {_shorten_path_display(str(CONFIG.get('tempmail_base') or DEFAULT_CONFIG['tempmail_base']), 50)}",
+            f"TempMail.plus API: {_shorten_path_display(str(CONFIG.get('tempmail_plus_api') or DEFAULT_CONFIG['tempmail_plus_api']), 50)}",
             f"NPCMail API Key: {_mask_secret(str(CONFIG.get('tm_npcmail_apikey') or ''))}",
+            f"NPCMail Base URL: {_shorten_path_display(str(CONFIG.get('npcmail_base') or DEFAULT_CONFIG['npcmail_base']), 50)}",
             f"GPTMail API Key: {_mask_secret(str(CONFIG.get('gptmail_api_key') or ''))}",
+            f"GPTMail Base URL: {_shorten_path_display(str(CONFIG.get('gptmail_base') or DEFAULT_CONFIG['gptmail_base']), 50)}",
             f"JunMail API Key: {_mask_secret(str(CONFIG.get('junmail_api_key') or ''))}",
             f"JunMail Base URL: {_shorten_path_display(str(CONFIG.get('junmail_base') or DEFAULT_CONFIG['junmail_base']), 50)}",
+            f"DuckMail Bearer: {_mask_secret(str(CONFIG.get('duckmail_bearer') or ''))}",
+            f"DuckMail Base URL: {_shorten_path_display(str(CONFIG.get('duckmail_api_base') or DEFAULT_CONFIG['duckmail_api_base']), 50)}",
+            f"LaMail API Key: {_mask_secret(str(CONFIG.get('lamail_api_key') or ''))}",
+            f"LaMail Base URL: {_shorten_path_display(str(CONFIG.get('lamail_api_base') or DEFAULT_CONFIG['lamail_api_base']), 50)}",
+            f"LaMail 域名: {_shorten_path_display(str(CONFIG.get('lamail_domain') or DEFAULT_CONFIG['lamail_domain'] or '未设置'), 50)}",
+            f"CFMail Profile: {_shorten_path_display(str(CONFIG.get('cfmail_profile') or DEFAULT_CONFIG['cfmail_profile']), 50)}",
             f"AISub API Key: {_mask_secret(str(CONFIG.get('aisub_api_key') or ''))}",
+            f"AISub Base URL: {_shorten_path_display(str(CONFIG.get('aisub_base_url') or DEFAULT_CONFIG['aisub_base_url']), 50)}",
             f"NCET Base URL: {_shorten_path_display(str(CONFIG.get('redeem_base_url') or DEFAULT_CONFIG['redeem_base_url']), 50)}",
             f"EFunCard Base URL: {_shorten_path_display(str(CONFIG.get('efuncard_base_url') or DEFAULT_CONFIG['efuncard_base_url']), 50)}",
             f"EFunCard CSRF Token: {_mask_secret(str(CONFIG.get('efuncard_csrf_token') or ''))}",
             f"EFunCard 城市库 URL: {_shorten_path_display(str(CONFIG.get('efuncard_address_cities_url') or DEFAULT_CONFIG['efuncard_address_cities_url']), 50)}",
-            f"AISub Base URL: {_shorten_path_display(str(CONFIG.get('aisub_base_url') or DEFAULT_CONFIG['aisub_base_url']), 50)}",
             f"OpenAI Client ID: {_shorten_path_display(_get_openai_client_id() or '未设置', 50)}",
             f"OpenAI Originator: {_shorten_path_display(_get_openai_originator() or '未设置', 50)}",
+            f"OpenAI Redirect URI: {_shorten_path_display(str(CONFIG.get('oauth_redirect_uri') or DEFAULT_CONFIG['oauth_redirect_uri']), 50)}",
+            f"OpenAI Scope: {_shorten_path_display(str(CONFIG.get('oauth_scope') or DEFAULT_CONFIG['oauth_scope']), 50)}",
             f"OpenAI POW 参数: {(_get_openai_pow_value() or '未设置')}",
             "返回",
         ]
@@ -2086,61 +3325,139 @@ def prompt_service_settings() -> None:
             log_ok(f"卡商已更新为 {provider_label}")
         elif selected_index == 1:
             _update_config_value(
+                "tempmail_base",
+                "请输入 TempMail.lol Base URL: ",
+                default=CONFIG.get("tempmail_base") or DEFAULT_CONFIG["tempmail_base"],
+                success_text="TempMail.lol Base URL 已更新",
+            )
+        elif selected_index == 2:
+            _update_config_value(
+                "tempmail_plus_api",
+                "请输入 TempMail.plus API: ",
+                default=CONFIG.get("tempmail_plus_api") or DEFAULT_CONFIG["tempmail_plus_api"],
+                success_text="TempMail.plus API 已更新",
+            )
+        elif selected_index == 3:
+            _update_config_value(
                 "tm_npcmail_apikey",
                 "请输入 NPCMail API Key，留空则清除: ",
                 default=CONFIG.get("tm_npcmail_apikey") or "",
                 success_text="NPCMail API Key 已更新",
             )
-        elif selected_index == 2:
+        elif selected_index == 4:
+            _update_config_value(
+                "npcmail_base",
+                "请输入 NPCMail Base URL: ",
+                default=CONFIG.get("npcmail_base") or DEFAULT_CONFIG["npcmail_base"],
+                success_text="NPCMail Base URL 已更新",
+            )
+        elif selected_index == 5:
             _update_config_value(
                 "gptmail_api_key",
                 "请输入 GPTMail API Key，留空则清除: ",
                 default=CONFIG.get("gptmail_api_key") or "",
                 success_text="GPTMail API Key 已更新",
             )
-        elif selected_index == 3:
+        elif selected_index == 6:
+            _update_config_value(
+                "gptmail_base",
+                "请输入 GPTMail Base URL: ",
+                default=CONFIG.get("gptmail_base") or DEFAULT_CONFIG["gptmail_base"],
+                success_text="GPTMail Base URL 已更新",
+            )
+        elif selected_index == 7:
             _update_config_value(
                 "junmail_api_key",
                 "请输入 JunMail API Key，留空则清除: ",
                 default=CONFIG.get("junmail_api_key") or "",
                 success_text="JunMail API Key 已更新",
             )
-        elif selected_index == 4:
+        elif selected_index == 8:
             _update_config_value(
                 "junmail_base",
                 "请输入 JunMail Base URL: ",
                 default=CONFIG.get("junmail_base") or DEFAULT_CONFIG["junmail_base"],
                 success_text="JunMail Base URL 已更新",
             )
-        elif selected_index == 5:
+        elif selected_index == 9:
+            _update_config_value(
+                "duckmail_bearer",
+                "请输入 DuckMail Bearer，留空则清除: ",
+                default=CONFIG.get("duckmail_bearer") or "",
+                success_text="DuckMail Bearer 已更新",
+            )
+        elif selected_index == 10:
+            _update_config_value(
+                "duckmail_api_base",
+                "请输入 DuckMail Base URL: ",
+                default=CONFIG.get("duckmail_api_base") or DEFAULT_CONFIG["duckmail_api_base"],
+                success_text="DuckMail Base URL 已更新",
+            )
+        elif selected_index == 11:
+            _update_config_value(
+                "lamail_api_key",
+                "请输入 LaMail API Key，留空则清除: ",
+                default=CONFIG.get("lamail_api_key") or "",
+                success_text="LaMail API Key 已更新",
+            )
+        elif selected_index == 12:
+            _update_config_value(
+                "lamail_api_base",
+                "请输入 LaMail Base URL: ",
+                default=CONFIG.get("lamail_api_base") or DEFAULT_CONFIG["lamail_api_base"],
+                success_text="LaMail Base URL 已更新",
+            )
+        elif selected_index == 13:
+            _update_config_value(
+                "lamail_domain",
+                "请输入 LaMail 域名，留空则清除: ",
+                default=CONFIG.get("lamail_domain") or "",
+                success_text="LaMail 域名已更新",
+            )
+        elif selected_index == 14:
+            _update_config_value(
+                "cfmail_profile",
+                "请输入 CFMail Profile（auto 或具体名称）: ",
+                default=CONFIG.get("cfmail_profile") or DEFAULT_CONFIG["cfmail_profile"],
+                success_text="CFMail Profile 已更新",
+            )
+            _reload_cfmail_accounts_if_needed(force=True)
+        elif selected_index == 15:
             _update_config_value(
                 "aisub_api_key",
                 "请输入 AISub API Key，留空则清除: ",
                 default=CONFIG.get("aisub_api_key") or "",
                 success_text="AISub API Key 已更新",
             )
-        elif selected_index == 6:
+        elif selected_index == 16:
+            _update_config_value(
+                "aisub_base_url",
+                "请输入 AISub Base URL: ",
+                default=CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"],
+                success_text="AISub Base URL 已更新",
+            )
+        elif selected_index == 17:
             _update_config_value(
                 "redeem_base_url",
                 "请输入 NCET Base URL: ",
                 default=CONFIG.get("redeem_base_url") or DEFAULT_CONFIG["redeem_base_url"],
                 success_text="NCET Base URL 已更新",
             )
-        elif selected_index == 7:
+        elif selected_index == 18:
             _update_config_value(
                 "efuncard_base_url",
                 "请输入 EFunCard Base URL: ",
                 default=CONFIG.get("efuncard_base_url") or DEFAULT_CONFIG["efuncard_base_url"],
                 success_text="EFunCard Base URL 已更新",
             )
-        elif selected_index == 8:
+        elif selected_index == 19:
             _update_config_value(
                 "efuncard_csrf_token",
                 "请输入 EFunCard CSRF Token，留空则清除: ",
                 default=CONFIG.get("efuncard_csrf_token") or "",
                 success_text="EFunCard CSRF Token 已更新",
             )
-        elif selected_index == 9:
+        elif selected_index == 20:
             value = _prompt_input(
                 "请输入 EFunCard 城市库 URL: ",
                 str(CONFIG.get("efuncard_address_cities_url") or DEFAULT_CONFIG["efuncard_address_cities_url"]),
@@ -2151,28 +3468,35 @@ def prompt_service_settings() -> None:
             EFUNCARD_CITY_DATA_CACHE = None
             save_config()
             log_ok("EFunCard 城市库 URL 已更新")
-        elif selected_index == 10:
-            _update_config_value(
-                "aisub_base_url",
-                "请输入 AISub Base URL: ",
-                default=CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"],
-                success_text="AISub Base URL 已更新",
-            )
-        elif selected_index == 11:
+        elif selected_index == 21:
             _update_config_value(
                 "oauth_client_id",
                 "请输入 OpenAI Client ID，留空则恢复默认: ",
                 default=_get_openai_client_id(),
                 success_text="OpenAI Client ID 已更新",
             )
-        elif selected_index == 12:
+        elif selected_index == 22:
             _update_config_value(
                 "oauth_originator",
                 "请输入 OpenAI Originator，留空则清除: ",
                 default=_get_openai_originator(),
                 success_text="OpenAI Originator 已更新",
             )
-        elif selected_index == 13:
+        elif selected_index == 23:
+            _update_config_value(
+                "oauth_redirect_uri",
+                "请输入 OpenAI Redirect URI: ",
+                default=CONFIG.get("oauth_redirect_uri") or DEFAULT_CONFIG["oauth_redirect_uri"],
+                success_text="OpenAI Redirect URI 已更新",
+            )
+        elif selected_index == 24:
+            _update_config_value(
+                "oauth_scope",
+                "请输入 OpenAI Scope: ",
+                default=CONFIG.get("oauth_scope") or DEFAULT_CONFIG["oauth_scope"],
+                success_text="OpenAI Scope 已更新",
+            )
+        elif selected_index == 25:
             _update_config_value(
                 "openai_pow_value",
                 "请输入 OpenAI POW 参数，留空则清除: ",
@@ -2181,34 +3505,154 @@ def prompt_service_settings() -> None:
             )
 
 
+def prompt_cpa_settings() -> None:
+    selected_index = 0
+    while True:
+        options = [
+            f"Token JSON 目录: {_shorten_path_display(str(CONFIG.get('token_json_dir') or DEFAULT_CONFIG['token_json_dir']))}",
+            f"AK 文件: {_shorten_path_display(str(CONFIG.get('ak_file') or DEFAULT_CONFIG['ak_file']))}",
+            f"RK 文件: {_shorten_path_display(str(CONFIG.get('rk_file') or DEFAULT_CONFIG['rk_file']))}",
+            f"CPA 上传 URL: {_shorten_path_display(str(CONFIG.get('upload_api_url') or DEFAULT_CONFIG['upload_api_url'] or '未设置'), 50)}",
+            f"CPA 上传 Token: {_mask_secret(str(CONFIG.get('upload_api_token') or ''))}",
+            f"CPA 上传代理: {_shorten_path_display(str(CONFIG.get('upload_api_proxy') or DEFAULT_CONFIG['upload_api_proxy'] or '未设置'), 50)}",
+            f"每 N 个自动导入: {int(CONFIG.get('cpa_upload_every_n') or DEFAULT_CONFIG['cpa_upload_every_n'])}",
+            f"注册前 CPA 清理: {'开' if bool(CONFIG.get('cpa_cleanup_enabled', DEFAULT_CONFIG['cpa_cleanup_enabled'])) else '关'}",
+            "返回",
+        ]
+        selected_index = _select_from_menu("配置中心 / CPA 配置", options, selected_index)
+        if selected_index in {-1, len(options) - 1}:
+            return
+        if selected_index == 0:
+            _update_config_value(
+                "token_json_dir",
+                "请输入 Token JSON 目录，支持相对路径: ",
+                default=CONFIG.get("token_json_dir") or DEFAULT_CONFIG["token_json_dir"],
+                success_text="Token JSON 目录已更新",
+            )
+        elif selected_index == 1:
+            _update_config_value(
+                "ak_file",
+                "请输入 AK 文件路径，支持相对路径: ",
+                default=CONFIG.get("ak_file") or DEFAULT_CONFIG["ak_file"],
+                success_text="AK 文件路径已更新",
+            )
+        elif selected_index == 2:
+            _update_config_value(
+                "rk_file",
+                "请输入 RK 文件路径，支持相对路径: ",
+                default=CONFIG.get("rk_file") or DEFAULT_CONFIG["rk_file"],
+                success_text="RK 文件路径已更新",
+            )
+        elif selected_index == 3:
+            _update_config_value(
+                "upload_api_url",
+                "请输入 CPA 上传 URL，留空则清除: ",
+                default=CONFIG.get("upload_api_url") or "",
+                success_text="CPA 上传 URL 已更新",
+            )
+        elif selected_index == 4:
+            _update_config_value(
+                "upload_api_token",
+                "请输入 CPA 上传 Token，留空则清除: ",
+                default=CONFIG.get("upload_api_token") or "",
+                success_text="CPA 上传 Token 已更新",
+            )
+        elif selected_index == 5:
+            _update_config_value(
+                "upload_api_proxy",
+                "请输入 CPA 上传代理（可填 direct/default/代理地址），留空则清除: ",
+                default=CONFIG.get("upload_api_proxy") or "",
+                success_text="CPA 上传代理已更新",
+            )
+        elif selected_index == 6:
+            _update_config_value(
+                "cpa_upload_every_n",
+                "请输入每成功多少个账号触发一次 CPA 自动导入: ",
+                default=CONFIG.get("cpa_upload_every_n") or DEFAULT_CONFIG["cpa_upload_every_n"],
+                parser=_parse_positive_int,
+                success_text="CPA 自动导入阈值已更新",
+            )
+        elif selected_index == 7:
+            enabled = bool(CONFIG.get("cpa_cleanup_enabled", DEFAULT_CONFIG["cpa_cleanup_enabled"]))
+            toggle_choice = _select_from_menu("注册前 CPA 清理", ["开", "关"], 0 if enabled else 1)
+            if toggle_choice == -1:
+                continue
+            CONFIG["cpa_cleanup_enabled"] = toggle_choice == 0
+            save_config()
+            log_ok("注册前 CPA 清理配置已更新")
+
+
 def prompt_runtime_settings() -> None:
     selected_index = 0
     while True:
         current_provider = _card_provider_label()
         max_use_config_key = "efuncard_card_max_use_count" if _card_provider_key() == "efuncard" else "card_max_use_count"
+        current_target_type = str(CONFIG.get("target_type") or DEFAULT_CONFIG["target_type"]).strip()
+        current_target_value = int(CONFIG.get("target_value") or DEFAULT_CONFIG["target_value"] or 0)
+        current_target_display = current_target_value if current_target_type == "register_count" else 0
         options = [
+            f"生成账户数: {current_target_display}",
             f"注册类型: {_register_type_label()}",
             f"默认代理: {str(CONFIG.get('default_proxy') or '').strip() or '未设置'}",
+            f"休息最短秒数: {int(CONFIG.get('default_sleep_min') or DEFAULT_CONFIG['default_sleep_min'])}",
+            f"休息最长秒数: {int(CONFIG.get('default_sleep_max') or DEFAULT_CONFIG['default_sleep_max'])}",
             f"单卡最大绑定次数({current_provider}): {get_card_max_use_count()}",
             f"日志模式: {'详细' if bool(CONFIG.get('verbose_info_logs_enabled', DEFAULT_CONFIG['verbose_info_logs_enabled'])) else '精简'}",
             f"subscribe 失败重开号: {'开' if bool(CONFIG.get('subscribe_retry_new_account_enabled', True)) else '关'}",
             f"3DS 触发换号: {'开' if bool(CONFIG.get('subscribe_switch_account_on_3ds_enabled', True)) else '关'}",
             f"subscribe 失败次数上限: {int(CONFIG.get('subscribe_retry_new_account_limit', 50) or 50)}",
+            f"订阅 Plan: {str(CONFIG.get('subscribe_plan') or DEFAULT_CONFIG['subscribe_plan']).strip() or '未设置'}",
             "返回",
         ]
         selected_index = _select_from_menu("配置中心 / 运行策略", options, selected_index)
         if selected_index in {-1, len(options) - 1}:
             return
         if selected_index == 0:
-            prompt_register_type_setting()
+            prompt_execution_count()
         elif selected_index == 1:
+            prompt_register_type_setting()
+        elif selected_index == 2:
             _update_config_value(
                 "default_proxy",
                 "请输入默认代理，留空则清除: ",
                 default=CONFIG.get("default_proxy") or "",
                 success_text="默认代理已更新",
             )
-        elif selected_index == 2:
+        elif selected_index == 3:
+            raw = _prompt_input(
+                "请输入休息最短秒数: ",
+                str(int(CONFIG.get("default_sleep_min") or DEFAULT_CONFIG["default_sleep_min"])),
+            )
+            if raw is None:
+                continue
+            try:
+                sleep_min = _parse_positive_int(raw)
+            except ValueError:
+                log_warn("输入无效")
+                continue
+            CONFIG["default_sleep_min"] = sleep_min
+            if sleep_min > int(CONFIG.get("default_sleep_max") or DEFAULT_CONFIG["default_sleep_max"]):
+                CONFIG["default_sleep_max"] = sleep_min
+            save_config()
+            log_ok(f"休息最短秒数已更新为 {CONFIG['default_sleep_min']}")
+        elif selected_index == 4:
+            raw = _prompt_input(
+                "请输入休息最长秒数: ",
+                str(int(CONFIG.get("default_sleep_max") or DEFAULT_CONFIG["default_sleep_max"])),
+            )
+            if raw is None:
+                continue
+            try:
+                sleep_max = _parse_positive_int(raw)
+            except ValueError:
+                log_warn("输入无效")
+                continue
+            CONFIG["default_sleep_max"] = sleep_max
+            if sleep_max < int(CONFIG.get("default_sleep_min") or DEFAULT_CONFIG["default_sleep_min"]):
+                CONFIG["default_sleep_min"] = sleep_max
+            save_config()
+            log_ok(f"休息最长秒数已更新为 {CONFIG['default_sleep_max']}")
+        elif selected_index == 5:
             raw = _prompt_input(f"请输入单卡最大绑定次数({current_provider}): ", str(get_card_max_use_count()))
             if raw is None:
                 continue
@@ -2219,7 +3663,7 @@ def prompt_runtime_settings() -> None:
                 continue
             save_config()
             log_ok(f"单卡最大绑定次数({current_provider})已更新为 {CONFIG[max_use_config_key]}")
-        elif selected_index == 3:
+        elif selected_index == 6:
             enabled = bool(CONFIG.get("verbose_info_logs_enabled", DEFAULT_CONFIG["verbose_info_logs_enabled"]))
             toggle_choice = _select_from_menu("日志模式", ["详细", "精简"], 0 if enabled else 1)
             if toggle_choice == -1:
@@ -2227,7 +3671,7 @@ def prompt_runtime_settings() -> None:
             CONFIG["verbose_info_logs_enabled"] = toggle_choice == 0
             save_config()
             log_ok(f"日志模式已更新为 {'详细' if CONFIG['verbose_info_logs_enabled'] else '精简'}")
-        elif selected_index == 4:
+        elif selected_index == 7:
             enabled = bool(CONFIG.get("subscribe_retry_new_account_enabled", True))
             toggle_choice = _select_from_menu("subscribe 失败重开号", ["开", "关"], 0 if enabled else 1)
             if toggle_choice == -1:
@@ -2235,7 +3679,7 @@ def prompt_runtime_settings() -> None:
             CONFIG["subscribe_retry_new_account_enabled"] = toggle_choice == 0
             save_config()
             log_ok("subscribe 失败重开号配置已更新")
-        elif selected_index == 5:
+        elif selected_index == 8:
             enabled = bool(CONFIG.get("subscribe_switch_account_on_3ds_enabled", True))
             toggle_choice = _select_from_menu("3DS 触发换号", ["开", "关"], 0 if enabled else 1)
             if toggle_choice == -1:
@@ -2243,7 +3687,7 @@ def prompt_runtime_settings() -> None:
             CONFIG["subscribe_switch_account_on_3ds_enabled"] = toggle_choice == 0
             save_config()
             log_ok("3DS 触发换号配置已更新")
-        elif selected_index == 6:
+        elif selected_index == 9:
             raw = _prompt_input(
                 "请输入 subscribe 失败次数上限: ",
                 str(int(CONFIG.get("subscribe_retry_new_account_limit", 50) or 50)),
@@ -2257,6 +3701,13 @@ def prompt_runtime_settings() -> None:
                 continue
             save_config()
             log_ok(f"subscribe 失败次数上限已更新为 {CONFIG['subscribe_retry_new_account_limit']}")
+        elif selected_index == 10:
+            _update_config_value(
+                "subscribe_plan",
+                "请输入订阅 Plan: ",
+                default=CONFIG.get("subscribe_plan") or DEFAULT_CONFIG["subscribe_plan"],
+                success_text="订阅 Plan 已更新",
+            )
 
 
 def prompt_register_type_setting() -> None:
@@ -2386,6 +3837,7 @@ def prompt_other_config() -> None:
             "导入数据",
             "邮箱注册",
             "接口与密钥",
+            "CPA 配置",
             "运行策略",
             "高级设置",
             "返回",
@@ -2408,9 +3860,12 @@ def prompt_other_config() -> None:
             prompt_service_settings()
             continue
         if selected_index == 4:
-            prompt_runtime_settings()
+            prompt_cpa_settings()
             continue
         if selected_index == 5:
+            prompt_runtime_settings()
+            continue
+        if selected_index == 6:
             prompt_advanced_settings()
 
 
@@ -3879,21 +5334,22 @@ def _enrich_token_json_with_registration_context(
     token_data["birthdate"] = birthdate
     token_data["email_provider"] = str(mailbox.get("email_provider") or "")
     token_data["custom_domain"] = bool(mailbox.get("custom_domain"))
+    if mailbox.get("email_password"):
+        token_data["email_password"] = str(mailbox.get("email_password") or "")
     if mailbox.get("junmail_mailbox_id"):
         token_data["junmail_mailbox_id"] = str(mailbox.get("junmail_mailbox_id") or "")
+    if mailbox.get("cfmail_account_name"):
+        token_data["cfmail_account_name"] = str(mailbox.get("cfmail_account_name") or "")
     return json.dumps(token_data, ensure_ascii=False, separators=(",", ":"))
 
 def run(proxy: Optional[str]) -> Optional[str]:
-    proxies: Any = None
-    if proxy:
-        proxies = {"http": proxy, "https": proxy}
+    proxies = _build_proxy_dict(proxy)
 
     _record_last_run_failure("")
-
-    s = requests.Session(proxies=proxies, impersonate="chrome")
     mailbox: Optional[Dict[str, Any]] = None
 
     try:
+        s = requests.Session(proxies=proxies, impersonate="chrome")
         trace = s.get("https://cloudflare.com/cdn-cgi/trace", timeout=10)
         trace = trace.text
         loc_re = re.search(r"^loc=(.+)$", trace, re.MULTILINE)
@@ -3919,255 +5375,39 @@ def run(proxy: Optional[str]) -> Optional[str]:
     provider_name = "TempMail" if mailbox.get("custom_domain") else _email_provider_label(mailbox.get("email_provider"))
     log_ok(f"邮箱就绪 [{provider_name}]: {email}")
 
-    oauth = generate_oauth_url()
-    url = oauth.auth_url
-    pow_value = _get_openai_pow_value()
-
     try:
-        resp = s.get(url, timeout=15)
-        did = _ensure_openai_device_id(s, resp)
-        if not did:
-            _record_last_run_failure("未获取到 OpenAI 下发的 Device ID（oai-did Cookie），当前代理/网络无法通过 auth.openai.com 前置校验")
-            log_error("未获取到 OpenAI 下发的 Device ID（oai-did Cookie），当前代理/网络无法通过 auth.openai.com 前置校验")
-            return None
-
-        signup_body = json.dumps({
-            "username": {"value": email, "kind": "email"},
-            "screen_hint": "signup",
-        })
-        sen_req_body = json.dumps({
-            "p": pow_value,
-            "id": did,
-            "flow": "authorize_continue",
-        })
-
-        sen_resp = requests.post(
-            "https://sentinel.openai.com/backend-api/sentinel/req",
-            headers={
-                "origin": "https://sentinel.openai.com",
-                "referer": "https://sentinel.openai.com/backend-api/sentinel/frame.html?sv=20260219f9f6",
-                "content-type": "text/plain;charset=UTF-8",
-            },
-            data=sen_req_body,
-            proxies=proxies,
-            impersonate="chrome",
-            timeout=15,
-        )
-
-        if sen_resp.status_code != 200:
-            _record_last_run_failure(f"Sentinel 异常拦截，状态码: {sen_resp.status_code}")
-            log_error(f"Sentinel 异常拦截，状态码: {sen_resp.status_code}")
-            return None
-
-        sen_token = sen_resp.json()["token"]
-        sentinel = json.dumps({
-            "p": pow_value,
-            "t": "",
-            "c": sen_token,
-            "id": did,
-            "flow": "authorize_continue",
-        })
-
-        signup_resp = s.post(
-            "https://auth.openai.com/api/accounts/authorize/continue",
-            headers={
-                "referer": "https://auth.openai.com/create-account",
-                "accept": "application/json",
-                "content-type": "application/json",
-                "openai-sentinel-token": sentinel,
-            },
-            data=signup_body,
-        )
-        if signup_resp.status_code >= 400:
-            _record_last_run_failure(f"注册入口失败: {signup_resp.status_code}")
-            log_error(f"注册入口失败: {signup_resp.status_code}")
-            return None
-
         password = str(mailbox.get("password") or "").strip()
         if not password:
             _record_last_run_failure("注册上下文缺少密码")
             log_error("注册上下文缺少密码")
             return None
-
-        # 提交密码和邮箱
-        register_body = json.dumps({
-            "password": password,
-            "username": email
-        })
-
-        pwd_resp = s.post(
-            "https://auth.openai.com/api/accounts/user/register",
-            headers={
-                "referer": "https://auth.openai.com/create-account/password",
-                "accept": "application/json",
-                "content-type": "application/json",
-            },
-            data=register_body,
-        )
-        if pwd_resp.status_code >= 400:
-            _record_last_run_failure(f"提交注册信息失败: {pwd_resp.status_code}")
-            log_error(f"提交注册信息失败: {pwd_resp.status_code}")
-            return None
-
-        # 发送邮箱验证码
-        otp_resp = s.get(
-            "https://auth.openai.com/api/accounts/email-otp/send",
-            headers={
-                "referer": "https://auth.openai.com/create-account/password",
-                "accept": "application/json",
-            },
-        )
-        if otp_resp.status_code >= 400:
-            _record_last_run_failure(f"发送验证码失败: {otp_resp.status_code}")
-            log_error(f"发送验证码失败: {otp_resp.status_code}")
-            return None
-
-        code = get_oai_code(mailbox, proxies)
-        if not code:
-            if not _peek_last_run_failure():
-                _record_last_run_failure("未获取到邮箱验证码")
-            return None
-
-        code_body = f'{{"code":"{code}"}}'
-        code_resp = s.post(
-            "https://auth.openai.com/api/accounts/email-otp/validate",
-            headers={
-                "referer": "https://auth.openai.com/email-verification",
-                "accept": "application/json",
-                "content-type": "application/json",
-            },
-            data=code_body,
-        )
-        if code_resp.status_code >= 400:
-            _record_last_run_failure(f"验证码校验失败: {code_resp.status_code}")
-            log_error(f"验证码校验失败: {code_resp.status_code}")
-            return None
-
         full_name = f"{mailbox.get('first_name', '')} {mailbox.get('last_name', '')}".strip()
         birthdate = str(mailbox.get("birthdate") or "2000-02-20").strip()
-        create_account_body = json.dumps({"name": full_name or "Neo", "birthdate": birthdate})
-        create_account_resp = s.post(
-            "https://auth.openai.com/api/accounts/create_account",
-            headers={
-                "referer": "https://auth.openai.com/about-you",
-                "accept": "application/json",
-                "content-type": "application/json",
-            },
-            data=create_account_body,
-        )
-        create_account_status = create_account_resp.status_code
+        provider = str(mailbox.get("email_provider") or "").strip().lower()
+        mail_token = str(mailbox.get("tm_token") or "").strip()
 
-        if create_account_status != 200:
-            _record_last_run_failure(f"账户创建失败: {create_account_status}")
-            log_error(f"账户创建失败: {create_account_status}")
-            return None
-        try:
-            create_account_payload = create_account_resp.json()
-        except Exception:
-            create_account_payload = {}
-        create_account_continue_url = str((create_account_payload.get("continue_url") or "")).strip()
-        create_account_page_type = str(((create_account_payload.get("page") or {}).get("type") or "")).strip()
-        if create_account_page_type == "add_phone" or "add-phone" in create_account_continue_url:
-            _record_last_run_failure("当前账号触发绑定手机")
-            log_error("当前账号触发绑定手机")
-            log_verbose(
-                "当前账号触发绑定手机 详情: "
-                + json.dumps(
-                    {
-                        "create_account_response": create_account_payload,
-                    },
-                    ensure_ascii=False,
-                    default=str,
-                )
-            )
-            return None
+        reg = _build_cpa_style_register(proxy, mailbox)
+        reg.run_register(
+            email,
+            password,
+            full_name or "Neo",
+            birthdate,
+            mail_token,
+            provider=provider,
+        )
         log_ok("OpenAI 账号创建完成")
 
-        auth_cookie = s.cookies.get("oai-client-auth-session")
-        if not auth_cookie:
-            _record_last_run_failure("未能获取到授权 Cookie")
-            log_error("未能获取到授权 Cookie")
-            return None
-
-        auth_json = _decode_jwt_segment(auth_cookie.split(".")[0])
-        workspaces = auth_json.get("workspaces") or []
-        if not workspaces:
-            _record_last_run_failure("授权 Cookie 里没有 workspace 信息")
-            log_error("授权 Cookie 里没有 workspace 信息")
-            log_verbose(
-                "授权 Cookie 里没有 workspace 信息 详情: "
-                + json.dumps(
-                    {
-                        "auth_cookie_payload": auth_json,
-                        "auth_cookie_prefix": str(auth_cookie)[:80],
-                        "create_account_response": create_account_payload,
-                    },
-                    ensure_ascii=False,
-                    default=str,
-                )
-            )
-            return None
-        workspace_id = str((workspaces[0] or {}).get("id") or "").strip()
-        if not workspace_id:
-            _record_last_run_failure("无法解析 workspace_id")
-            log_error("无法解析 workspace_id")
-            log_verbose(f"无法解析 workspace_id 详情: {json.dumps({'workspaces': workspaces}, ensure_ascii=False, default=str)}")
-            return None
-
-        select_body = f'{{"workspace_id":"{workspace_id}"}}'
-        select_resp = s.post(
-            "https://auth.openai.com/api/accounts/workspace/select",
-            headers={
-                "referer": "https://auth.openai.com/sign-in-with-chatgpt/codex/consent",
-                "content-type": "application/json",
-            },
-            data=select_body,
+        token_json = _perform_cpa_style_codex_oauth_login_http(
+            reg,
+            mailbox=mailbox,
+            email=email,
+            password=password,
         )
-
-        if select_resp.status_code != 200:
-            _record_last_run_failure(f"选择 workspace 失败，状态码: {select_resp.status_code}")
-            log_error(f"选择 workspace 失败，状态码: {select_resp.status_code}")
-            log_verbose(
-                f"选择 workspace 失败，状态码: {select_resp.status_code} 详情: "
-                + json.dumps({"response_text": select_resp.text}, ensure_ascii=False, default=str)
-            )
+        if not token_json:
+            _record_last_run_failure("按 CPA 流程执行 Codex OAuth 失败")
+            log_error("按 CPA 流程执行 Codex OAuth 失败")
             return None
-
-        continue_url = str((select_resp.json() or {}).get("continue_url") or "").strip()
-        if not continue_url:
-            _record_last_run_failure("workspace/select 响应里缺少 continue_url")
-            log_error("workspace/select 响应里缺少 continue_url")
-            return None
-
-        current_url = continue_url
-        for _ in range(6):
-            final_resp = s.get(current_url, allow_redirects=False, timeout=15)
-            location = final_resp.headers.get("Location") or ""
-
-            if final_resp.status_code not in [301, 302, 303, 307, 308]:
-                break
-            if not location:
-                break
-
-            next_url = urllib.parse.urljoin(current_url, location)
-            if "code=" in next_url and "state=" in next_url:
-                token_json = submit_callback_url(
-                    callback_url=next_url,
-                    code_verifier=oauth.code_verifier,
-                    redirect_uri=oauth.redirect_uri,
-                    expected_state=oauth.state,
-                )
-                return _enrich_token_json_with_registration_context(
-                    token_json,
-                    password=password,
-                    birthdate=birthdate,
-                    mailbox=mailbox,
-                )
-            current_url = next_url
-
-        _record_last_run_failure("未能在重定向链中捕获到最终 Callback URL")
-        log_error("未能在重定向链中捕获到最终 Callback URL")
-        return None
+        return token_json
 
     except Exception as e:
         _record_last_run_failure(f"运行时发生错误: {e}")
@@ -4215,6 +5455,8 @@ def main() -> None:
     aisub_balance_before: Dict[str, Any] = {}
     aisub_balance_after: Dict[str, Any] = {}
     cdkey_added_count = 0
+    pending_cpa_uploads = 0
+    cpa_cleanup_executed = False
 
     count = 0
     cdkey_added_count = sync_code_file_from_cdkeys()
@@ -4244,6 +5486,9 @@ def main() -> None:
                 print_aisub_balance_summary("运行前 AISub 余额", aisub_balance_before)
         if register_type == "team":
             ensure_aisub_balance(proxies)
+        if bool(CONFIG.get("cpa_cleanup_enabled", DEFAULT_CONFIG["cpa_cleanup_enabled"])) and not cpa_cleanup_executed:
+            _run_cpa_cleanup_before_register()
+            cpa_cleanup_executed = True
 
         started_at = datetime.now()
         while True:
@@ -4264,13 +5509,29 @@ def main() -> None:
                 token_json = run(proxy_value)
 
                 if token_json:
-                    registered_accounts += 1
                     try:
                         t_data = json.loads(token_json)
                     except Exception:
                         t_data = {}
 
                     t_data["register_type"] = register_type
+                    token_artifact_path = _save_codex_token_artifacts(t_data)
+                    if token_artifact_path:
+                        pending_cpa_uploads += 1
+                        upload_every_n = max(
+                            1,
+                            int(CONFIG.get("cpa_upload_every_n") or DEFAULT_CONFIG["cpa_upload_every_n"]),
+                        )
+                        if (
+                            str(CONFIG.get("upload_api_url") or DEFAULT_CONFIG["upload_api_url"]).strip()
+                            and pending_cpa_uploads >= upload_every_n
+                        ):
+                            log_info(
+                                f"达到 CPA 自动导入阈值: {pending_cpa_uploads}/{upload_every_n}，开始上传"
+                            )
+                            _upload_all_tokens_to_cpa()
+                            pending_cpa_uploads = 0
+
                     if register_type == "team":
                         access_token = str(t_data.get("access_token") or "").strip()
                         if not access_token:
@@ -4296,6 +5557,7 @@ def main() -> None:
                         t_data["subscribe_result"] = subscribe_result
                         mother_accounts += 1
                     append_team_entry(teams_file, t_data)
+                    registered_accounts += 1
                     if should_stop_for_target(
                         registered_accounts=registered_accounts,
                         mother_accounts=mother_accounts,
@@ -4333,6 +5595,7 @@ def main() -> None:
         if register_type == "team":
             aisub_balance_after = get_aisub_balance_snapshot(proxies)
             print_aisub_balance_summary("运行后 AISub 余额", aisub_balance_after)
+        _upload_all_tokens_to_cpa()
         print_run_summary(
             register_type=register_type,
             registered_accounts=registered_accounts,

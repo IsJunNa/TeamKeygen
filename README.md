@@ -8,6 +8,8 @@
 - 自动校验兑换码、开卡、轮询开卡结果
 - 申请注册邮箱并收取验证码
 - 创建 OpenAI 账号并执行后续订阅流程
+- 自动落盘 `access_token / refresh_token / token json`
+- 按阈值把新注册账号自动导入到 CPA 管理平台
 - 在终端里提供菜单式配置中心
 
 ## 开始前先看
@@ -149,10 +151,13 @@ python3 team.py
 
 当前支持的邮箱来源：
 
+- `DuckMail`
 - `NPCMail`
 - `GPTMail`
 - `JunMail`
-- `临时邮箱(仅可做测试使用,封号严重)` (`xiaomajiang`)
+- `LaMail`
+- `CFMail`
+- `TempMail.lol` (`tempmail_lol`)
 - `本地Outlook邮箱` (`local_graph`)
 
 如果你用的是 [data/local_graph_accounts.txt](/Applications/Project/TeamKeygen/data/local_graph_accounts.txt)，通常把邮箱提供商设成 `本地Outlook邮箱`。
@@ -167,6 +172,15 @@ python3 team.py
 - `GPTMail API Key`
 - `JunMail API Key`
 - `JunMail Base URL`
+- `DuckMail Bearer`
+- `DuckMail Base URL`
+- `LaMail API Key`
+- `LaMail Base URL`
+- `LaMail 域名`
+- `CFMail Profile`
+- `CPA 上传 URL / Token / Proxy`
+- `CPA 自动导入阈值`
+- `注册前 CPA 清理`
 - `AISub API Key`
 - `NCET Base URL`
 - `EFunCard Base URL`
@@ -182,6 +196,8 @@ python3 team.py
 - `OpenAI Client ID` 用于控制 OpenAI OAuth 授权链路里的 `client_id`
 - `OpenAI Originator` 会追加到 OpenAI OAuth 授权 URL 的 `originator` 参数
 - `OpenAI POW 参数` 会写入 OpenAI 注册链路里 `sentinel/req` 和 `openai-sentinel-token` 的 `p` 字段
+- `CPA 上传 URL` 配置后，程序会把 `token_json_dir` 里的 token 文件自动上传到 CPA
+- `注册前 CPA 清理` 开启后，会调用 `cpa_20260323/ncs_register.py` 里的清理逻辑先删掉无效号
 - 默认留空，不填时按原来的空值请求
 
 ### 运行策略
