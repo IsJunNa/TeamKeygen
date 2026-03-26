@@ -1,0 +1,25 @@
+# macOS / editor
+.DS_Store
+.idea/
+
+# Python caches
+__pycache__/
+.pycache/
+.pycache_tmp/
+*.py[cod]
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Node dependencies
+node_modules/
+
+# Runtime logs and generated outputs
+logs/
+output/
+codex_tokens/
+code_results.json
+ak.txt
+rk.txt

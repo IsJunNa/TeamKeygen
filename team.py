@@ -90,9 +90,14 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "efuncard_csrf_token": "",
     "efuncard_address_cities_url": "https://usaddressgen.com/data/cities/us-cities.70518e158991aef99b470662cb3b5a408c6e0b189f77fb7c64da1ab6a95ff737.json",
     "efuncard_card_max_use_count": 1,
-    "aisub_base_url": "https://sub.zenscaleai.com",
-    "aisub_api_key": "sk_c1561e264e8b0b164d737603e696cba53e0040cc64fec55c",
+    "aisub_base_url": "https://stripe.xmdbd.com",
+    "aisub_api_key": "sk-49d7e4023898fb4acdb7d0ca0c1d7744b12e13bcda843d7f",
+    "aisub_proxy_region": "auto",
+    "aisub_payment_mode": "async",
+    "aisub_async_timeout": 300,
+    "aisub_async_poll_interval": 3,
     "subscribe_plan": "team",
+    "team_card_open_timing": "after_register",
     "card_max_use_count": 2,
     "verbose_info_logs_enabled": False,
     "subscribe_retry_new_account_enabled": True,
@@ -183,6 +188,8 @@ EFUNCARD_CITY_DATA_CACHE: Optional[Dict[str, Any]] = None
 LAST_RUN_FAILURE_REASON = ""
 FILE_WRITE_LOCK = threading.Lock()
 _CPA_REFERENCE_MODULE: Any = None
+_CPA_IMPERSONATE_SUPPORT_CACHE: Dict[str, bool] = {}
+_CPA_REFERENCE_PROFILES_NORMALIZED = False
 
 FIRST_NAMES = [
     "James", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph",
@@ -233,6 +240,7 @@ EMAIL_PROVIDER_LABELS: Dict[str, str] = {
 CARD_PROVIDER_LABELS: Dict[str, str] = {
     "ncet": "NCET",
     "efuncard": "EFunCard",
+    "hosted": "托管支付",
 }
 
 REGISTER_TYPE_LABELS: Dict[str, str] = {
@@ -270,13 +278,17 @@ def log_line(tag: str, message: str) -> None:
     print(line)
 
 
+def _info_logs_enabled() -> bool:
+    return bool(CONFIG.get("verbose_info_logs_enabled", DEFAULT_CONFIG["verbose_info_logs_enabled"]))
+
+
 def log_info(message: str) -> None:
-    log_line("INFO", message)
+    if _info_logs_enabled():
+        log_line("INFO", message)
 
 
 def log_verbose(message: str) -> None:
-    if bool(CONFIG.get("verbose_info_logs_enabled", DEFAULT_CONFIG["verbose_info_logs_enabled"])):
-        log_line("INFO", message)
+    log_info(message)
 
 
 def log_ok(message: str) -> None:
@@ -367,6 +379,30 @@ def _register_type_label(value: Any = None) -> str:
     return REGISTER_TYPE_LABELS.get(key, "Team")
 
 
+def _team_card_open_timing_key(value: Any = None) -> str:
+    key = str(CONFIG.get("team_card_open_timing") if value is None else value or "").strip().lower()
+    if key not in {"before_register", "after_register"}:
+        return "after_register"
+    return key
+
+
+def _team_card_open_timing_label(value: Any = None) -> str:
+    key = _team_card_open_timing_key(value)
+    return "先开卡再注册" if key == "before_register" else "先注册再开卡"
+
+
+def _aisub_payment_mode_key(value: Any = None) -> str:
+    key = str(CONFIG.get("aisub_payment_mode") if value is None else value or "").strip().lower()
+    if key not in {"sync", "async"}:
+        return "async"
+    return key
+
+
+def _aisub_payment_mode_label(value: Any = None) -> str:
+    key = _aisub_payment_mode_key(value)
+    return "异步(推荐)" if key == "async" else "同步"
+
+
 def _card_provider_key(value: Any = None) -> str:
     key = str(CONFIG.get("card_provider") if value is None else value or "").strip().lower()
     if key == "default":
@@ -379,6 +415,10 @@ def _card_provider_key(value: Any = None) -> str:
 def _card_provider_label(value: Any = None) -> str:
     key = _card_provider_key(value)
     return CARD_PROVIDER_LABELS.get(key, "NCET")
+
+
+def _uses_hosted_payment(value: Any = None) -> bool:
+    return _card_provider_key(value) == "hosted"
 
 
 def _extract_verification_code(content: str) -> str:
@@ -1666,18 +1706,6 @@ def _jwt_claims_no_verify(id_token: str) -> Dict[str, Any]:
         return {}
 
 
-def _decode_jwt_segment(seg: str) -> Dict[str, Any]:
-    raw = (seg or "").strip()
-    if not raw:
-        return {}
-    pad = "=" * ((4 - (len(raw) % 4)) % 4)
-    try:
-        decoded = base64.urlsafe_b64decode((raw + pad).encode("ascii"))
-        return json.loads(decoded.decode("utf-8"))
-    except Exception:
-        return {}
-
-
 def _to_int(v: Any) -> int:
     try:
         return int(v)
@@ -1709,9 +1737,18 @@ VALIDATE_HEADERS = {
 
 def _aisub_headers() -> Dict[str, str]:
     api_key = str(CONFIG.get("aisub_api_key") or DEFAULT_CONFIG["aisub_api_key"]).strip()
+    aisub_base_url = str(CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"]).rstrip("/")
     return {
         "Authorization": f"Bearer {api_key}",
-        "Accept": "application/json",
+        "Accept": "*/*",
+        "Referer": f"{aisub_base_url}/",
+        "sec-ch-ua": '"Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"macOS"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
     }
 
 
@@ -1999,6 +2036,68 @@ def _sync_cpa_reference_runtime(module: Any) -> None:
     ).strip()
 
 
+def _is_unsupported_impersonate_error(exc: Exception) -> bool:
+    text = str(exc or "").strip()
+    return exc.__class__.__name__ == "ImpersonateError" or (
+        "Impersonating" in text and "not supported" in text
+    )
+
+
+def _cpa_impersonate_supported(module: Any, impersonate: str) -> bool:
+    key = str(impersonate or "").strip()
+    if not key:
+        return False
+    cached = _CPA_IMPERSONATE_SUPPORT_CACHE.get(key)
+    if cached is not None:
+        return cached
+
+    supported = True
+    session = None
+    try:
+        session = module.curl_requests.Session(impersonate=key)
+        try:
+            session.get("https://example.com", timeout=1, verify=False)
+        except Exception as exc:
+            supported = not _is_unsupported_impersonate_error(exc)
+    except Exception as exc:
+        supported = not _is_unsupported_impersonate_error(exc)
+    finally:
+        try:
+            if session is not None:
+                session.close()
+        except Exception:
+            pass
+
+    _CPA_IMPERSONATE_SUPPORT_CACHE[key] = supported
+    return supported
+
+
+def _normalize_cpa_reference_profiles(module: Any) -> None:
+    global _CPA_REFERENCE_PROFILES_NORMALIZED
+    if _CPA_REFERENCE_PROFILES_NORMALIZED:
+        return
+
+    profiles = list(getattr(module, "_CHROME_PROFILES", []) or [])
+    if not profiles:
+        _CPA_REFERENCE_PROFILES_NORMALIZED = True
+        return
+
+    supported_profiles = [
+        profile
+        for profile in profiles
+        if _cpa_impersonate_supported(module, str(profile.get("impersonate") or ""))
+    ]
+    if supported_profiles:
+        unsupported = [
+            str(profile.get("impersonate") or "")
+            for profile in profiles
+            if profile not in supported_profiles
+        ]
+        module._CHROME_PROFILES = supported_profiles
+
+    _CPA_REFERENCE_PROFILES_NORMALIZED = True
+
+
 def _cpa_style_wait_for_verification_email(
     self: Any,
     mail_token: str,
@@ -2048,6 +2147,7 @@ def _cpa_style_print(self: Any, *parts: Any, **kwargs: Any) -> None:
 def _build_cpa_style_register(proxy: Optional[str], mailbox: Dict[str, Any]) -> Any:
     module = _load_cpa_reference_module()
     _sync_cpa_reference_runtime(module)
+    _normalize_cpa_reference_profiles(module)
     reg = module.ChatGPTRegister(proxy=proxy or None)
     reg._team_mailbox_context = dict(mailbox or {})
     if mailbox.get("cfmail_api_base"):
@@ -2358,6 +2458,72 @@ def _perform_cpa_style_codex_oauth_login_http(
     )
 
 
+def _run_cpa_style_registration_flow(
+    *,
+    proxy: Optional[str],
+    mailbox: Dict[str, Any],
+    email: str,
+    oauth_log_to_info: bool = False,
+) -> Optional[str]:
+    password = str(mailbox.get("password") or "").strip()
+    if not password:
+        _record_last_run_failure("注册上下文缺少密码")
+        log_error("注册上下文缺少密码")
+        return None
+
+    full_name = f"{mailbox.get('first_name', '')} {mailbox.get('last_name', '')}".strip()
+    birthdate = str(mailbox.get("birthdate") or "2000-02-20").strip()
+    provider = str(mailbox.get("email_provider") or "").strip().lower()
+    mail_token = str(mailbox.get("tm_token") or "").strip()
+
+    reg = _build_cpa_style_register(proxy, mailbox)
+    try:
+        reg.run_register(
+            email,
+            password,
+            full_name or "Neo",
+            birthdate,
+            mail_token,
+            provider=provider,
+        )
+    except Exception as exc:
+        if _is_unsupported_impersonate_error(exc):
+            message = f"当前 curl_cffi 不支持 CPA 选中的浏览器指纹: {exc}"
+            _record_last_run_failure(message)
+            log_error(message)
+            return None
+        if "registration_disallowed" in str(exc):
+            message = (
+                f"OpenAI 返回 registration_disallowed，当前环境被风控拒绝注册"
+                f"（常见原因: 代理/IP、邮箱域名或设备指纹）"
+            )
+            _record_last_run_failure(message)
+            log_error(message)
+            return None
+        raise
+    log_ok("OpenAI 账号创建完成")
+
+    if oauth_log_to_info:
+        from types import MethodType as _MethodType
+
+        def _force_print(self: Any, *parts: Any, **kwargs: Any) -> None:
+            log_info(" ".join(str(part) for part in parts))
+
+        reg._print = _MethodType(_force_print, reg)
+
+    token_json = _perform_cpa_style_codex_oauth_login_http(
+        reg,
+        mailbox=mailbox,
+        email=email,
+        password=password,
+    )
+    if not token_json:
+        _record_last_run_failure("按 CPA 流程执行 Codex OAuth 失败")
+        log_error("按 CPA 流程执行 Codex OAuth 失败")
+        return None
+    return token_json
+
+
 def load_code_array(quiet: bool = False) -> list[dict[str, Any]]:
     """读取 CDKEY 文件，兼容字符串数组、对象数组和纯文本格式。"""
     code_file = _cdkey_file_path()
@@ -2610,6 +2776,15 @@ def get_cdkey_count() -> int:
 
 def print_card_inventory_summary() -> None:
     """打印运行前卡片库存摘要。"""
+    if _uses_hosted_payment():
+        _render_kv_table(
+            "运行前卡片信息",
+            [
+                ("卡商", _card_provider_label()),
+                ("本地卡池", "不需要"),
+            ],
+        )
+        return
     virtual_card_count = len(load_code_array(quiet=True))
     _render_kv_table(
         "运行前卡片信息",
@@ -2621,6 +2796,8 @@ def print_card_inventory_summary() -> None:
 
 def get_available_card_use_count() -> int:
     """按 use 计数计算当前虚拟卡还可用多少次。"""
+    if _uses_hosted_payment():
+        return 10**9
     code_array = load_code_array(quiet=True)
     max_use_count = get_card_max_use_count()
     available_uses = 0
@@ -2630,6 +2807,16 @@ def get_available_card_use_count() -> int:
         use_count = _normalize_use_count(item.get("use"))
         available_uses += max(0, max_use_count - use_count)
     return available_uses
+
+
+def ensure_team_card_capacity_available() -> int:
+    """仅检查卡池剩余次数，不提前开卡。"""
+    if _uses_hosted_payment():
+        return 10**9
+    available_uses = get_available_card_use_count()
+    if available_uses > 0:
+        return available_uses
+    raise StopScript("虚拟卡可用次数不足，请补充 CDKEY 后再试")
 
 
 def load_code_result_map() -> dict[str, Dict[str, Any]]:
@@ -2717,13 +2904,24 @@ def get_aisub_balance(proxies: Any = None) -> Dict[str, Any]:
     try:
         aisub_base_url = str(CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"]).rstrip("/")
         resp = requests.get(
-            f"{aisub_base_url}/api/v1/balance",
+            f"{aisub_base_url}/api/balance",
             headers=_aisub_headers(),
             proxies=proxies,
             impersonate="chrome",
             timeout=20,
         )
-        data: Any = resp.json() if resp.status_code == 200 else {"error": resp.text}
+        if resp.status_code == 404:
+            resp = requests.get(
+                f"{aisub_base_url}/api/v1/balance",
+                headers=_aisub_headers(),
+                proxies=proxies,
+                impersonate="chrome",
+                timeout=20,
+            )
+        if resp.status_code == 200:
+            data: Any = resp.json()
+        else:
+            data = {"error": resp.text}
         return {
             "status_code": resp.status_code,
             "response": data,
@@ -2738,7 +2936,12 @@ def get_aisub_balance(proxies: Any = None) -> Dict[str, Any]:
 def ensure_aisub_balance(proxies: Any = None) -> int:
     """检查 AISub 余额，不足时停止脚本。"""
     balance_result = get_aisub_balance(proxies)
+    status_code = balance_result.get("status_code")
     balance_data = balance_result.get("response") or {}
+
+    if status_code == 401:
+        raise StopScript("AISub API Key 无效，请在设置中更新 API Key 后再试")
+
     balance = 0
     if isinstance(balance_data, dict):
         try:
@@ -2746,8 +2949,8 @@ def ensure_aisub_balance(proxies: Any = None) -> int:
         except (TypeError, ValueError):
             balance = 0
 
-    remaining_times = balance // 30
-    if balance_result.get("status_code") == 200 and remaining_times > 0:
+    remaining_times = balance  # 新 API 单价 ¥1/次，余额即可用次数
+    if status_code == 200 and remaining_times > 0:
         return remaining_times
 
     raise StopScript("AISub余额不足，请充值后再试")
@@ -2766,7 +2969,7 @@ def get_aisub_balance_snapshot(proxies: Any = None) -> Dict[str, Any]:
     return {
         "status_code": int(balance_result.get("status_code") or 0),
         "balance": balance,
-        "remaining_times": balance // 30,
+        "remaining_times": balance,  # 新 API 单价 ¥1/次，余额即可用次数
         "raw": balance_data,
     }
 
@@ -2784,7 +2987,7 @@ def print_aisub_balance_summary(title: str, snapshot: Dict[str, Any]) -> None:
         return
     remaining_times = int(snapshot.get("remaining_times") or 0)
     available_card_uses = get_available_card_use_count()
-    estimated_accounts = min(remaining_times, available_card_uses)
+    estimated_accounts = remaining_times if _uses_hosted_payment() else min(remaining_times, available_card_uses)
     estimated_positions = estimated_accounts * 5
     _render_kv_table(
         title,
@@ -2874,13 +3077,19 @@ def _print_dashboard_rows(rows: list[tuple[str, str]], gap: int = 6) -> None:
 
 def _get_startup_dashboard_data(proxies: Any = None) -> Dict[str, Any]:
     register_type = _register_type_key()
+    team_card_open_timing = _team_card_open_timing_key()
+    provider = _card_provider_key()
+    hosted_payment = _uses_hosted_payment(provider)
     available_card_uses = get_available_card_use_count()
     aisub_snapshot = get_aisub_balance_snapshot(proxies)
     aisub_times = int(aisub_snapshot.get("remaining_times") or 0) if int(aisub_snapshot.get("status_code") or 0) == 200 else 0
-    estimated_accounts = min(aisub_times, available_card_uses)
+    estimated_accounts = aisub_times if hosted_payment else min(aisub_times, available_card_uses)
     estimated_positions = estimated_accounts * 5
     return {
         "register_type": register_type,
+        "card_provider": provider,
+        "hosted_payment": hosted_payment,
+        "team_card_open_timing": team_card_open_timing,
         "available_card_uses": available_card_uses,
         "aisub_snapshot": aisub_snapshot,
         "aisub_times": aisub_times,
@@ -2895,8 +3104,10 @@ def print_startup_dashboard(proxies: Any = None) -> Dict[str, Any]:
     if data.get("register_type") == "team":
         rows.extend(
             [
+                ("卡商", _card_provider_label(data.get("card_provider"))),
+                ("开卡时机", _team_card_open_timing_label(data.get("team_card_open_timing"))),
                 ("AISub 可用次数", str(data["aisub_times"])),
-                ("虚拟卡可用次数", str(data["available_card_uses"])),
+                ("虚拟卡可用次数", "托管支付无需本地卡" if data.get("hosted_payment") else str(data["available_card_uses"])),
                 ("预计可生成账号", str(data["estimated_accounts"])),
                 ("预计可生成位置", str(data["estimated_positions"])),
             ]
@@ -3292,6 +3503,7 @@ def prompt_service_settings() -> None:
             f"CFMail Profile: {_shorten_path_display(str(CONFIG.get('cfmail_profile') or DEFAULT_CONFIG['cfmail_profile']), 50)}",
             f"AISub API Key: {_mask_secret(str(CONFIG.get('aisub_api_key') or ''))}",
             f"AISub Base URL: {_shorten_path_display(str(CONFIG.get('aisub_base_url') or DEFAULT_CONFIG['aisub_base_url']), 50)}",
+            f"AISub Proxy Region: {str(CONFIG.get('aisub_proxy_region') or DEFAULT_CONFIG['aisub_proxy_region'] or 'auto')}",
             f"NCET Base URL: {_shorten_path_display(str(CONFIG.get('redeem_base_url') or DEFAULT_CONFIG['redeem_base_url']), 50)}",
             f"EFunCard Base URL: {_shorten_path_display(str(CONFIG.get('efuncard_base_url') or DEFAULT_CONFIG['efuncard_base_url']), 50)}",
             f"EFunCard CSRF Token: {_mask_secret(str(CONFIG.get('efuncard_csrf_token') or ''))}",
@@ -3310,6 +3522,7 @@ def prompt_service_settings() -> None:
             provider_options = [
                 ("ncet", "NCET"),
                 ("efuncard", "EFunCard"),
+                ("hosted", "托管支付"),
             ]
             provider_labels = [label for _, label in provider_options]
             provider_index = next(
@@ -3438,6 +3651,13 @@ def prompt_service_settings() -> None:
             )
         elif selected_index == 17:
             _update_config_value(
+                "aisub_proxy_region",
+                "请输入 AISub 代理区域（auto 或具体区域）: ",
+                default=CONFIG.get("aisub_proxy_region") or DEFAULT_CONFIG["aisub_proxy_region"],
+                success_text="AISub 代理区域已更新",
+            )
+        elif selected_index == 18:
+            _update_config_value(
                 "redeem_base_url",
                 "请输入 NCET Base URL: ",
                 default=CONFIG.get("redeem_base_url") or DEFAULT_CONFIG["redeem_base_url"],
@@ -3450,14 +3670,14 @@ def prompt_service_settings() -> None:
                 default=CONFIG.get("efuncard_base_url") or DEFAULT_CONFIG["efuncard_base_url"],
                 success_text="EFunCard Base URL 已更新",
             )
-        elif selected_index == 19:
+        elif selected_index == 20:
             _update_config_value(
                 "efuncard_csrf_token",
                 "请输入 EFunCard CSRF Token，留空则清除: ",
                 default=CONFIG.get("efuncard_csrf_token") or "",
                 success_text="EFunCard CSRF Token 已更新",
             )
-        elif selected_index == 20:
+        elif selected_index == 21:
             value = _prompt_input(
                 "请输入 EFunCard 城市库 URL: ",
                 str(CONFIG.get("efuncard_address_cities_url") or DEFAULT_CONFIG["efuncard_address_cities_url"]),
@@ -3468,35 +3688,35 @@ def prompt_service_settings() -> None:
             EFUNCARD_CITY_DATA_CACHE = None
             save_config()
             log_ok("EFunCard 城市库 URL 已更新")
-        elif selected_index == 21:
+        elif selected_index == 22:
             _update_config_value(
                 "oauth_client_id",
                 "请输入 OpenAI Client ID，留空则恢复默认: ",
                 default=_get_openai_client_id(),
                 success_text="OpenAI Client ID 已更新",
             )
-        elif selected_index == 22:
+        elif selected_index == 23:
             _update_config_value(
                 "oauth_originator",
                 "请输入 OpenAI Originator，留空则清除: ",
                 default=_get_openai_originator(),
                 success_text="OpenAI Originator 已更新",
             )
-        elif selected_index == 23:
+        elif selected_index == 24:
             _update_config_value(
                 "oauth_redirect_uri",
                 "请输入 OpenAI Redirect URI: ",
                 default=CONFIG.get("oauth_redirect_uri") or DEFAULT_CONFIG["oauth_redirect_uri"],
                 success_text="OpenAI Redirect URI 已更新",
             )
-        elif selected_index == 24:
+        elif selected_index == 25:
             _update_config_value(
                 "oauth_scope",
                 "请输入 OpenAI Scope: ",
                 default=CONFIG.get("oauth_scope") or DEFAULT_CONFIG["oauth_scope"],
                 success_text="OpenAI Scope 已更新",
             )
-        elif selected_index == 25:
+        elif selected_index == 26:
             _update_config_value(
                 "openai_pow_value",
                 "请输入 OpenAI POW 参数，留空则清除: ",
@@ -3602,6 +3822,8 @@ def prompt_runtime_settings() -> None:
             f"3DS 触发换号: {'开' if bool(CONFIG.get('subscribe_switch_account_on_3ds_enabled', True)) else '关'}",
             f"subscribe 失败次数上限: {int(CONFIG.get('subscribe_retry_new_account_limit', 50) or 50)}",
             f"订阅 Plan: {str(CONFIG.get('subscribe_plan') or DEFAULT_CONFIG['subscribe_plan']).strip() or '未设置'}",
+            f"AISub 支付模式: {_aisub_payment_mode_label()}",
+            f"Team 开卡时机: {_team_card_open_timing_label()}",
             "返回",
         ]
         selected_index = _select_from_menu("配置中心 / 运行策略", options, selected_index)
@@ -3708,6 +3930,44 @@ def prompt_runtime_settings() -> None:
                 default=CONFIG.get("subscribe_plan") or DEFAULT_CONFIG["subscribe_plan"],
                 success_text="订阅 Plan 已更新",
             )
+        elif selected_index == 11:
+            payment_mode_options = [
+                ("async", "异步(推荐)"),
+                ("sync", "同步"),
+            ]
+            current_mode = _aisub_payment_mode_key()
+            payment_mode_index = next(
+                (index for index, (mode_key, _) in enumerate(payment_mode_options) if mode_key == current_mode),
+                0,
+            )
+            choice = _select_from_menu(
+                "AISub 支付模式",
+                [label for _, label in payment_mode_options],
+                payment_mode_index,
+            )
+            if choice == -1:
+                continue
+            mode_key, mode_label = payment_mode_options[choice]
+            CONFIG["aisub_payment_mode"] = mode_key
+            save_config()
+            log_ok(f"AISub 支付模式已更新为 {mode_label}")
+        elif selected_index == 12:
+            timing_options = [
+                ("after_register", "先注册再开卡"),
+                ("before_register", "先开卡再注册"),
+            ]
+            current_timing = _team_card_open_timing_key()
+            timing_index = next(
+                (index for index, (timing_key, _) in enumerate(timing_options) if timing_key == current_timing),
+                0,
+            )
+            choice = _select_from_menu("Team 开卡时机", [label for _, label in timing_options], timing_index)
+            if choice == -1:
+                continue
+            timing_key, timing_label = timing_options[choice]
+            CONFIG["team_card_open_timing"] = timing_key
+            save_config()
+            log_ok(f"Team 开卡时机已更新为 {timing_label}")
 
 
 def prompt_register_type_setting() -> None:
@@ -3770,7 +4030,9 @@ def _render_startup_menu(selected_index: int, dashboard: Dict[str, Any], started
         [("注册类型", _register_type_label(dashboard.get("register_type")))]
         + (
             [
-                ("虚拟卡可用次数", str(dashboard["available_card_uses"])),
+                ("卡商", _card_provider_label(dashboard.get("card_provider"))),
+                ("开卡时机", _team_card_open_timing_label(dashboard.get("team_card_open_timing"))),
+                ("虚拟卡可用次数", "托管支付无需本地卡" if dashboard.get("hosted_payment") else str(dashboard["available_card_uses"])),
                 ("AISub 可用次数", str(dashboard["aisub_times"])),
                 ("预计可生成账号", str(dashboard["estimated_accounts"])),
                 ("预计可生成位置", str(dashboard["estimated_positions"])),
@@ -4018,6 +4280,39 @@ def _normalize_country_name(value: Any) -> str:
     if lowered in {"us", "usa", "united states", "united states of america", "美国"}:
         return "United States"
     return text
+
+
+def _country_to_alpha2(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "US"
+    upper = text.upper()
+    if re.fullmatch(r"[A-Z]{2}", upper):
+        return upper
+
+    normalized = re.sub(r"[^a-z\u4e00-\u9fff]+", " ", text.lower()).strip()
+    mapping = {
+        "us": "US",
+        "usa": "US",
+        "united states": "US",
+        "united states of america": "US",
+        "美国": "US",
+        "gb": "GB",
+        "uk": "GB",
+        "great britain": "GB",
+        "united kingdom": "GB",
+        "英国": "GB",
+        "ca": "CA",
+        "canada": "CA",
+        "加拿大": "CA",
+        "au": "AU",
+        "australia": "AU",
+        "澳大利亚": "AU",
+        "eg": "EG",
+        "egypt": "EG",
+        "埃及": "EG",
+    }
+    return mapping.get(normalized, "US")
 
 
 def _parse_efuncard_node_address(node_instructions: str) -> Dict[str, str]:
@@ -4675,7 +4970,7 @@ def _looks_like_street_address(line: str) -> bool:
     return bool(re.search(r"\d", text) and re.search(r"[a-zA-Z\u4e00-\u9fff]", text))
 
 
-def _extract_address_from_template(template: str) -> str:
+def _extract_address_fields_from_template(template: str) -> Dict[str, str]:
     fields = {
         "address": "",
         "city": "",
@@ -4715,13 +5010,14 @@ def _extract_address_from_template(template: str) -> str:
     if not fields["address"] and fallback_address_lines:
         fields["address"] = _normalize_address_component(fallback_address_lines[0])
 
-    address_parts = [
-        _normalize_address_component(fields["address"]),
-        _normalize_address_component(fields["city"]),
-        _normalize_address_component(fields["state"]),
-        _normalize_address_component(fields["zipcode"]),
-        _normalize_address_component(fields["country"]),
-    ]
+    for key in fields:
+        fields[key] = _normalize_address_component(fields[key])
+    return fields
+
+
+def _extract_address_from_template(template: str) -> str:
+    fields = _extract_address_fields_from_template(template)
+    address_parts = [fields["address"], fields["city"], fields["state"], fields["zipcode"], fields["country"]]
     address_parts = [part for part in address_parts if part]
     return ", ".join(address_parts)
 
@@ -4755,6 +5051,62 @@ def _extract_first_card_and_data(response_data: Any) -> tuple[Optional[Dict[str,
             card_data = {}
 
     return card, card_data
+
+
+def _normalize_expiry_year(value: Any) -> str:
+    raw = str(value or "").strip()
+    if len(raw) == 2 and raw.isdigit():
+        raw = f"20{raw}"
+    if len(raw) == 4 and raw.isdigit() and not raw.startswith("20"):
+        raw = f"20{raw[-2:]}"
+    return raw
+
+
+def _extract_card_details(validate_result: Dict[str, Any]) -> Dict[str, Any]:
+    response_data = validate_result.get("response") or {}
+    card, card_data = _extract_first_card_and_data(response_data)
+    if not card:
+        return {}
+
+    card_number = str(card.get("cardNumber") or "").strip()
+    if not card_number:
+        return {}
+    cvv = str(
+        card.get("cvv")
+        or card.get("cardPassword")
+        or card_data.get("cvv")
+        or card_data.get("cardPassword")
+        or ""
+    ).strip()
+    expiry_month = str(card_data.get("expiryMonth") or "").strip()
+    expiry_year = _normalize_expiry_year(card_data.get("expiryYear"))
+    expiry = str(card_data.get("expiry") or "").strip()
+    if not expiry_month and len(expiry) >= 2:
+        expiry_month = expiry[:2]
+    if not expiry_year and len(expiry) >= 4:
+        expiry_year = _normalize_expiry_year(expiry[2:])
+
+    template = str((response_data.get("data") or {}).get("cardTemplate") or "").strip()
+    return {
+        "card_number": card_number,
+        "cvv": cvv,
+        "expiry_month": expiry_month,
+        "expiry_year": expiry_year,
+        "billing_template": template,
+    }
+
+
+def _build_billing_from_template(template: str, name: str) -> Dict[str, str]:
+    fields = _extract_address_fields_from_template(template)
+    billing = {
+        "name": name or "AI Sub",
+        "line1": fields.get("address") or "Unknown",
+        "city": fields.get("city") or "Unknown",
+        "state": fields.get("state") or "Unknown",
+        "postal_code": fields.get("zipcode") or "00000",
+        "country": _country_to_alpha2(fields.get("country")),
+    }
+    return billing
 
 
 def _parse_iso_datetime(value: Any) -> Optional[datetime]:
@@ -5002,42 +5354,220 @@ def should_stop_for_target(
     return False
 
 
-def subscribe_aisub(access_token: str, validate_result: Dict[str, Any], proxies: Any = None) -> Dict[str, Any]:
-    """调用 AISub subscribe 接口。"""
-    card_payload = str(validate_result.get("formatted_text") or "").strip()
-    if not card_payload:
-        card_payload = json.dumps(validate_result, ensure_ascii=False)
-    log_info(f"AISub card 参数: {card_payload}")
+def _build_aisub_payment_payload(
+    access_token: str,
+    validate_result: Dict[str, Any],
+    cardholder_name: str,
+) -> Dict[str, Any]:
+    if _uses_hosted_payment():
+        return {
+            "mode": "scan",
+            "scan_mode": "at",
+            "access_token": access_token,
+            "plan": str(CONFIG.get("subscribe_plan") or DEFAULT_CONFIG["subscribe_plan"]),
+            "proxy_region": str(CONFIG.get("aisub_proxy_region") or DEFAULT_CONFIG["aisub_proxy_region"] or "auto"),
+        }
 
-    headers = dict(_aisub_headers())
-    headers["Content-Type"] = "application/json"
+    card_info = _extract_card_details(validate_result)
+    if not card_info:
+        return {}
 
+    billing_name = cardholder_name.strip() or str(validate_result.get("formatted_text") or "").strip()
+    return {
+        "mode": "at",
+        "access_token": access_token,
+        "card_number": card_info["card_number"],
+        "exp_month": card_info["expiry_month"],
+        "exp_year": card_info["expiry_year"],
+        "cvv": card_info["cvv"],
+        "plan": str(CONFIG.get("subscribe_plan") or DEFAULT_CONFIG["subscribe_plan"]),
+        "proxy_region": str(CONFIG.get("aisub_proxy_region") or DEFAULT_CONFIG["aisub_proxy_region"] or "auto"),
+        "billing": _build_billing_from_template(card_info["billing_template"], billing_name),
+    }
+
+
+def _parse_aisub_response(resp: Any) -> Any:
     try:
-        aisub_base_url = str(CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"]).rstrip("/")
+        return resp.json()
+    except Exception:
+        return {"error": resp.text}
+
+
+def _extract_aisub_async_result(payload: Any) -> tuple[bool, int, Any, str]:
+    if not isinstance(payload, dict):
+        return False, 0, payload, ""
+
+    state_text = str(payload.get("status") or "").strip()
+    candidates = [payload]
+    for key in ("result", "data", "response", "payload"):
+        nested = payload.get(key)
+        if isinstance(nested, dict):
+            candidates.append(nested)
+
+    for candidate in candidates:
+        if "success" in candidate:
+            effective_status = _to_int(
+                candidate.get("status_code")
+                or candidate.get("http_status")
+                or candidate.get("code")
+            )
+            if effective_status <= 0:
+                effective_status = 200 if candidate.get("success") is True else 0
+            return True, effective_status, candidate, state_text
+
+    state_key = state_text.lower()
+    if state_key in {"success", "succeeded", "done", "completed"}:
+        normalized = dict(payload)
+        normalized["success"] = True
+        return True, 200, normalized, state_text
+    if state_key in {"failed", "error", "cancelled", "canceled"}:
+        normalized = dict(payload)
+        normalized["success"] = False
+        effective_status = _to_int(payload.get("status_code") or payload.get("http_status") or payload.get("code"))
+        return True, effective_status, normalized, state_text
+    return False, 0, payload, state_text
+
+
+def _subscribe_aisub_sync(payload: Dict[str, Any], headers: Dict[str, str], proxies: Any = None) -> Dict[str, Any]:
+    aisub_base_url = str(CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"]).rstrip("/")
+    try:
         resp = requests.post(
-            f"{aisub_base_url}/api/v1/subscribe",
+            f"{aisub_base_url}/api/pay",
             headers=headers,
-            json={
-                "access_token": access_token,
-                "card": card_payload,
-                "plan": str(CONFIG.get("subscribe_plan") or DEFAULT_CONFIG["subscribe_plan"]),
-            },
+            json=payload,
             proxies=proxies,
             impersonate="chrome",
             timeout=20,
         )
-        data: Any = resp.json() if resp.status_code == 200 else {"error": resp.text}
-        result = {
+        return {
             "status_code": resp.status_code,
-            "response": data,
+            "response": _parse_aisub_response(resp),
         }
-        return result
     except Exception as e:
-        result = {
+        return {
             "status_code": 0,
             "response": {"success": False, "error": str(e)},
         }
-        return result
+
+
+def _subscribe_aisub_async(payload: Dict[str, Any], headers: Dict[str, str], proxies: Any = None) -> Dict[str, Any]:
+    aisub_base_url = str(CONFIG.get("aisub_base_url") or DEFAULT_CONFIG["aisub_base_url"]).rstrip("/")
+    try:
+        resp = requests.post(
+            f"{aisub_base_url}/api/pay/async",
+            headers=headers,
+            json=payload,
+            proxies=proxies,
+            impersonate="chrome",
+            timeout=20,
+        )
+    except Exception as e:
+        return {
+            "status_code": 0,
+            "response": {"success": False, "error": str(e)},
+        }
+
+    response_data = _parse_aisub_response(resp)
+    if resp.status_code not in {200, 201, 202}:
+        return {
+            "status_code": resp.status_code,
+            "response": response_data,
+        }
+
+    initial_done, initial_status, initial_payload, _ = _extract_aisub_async_result(response_data)
+    if initial_done:
+        return {
+            "status_code": initial_status or resp.status_code,
+            "response": initial_payload,
+        }
+
+    task_id = str(
+        (response_data.get("task_id") if isinstance(response_data, dict) else "")
+        or (response_data.get("taskId") if isinstance(response_data, dict) else "")
+        or ""
+    ).strip()
+    if not task_id:
+        return {
+            "status_code": 0,
+            "response": {"success": False, "error": "AISub 异步支付未返回 task_id"},
+        }
+
+    timeout_seconds = max(30, _to_int(CONFIG.get("aisub_async_timeout") or DEFAULT_CONFIG["aisub_async_timeout"]))
+    poll_interval = max(1, _to_int(CONFIG.get("aisub_async_poll_interval") or DEFAULT_CONFIG["aisub_async_poll_interval"]))
+    last_state = ""
+    deadline = time.time() + timeout_seconds
+    log_verbose(f"AISub 异步支付任务已创建: {task_id}")
+
+    while time.time() < deadline:
+        try:
+            status_resp = requests.get(
+                f"{aisub_base_url}/api/pay/status/{quote(task_id, safe='')}",
+                headers=headers,
+                proxies=proxies,
+                impersonate="chrome",
+                timeout=20,
+            )
+        except Exception as e:
+            return {
+                "status_code": 0,
+                "response": {"success": False, "error": f"AISub 状态查询失败: {e}", "task_id": task_id},
+            }
+
+        status_data = _parse_aisub_response(status_resp)
+        if status_resp.status_code != 200:
+            return {
+                "status_code": status_resp.status_code,
+                "response": status_data,
+            }
+
+        is_done, effective_status, final_payload, state_text = _extract_aisub_async_result(status_data)
+        current_state = state_text or str((status_data.get("message") if isinstance(status_data, dict) else "") or "").strip()
+        if current_state and current_state != last_state:
+            log_verbose(f"AISub 异步支付状态[{task_id}]: {current_state}")
+            last_state = current_state
+
+        if is_done:
+            if isinstance(final_payload, dict):
+                final_payload = dict(final_payload)
+                final_payload.setdefault("task_id", task_id)
+            return {
+                "status_code": effective_status or status_resp.status_code,
+                "response": final_payload,
+            }
+
+        time.sleep(poll_interval)
+
+    return {
+        "status_code": 0,
+        "response": {
+            "success": False,
+            "error": f"AISub 异步支付超时（{timeout_seconds} 秒）",
+            "task_id": task_id,
+        },
+    }
+
+
+def subscribe_aisub(access_token: str, validate_result: Dict[str, Any], cardholder_name: str, proxies: Any = None) -> Dict[str, Any]:
+    """调用 AISub subscribe 接口。"""
+    payload = _build_aisub_payment_payload(access_token, validate_result, cardholder_name)
+    if not payload:
+        return {
+            "status_code": 0,
+            "response": {"success": False, "error": "缺少卡信息"},
+        }
+
+    headers = dict(_aisub_headers())
+    headers["Content-Type"] = "application/json"
+    if _aisub_payment_mode_key() == "async":
+        return _subscribe_aisub_async(payload, headers, proxies)
+
+    try:
+        return _subscribe_aisub_sync(payload, headers, proxies)
+    except Exception as e:
+        return {
+            "status_code": 0,
+            "response": {"success": False, "error": str(e)},
+        }
 
 
 def _extract_subscribe_failure_info(response_data: Any) -> tuple[str, str]:
@@ -5046,13 +5576,16 @@ def _extract_subscribe_failure_info(response_data: Any) -> tuple[str, str]:
     if not isinstance(response_data, dict):
         return full_text, concise_reason
 
+    message_text = str(response_data.get("message") or response_data.get("detail") or "").strip()
     error_text = str(response_data.get("error") or "").strip()
+    error_code = str(response_data.get("code") or response_data.get("error_code") or "").strip()
+    task_status = str(response_data.get("status") or "").strip()
     steps = response_data.get("steps")
     step_texts: list[str] = []
     if isinstance(steps, list):
         step_texts = [str(step).strip() for step in steps if str(step).strip()]
 
-    parts = [part for part in [error_text, *step_texts] if part]
+    parts = [part for part in [message_text, error_text, error_code, task_status, *step_texts] if part]
     full_text = " | ".join(parts)
 
     diagnostic_step = ""
@@ -5080,11 +5613,16 @@ def _extract_subscribe_failure_info(response_data: Any) -> tuple[str, str]:
         "请重试",
     }
     is_generic_error = error_text in generic_errors
+    is_generic_message = message_text in generic_errors
 
     if any("需要 hCaptcha challenge" in step for step in step_texts):
         concise_reason = "需要 hCaptcha challenge"
     elif any("3DS" in step or "额外验证" in step for step in step_texts):
         concise_reason = "该账号需要额外验证（3DS）"
+    elif message_text and not is_generic_message:
+        concise_reason = message_text
+    elif message_text and diagnostic_step:
+        concise_reason = f"{message_text} | {diagnostic_step}"
     elif error_text and not is_generic_error:
         concise_reason = error_text
     elif error_text and diagnostic_step:
@@ -5099,10 +5637,25 @@ def _extract_subscribe_failure_info(response_data: Any) -> tuple[str, str]:
     return full_text, concise_reason
 
 
+def _raise_for_aisub_http_error(status_code: int, response_data: Any, failure_reason: str) -> None:
+    if status_code not in {401, 402, 403}:
+        return
+    detail = failure_reason.strip()
+    if not detail and isinstance(response_data, dict):
+        detail = str(response_data.get("message") or response_data.get("error") or "").strip()
+    suffix = f"，详情: {detail}" if detail else ""
+    if status_code == 401:
+        raise StopScript(f"AISub API Key 无效或缺失{suffix}")
+    if status_code == 402:
+        raise StopScript(f"AISub 余额不足{suffix}")
+    raise StopScript(f"AISub 账户已禁用{suffix}")
+
+
 def wait_for_subscribe_success(
     access_token: str,
     validate_context: Dict[str, Any],
     proxies: Any = None,
+    cardholder_name: str = "",
 ) -> Dict[str, Any]:
     """阻塞等待 subscribe 成功。"""
     retry_with_new_account_enabled = bool(
@@ -5124,11 +5677,16 @@ def wait_for_subscribe_success(
     failed_attempts = 0
 
     while True:
-        validate_context = ensure_fresh_validate_context(validate_context, proxies)
-        validate_result = validate_context["validate_result"]
-        subscribe_result = subscribe_aisub(access_token, validate_result, proxies)
+        if _uses_hosted_payment():
+            validate_result = validate_context.get("validate_result") or {}
+        else:
+            validate_context = ensure_fresh_validate_context(validate_context, proxies)
+            validate_result = validate_context["validate_result"]
+        subscribe_result = subscribe_aisub(access_token, validate_result, cardholder_name, proxies)
         response_data = subscribe_result.get("response") or {}
         failure_text, failure_reason = _extract_subscribe_failure_info(response_data)
+        status_code = int(subscribe_result.get("status_code") or 0)
+        _raise_for_aisub_http_error(status_code, response_data, failure_reason)
         if subscribe_result.get("status_code") == 200 and isinstance(response_data, dict) and response_data.get("success") is True:
             steps = response_data.get("steps")
             last_step = ""
@@ -5147,10 +5705,12 @@ def wait_for_subscribe_success(
             detail = f"，原因: {failure_reason}" if failure_reason else ""
             raise RetryWithNewAccount(f"该账号触发 hCaptcha challenge，切换下一个账号继续复用当前卡{detail}")
         failed_attempts += 1
-        if retry_with_new_account_enabled and failed_attempts >= retry_with_new_account_limit:
-            raise RetryWithNewAccount(
-                f"subscribe 连续失败 {failed_attempts} 次，放弃当前账号并重新注册，继续复用当前卡"
-            )
+        if failed_attempts >= retry_with_new_account_limit:
+            if retry_with_new_account_enabled:
+                raise RetryWithNewAccount(
+                    f"subscribe 连续失败 {failed_attempts} 次，放弃当前账号并重新注册，继续复用当前卡"
+                )
+            raise RuntimeError(f"subscribe 连续失败 {failed_attempts} 次，已达到重试上限")
         detail = f"，原因: {failure_reason}" if failure_reason else ""
         log_warn(f"subscribe 第 {failed_attempts} 次失败，立即重试{detail}")
 
@@ -5285,38 +5845,6 @@ def submit_callback_url(
 # ==========================================
 
 
-def _ensure_openai_device_id(session: Any, initial_response: Any = None) -> str:
-    def _response_cookie_value(response: Any) -> str:
-        if response is None:
-            return ""
-        cookie_value = str(response.cookies.get("oai-did") or "").strip()
-        if cookie_value:
-            return cookie_value
-        raw_set_cookie = str(response.headers.get("set-cookie") or response.headers.get("Set-Cookie") or "")
-        match = re.search(r"oai-did=([^;,\s]+)", raw_set_cookie)
-        return str(match.group(1) if match else "").strip()
-
-    did = str(session.cookies.get("oai-did") or "").strip()
-    if not did and initial_response is not None:
-        did = _response_cookie_value(initial_response)
-    if did:
-        return did
-
-    for fallback_url in (
-        "https://auth.openai.com/create-account",
-        "https://auth.openai.com/u/login/identifier",
-    ):
-        try:
-            resp = session.get(fallback_url, timeout=15)
-        except Exception:
-            continue
-        did = str(session.cookies.get("oai-did") or _response_cookie_value(resp) or "").strip()
-        if did:
-            return did
-
-    return ""
-
-
 def _enrich_token_json_with_registration_context(
     token_json: str,
     *,
@@ -5341,6 +5869,7 @@ def _enrich_token_json_with_registration_context(
     if mailbox.get("cfmail_account_name"):
         token_data["cfmail_account_name"] = str(mailbox.get("cfmail_account_name") or "")
     return json.dumps(token_data, ensure_ascii=False, separators=(",", ":"))
+
 
 def run(proxy: Optional[str]) -> Optional[str]:
     proxies = _build_proxy_dict(proxy)
@@ -5376,39 +5905,12 @@ def run(proxy: Optional[str]) -> Optional[str]:
     log_ok(f"邮箱就绪 [{provider_name}]: {email}")
 
     try:
-        password = str(mailbox.get("password") or "").strip()
-        if not password:
-            _record_last_run_failure("注册上下文缺少密码")
-            log_error("注册上下文缺少密码")
-            return None
-        full_name = f"{mailbox.get('first_name', '')} {mailbox.get('last_name', '')}".strip()
-        birthdate = str(mailbox.get("birthdate") or "2000-02-20").strip()
-        provider = str(mailbox.get("email_provider") or "").strip().lower()
-        mail_token = str(mailbox.get("tm_token") or "").strip()
-
-        reg = _build_cpa_style_register(proxy, mailbox)
-        reg.run_register(
-            email,
-            password,
-            full_name or "Neo",
-            birthdate,
-            mail_token,
-            provider=provider,
-        )
-        log_ok("OpenAI 账号创建完成")
-
-        token_json = _perform_cpa_style_codex_oauth_login_http(
-            reg,
+        return _run_cpa_style_registration_flow(
+            proxy=proxy,
             mailbox=mailbox,
             email=email,
-            password=password,
+            oauth_log_to_info=(_register_type_key() == "team"),
         )
-        if not token_json:
-            _record_last_run_failure("按 CPA 流程执行 Codex OAuth 失败")
-            log_error("按 CPA 流程执行 Codex OAuth 失败")
-            return None
-        return token_json
-
     except Exception as e:
         _record_last_run_failure(f"运行时发生错误: {e}")
         log_error(f"运行时发生错误: {e}")
@@ -5479,14 +5981,26 @@ def main() -> None:
                 "Team 注册机",
                 f"欢迎使用 Team 注册机，现在是 {_fmt_local_dt(ui_started_at)}",
             )
-            _render_kv_table("运行前概览", [("注册类型", _register_type_label(register_type))])
+            overview_rows = [("注册类型", _register_type_label(register_type))]
+            if register_type == "team":
+                overview_rows.extend(
+                    [
+                        ("卡商", _card_provider_label()),
+                        ("开卡时机", _team_card_open_timing_label()),
+                    ]
+                )
+            _render_kv_table("运行前概览", overview_rows)
             if register_type == "team":
                 print_card_inventory_summary()
                 aisub_balance_before = get_aisub_balance_snapshot(proxies)
                 print_aisub_balance_summary("运行前 AISub 余额", aisub_balance_before)
         if register_type == "team":
             ensure_aisub_balance(proxies)
-        if bool(CONFIG.get("cpa_cleanup_enabled", DEFAULT_CONFIG["cpa_cleanup_enabled"])) and not cpa_cleanup_executed:
+        if (
+            register_type != "team"
+            and bool(CONFIG.get("cpa_cleanup_enabled", DEFAULT_CONFIG["cpa_cleanup_enabled"]))
+            and not cpa_cleanup_executed
+        ):
             _run_cpa_cleanup_before_register()
             cpa_cleanup_executed = True
 
@@ -5503,8 +6017,11 @@ def main() -> None:
                 validate_result: Dict[str, Any] = {}
                 if register_type == "team":
                     ensure_aisub_balance(proxies)
-                    validate_context = get_validate_context(proxies)
-                    validate_result = validate_context["validate_result"]
+                    if not _uses_hosted_payment() and _team_card_open_timing_key() == "before_register":
+                        validate_context = get_validate_context(proxies)
+                        validate_result = validate_context["validate_result"]
+                    elif not _uses_hosted_payment():
+                        ensure_team_card_capacity_available()
 
                 token_json = run(proxy_value)
 
@@ -5515,45 +6032,56 @@ def main() -> None:
                         t_data = {}
 
                     t_data["register_type"] = register_type
-                    token_artifact_path = _save_codex_token_artifacts(t_data)
-                    if token_artifact_path:
-                        pending_cpa_uploads += 1
-                        upload_every_n = max(
-                            1,
-                            int(CONFIG.get("cpa_upload_every_n") or DEFAULT_CONFIG["cpa_upload_every_n"]),
-                        )
-                        if (
-                            str(CONFIG.get("upload_api_url") or DEFAULT_CONFIG["upload_api_url"]).strip()
-                            and pending_cpa_uploads >= upload_every_n
-                        ):
-                            log_info(
-                                f"达到 CPA 自动导入阈值: {pending_cpa_uploads}/{upload_every_n}，开始上传"
+                    if register_type != "team":
+                        token_artifact_path = _save_codex_token_artifacts(t_data)
+                        if token_artifact_path:
+                            pending_cpa_uploads += 1
+                            upload_every_n = max(
+                                1,
+                                int(CONFIG.get("cpa_upload_every_n") or DEFAULT_CONFIG["cpa_upload_every_n"]),
                             )
-                            _upload_all_tokens_to_cpa()
-                            pending_cpa_uploads = 0
+                            if (
+                                str(CONFIG.get("upload_api_url") or DEFAULT_CONFIG["upload_api_url"]).strip()
+                                and pending_cpa_uploads >= upload_every_n
+                            ):
+                                log_info(
+                                    f"达到 CPA 自动导入阈值: {pending_cpa_uploads}/{upload_every_n}，开始上传"
+                                )
+                                _upload_all_tokens_to_cpa()
+                                pending_cpa_uploads = 0
 
                     if register_type == "team":
                         access_token = str(t_data.get("access_token") or "").strip()
                         if not access_token:
                             raise RuntimeError("token_json 中缺少 access_token")
-                        if not validate_context:
-                            raise RuntimeError("缺少 Team 绑定上下文")
+                        if not validate_context and not _uses_hosted_payment():
+                            log_info("账号注册完成，开始获取虚拟卡")
+                            validate_context = get_validate_context(proxies)
+                            validate_result = validate_context["validate_result"]
+                        full_name = f"{t_data.get('first_name', '')} {t_data.get('last_name', '')}".strip()
 
-                        subscribe_context = wait_for_subscribe_success(access_token, validate_context, proxies)
-                        validate_context = subscribe_context["validate_context"]
-                        validate_result = validate_context["validate_result"]
-                        subscribe_result = subscribe_context["subscribe_result"]
-                        current_use_count = int(validate_context["use_count"])
-                        mark_code_used(
-                            validate_context["code_array"],
-                            int(validate_context["code_index"]),
-                            current_use_count,
+                        subscribe_context = wait_for_subscribe_success(
+                            access_token,
+                            validate_context or {},
+                            proxies,
+                            full_name,
                         )
+                        validate_context = subscribe_context["validate_context"]
+                        validate_result = validate_context.get("validate_result") or {}
+                        subscribe_result = subscribe_context["subscribe_result"]
+                        if not _uses_hosted_payment():
+                            current_use_count = int(validate_context["use_count"])
+                            mark_code_used(
+                                validate_context["code_array"],
+                                int(validate_context["code_index"]),
+                                current_use_count,
+                            )
+                            if current_use_count == 0:
+                                cards_used += 1
                         aisub_uses += 1
-                        if current_use_count == 0:
-                            cards_used += 1
 
-                        t_data["validate_result"] = validate_result
+                        if validate_result:
+                            t_data["validate_result"] = validate_result
                         t_data["subscribe_result"] = subscribe_result
                         mother_accounts += 1
                     append_team_entry(teams_file, t_data)
@@ -5595,7 +6123,8 @@ def main() -> None:
         if register_type == "team":
             aisub_balance_after = get_aisub_balance_snapshot(proxies)
             print_aisub_balance_summary("运行后 AISub 余额", aisub_balance_after)
-        _upload_all_tokens_to_cpa()
+        if register_type != "team":
+            _upload_all_tokens_to_cpa()
         print_run_summary(
             register_type=register_type,
             registered_accounts=registered_accounts,
