@@ -1,5 +1,7 @@
 # TeamKeygen
 
+> **旧版GPT + Team 注册机**
+
 一个基于终端界面的自动化脚本项目，主流程集中在 [team.py](/Applications/Project/TeamKeygen/team.py)。
 
 它当前负责的事情主要有：
