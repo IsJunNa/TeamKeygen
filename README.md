@@ -2,6 +2,8 @@
 
 > **旧版GPT + Team 注册机**
 
+团队账号管理系统，支持 Keygen、Token 提取、自动刷新、CPA 导出与团队席位管理，适用于 OpenAI Team 等共享账号自动化管理场景。
+
 一个基于终端界面的自动化脚本项目，主流程集中在 [team.py](/Applications/Project/TeamKeygen/team.py)。
 
 它当前负责的事情主要有：
@@ -328,16 +330,7 @@ python3 team.py
 
 - 标题面板
 - 菜单高亮
-- 表格展示
-- 彩色日志
+- 状态表格
+- 关键流程提示
 
-如果你的环境没有 `rich`，程序会自动回退成普通终端输出，不会因为 UI 包缺失直接崩掉。
-
-## 最后从哪里开始
-
-如果你是第一次接触这个项目，按这个顺序看：
-
-1. 先看这份 [README.md](/Applications/Project/TeamKeygen/README.md)
-2. 再运行 [team.py](/Applications/Project/TeamKeygen/team.py)
-3. 在程序里打开 `配置中心`
-4. 需要深挖逻辑时，再去看 [team.py](/Applications/Project/TeamKeygen/team.py) 源码
+没有安装 `rich` 时不会影响运行，只是显示会退回普通文本。
